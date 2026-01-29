@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadStart • Elite Education & Learning Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+    :root {
+        --bg: #ffffff;
+        --bg-alt: #f8fafc;
+        --text: #1e293b;
+        --text-muted: #64748b;
+        --accent: #22c55e;
+        --accent-dark: #16a34a;
+        --secondary: #4ade80;
+        --green: #22c55e;
+        --border: #e2e8f0;
+        --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+        --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: var(--font-main);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 72px;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        padding: 0 48px;
+        justify-content: space-between;
+    }
+
+    .logo {
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--accent);
+    }
+
+    nav {
+        display: flex;
+        gap: 32px;
+    }
+
+    nav a {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 14px;
+        transition: var(--transition);
+        position: relative;
+    }
+
+    nav a:hover {
+        color: var(--text);
+    }
+
+    nav a::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: var(--accent);
+        transition: var(--transition);
+    }
+
+    nav a:hover::after {
+        width: 100%;
+    }
+
+    main {
+        padding-top: 72px;
+    }
+
+    section {
+  padding: 120px 48px;
+  border-bottom: 1px solid var(--border);
+}
+
+    h2 {
+        font-size: 42px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        margin-bottom: 24px;
+        position: relative;
+        display: inline-block;
+    }
+
+    h2::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 48px;
+        height: 3px;
+        background: var(--accent);
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    #hero {
+        height: 100vh;
+        min-height: 800px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        padding: 0 48px;
+    }
+
+    #hero-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        opacity: 0.1;
+    }
+
+    .btn {
+        padding: 16px 32px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+        transition: var(--transition);
+        border: none;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-primary {
+        background: var(--accent);
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background: var(--accent-dark);
+        transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        z-index: 1100;
+    }
+
+    .hamburger span {
+        width: 28px;
+        height: 3px;
+        background: var(--text);
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+
+    @media (max-width: 1024px) {
+        .hamburger {
+            display: flex;
+            margin-left: auto;
+        }
+
+        nav#main-nav {
+            position: fixed;
+            top: -100vh;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(20px);
+            flex-direction: column;
+            align-items: center;
+            padding: 100px 24px 60px;
+            gap: 32px;
+            transition: top 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 999;
+        }
+
+        nav#main-nav.nav-open {
+            top: 0;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+    }
+    .stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+}
+
+.stat-card .icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+    stroke: #ccc;
+    transition: stroke 0.3s;
+}
+
+.stat-card:hover .icon {
+    stroke: #22c55e;
+}
+
+.stat-card .stat-number {
+    font-size: 56px;
+    font-weight: 800;
+    color: #2e7d32;
+    line-height: 1;
+}
+
+.stat-card p {
+    font-size: 18px;
+    color: #555;
+    margin-top: 12px;
+}
+.hero-curve {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 118px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.hero-curve svg {
+  width: 115%;
+  height: 100%;
+  display: block;
+}
+
+#hero {
+  border-bottom: none !important;
+}
+
+/* ✅ MOBILE FONT FIX (homepage hero only) */
+@media (max-width: 768px) {
+
+  #hero h1 {
+    font-size: 38px !important;
+    line-height: 1.15;
+  }
+
+  #hero p {
+    font-size: 18px !important;
+    line-height: 1.5;
+  }
+
+  #hero a {
+    font-size: 16px !important;
+    padding: 14px 28px !important;
+  }
+
+  #hero {
+    padding: 120px 24px 160px !important;
+  }
+}
+
+/* ================================
+   OUR LOCATIONS (FULL PAGE)
+================================ */
+
+#locations {
+  min-height: 100vh;
+  background: #ffffff;
+  border-bottom: none;
+}
+
+.locations-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.location-box {
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.location-box h3 {
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+
+.location-box a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.map-box {
+  position: relative;
+  height: 420px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .locations-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .map-box {
+    height: 320px;
+  }
+}
+</style>
+</head>
+<body>
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <header>
+        <div class="logo">HeadStart</div>
+       <nav id="main-nav">
+    <a href="#hero" onclick="smoothScroll('#hero'); return false;">Home</a>
+    <a href="#courses" onclick="smoothScroll('#courses'); return false;">Courses</a>
+    <a href="#locations" onclick="smoothScroll('#locations'); return false;">Locations</a>
+    <a href="#performance" onclick="smoothScroll('#performance'); return false;">Performance</a>
+    <a href="#approach" onclick="smoothScroll('#approach'); return false;">Approach</a>
+    <a href="#safety" onclick="smoothScroll('#safety'); return false;">Safety</a>
+    <a href="#teachers" onclick="smoothScroll('#teachers'); return false;">Teachers</a>
+    <a href="#contact" onclick="smoothScroll('#contact'); return false;">Contact</a>
+</nav>
+        <div class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+    <main>
+
+<section id="hero" style="background: linear-gradient(135deg, #3eaf3e 0%, #1b941b 100%); min-height: 100vh; position: relative; overflow: hidden; display: flex; align-items: center; padding: 140px 48px 180px;">
+    <div class="container" style="position: relative; z-index: 2; text-align: center; max-width: 1100px; margin: 0 auto; color: white;">
+        <div style="margin-bottom: 32px;">
+        </div>
+
+        <h1 style="font-size: 64px; font-weight: 800; line-height: 1.1; margin-bottom: 24px; letter-spacing: -0.02em; color: white;">
+            ELITE ENGLISH & LANGUAGE CENTER<br>
+            FOR FUTURE LEADERS
+        </h1>
+
+        <p style="font-size: 24px; margin-bottom: 48px; max-width: 720px; margin-left: auto; margin-right: auto; color: white;">
+            Expert English training and specialized courses to unlock global opportunities
+        </p>
+
+        <div style="display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;">
+            <a href="#courses" style="background: white; color: #2e7d32; padding: 16px 40px; border-radius: 9999px; font-size: 18px; font-weight: 600; text-decoration: none; box-shadow: 0 8px 24px rgba(0,0,0,0.15); transition: all 0.3s;">
+                Explore Courses →
+            </a>
+            <a href="#results" style="background: transparent; color: white; padding: 16px 40px; border-radius: 9999px; font-size: 18px; font-weight: 600; text-decoration: none; border: 2px solid white; transition: all 0.3s;">
+                See Our Results →
+            </a>
+        </div>
+    </div>
+    <div class="hero-curve">
+  <svg
+    viewBox="0 0 1440 140"
+    preserveAspectRatio="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M0,40 C240,0 480,0 720,20 960,40 1200,80 1440,120 L1440,140 L0,140 Z"
+      fill="#ffffff"
+    />
+  </svg>
+</div>
+</section>
+
+<section id="stats" style="background:#ffffff; padding:60px 48px 80px; border-bottom:none;">
+  <div class="container" style="
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 32px;
+    text-align: center;
+  ">
+    <div class="stat-card">
+      <svg class="icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke-width="2">
+        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+        <path d="M6 12v5c3 2 9 2 12 0v-5"/>
+      </svg>
+      <div class="stat-number" data-target="98">0</div>
+      <p>University Acceptance</p>
+    </div>
+
+    <div class="stat-card">
+      <svg class="icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke-width="2">
+        <path d="M12 2L2 7l10 5 10-5"/>
+        <path d="M2 17l10 5 10-5"/>
+      </svg>
+      <div class="stat-number" data-target="45">0</div>
+      <p>Top-100 Universities</p>
+    </div>
+
+    <div class="stat-card">
+      <svg class="icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <div class="stat-number" data-target="7.8">0.0</div>
+      <p>Average IB Score</p>
+    </div>
+
+    <div class="stat-card">
+      <svg class="icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke-width="2">
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5"/>
+      </svg>
+      <div class="stat-number" data-target="200">0</div>
+      <p>Graduates</p>
+    </div>
+  </div>
+</section>
+ 
+        <section id="courses">
+            <div class="container">
+                <h2>Our Courses</h2>
+                <div style="margin-top: 48px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px;">
+    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; border-top: 4px solid #3b82f6;">
+        <strong>IELTS General</strong><br>Practical English for work and immigration.
+    </div>
+    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; border-top: 4px solid #1d4ed8;">
+        <strong>IELTS Academic</strong><br>University-level English preparation.
+    </div>
+    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; border-top: 4px solid #22c55e;">
+        <strong>CEFR</strong><br>European language proficiency framework.
+    </div>
+    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; border-top: 4px solid #a855f7;">
+        <strong>SAT</strong><br>College entrance exam preparation.
+    </div>
+    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; border-top: 4px solid #ef4444;">
+        <strong>German</strong><br>Beginner to advanced German courses.
+    </div>
+    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; border-top: 4px solid #f97316;">
+        <strong>Russian</strong><br>Grammar, conversation, and culture.
+    </div>
+    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; border-top: 4px solid #14b8a6;">
+        <strong>Turkish</strong><br>Modern Turkish language training.
+    </div>
+</div>
+            </div>
+        </section>
+
+        <section id="locations">
+  <div class="container">
+
+    <h2>Our Locations</h2>
+
+<!-- MAIN LOCATION -->
+<div class="locations-grid" style="margin-top:64px;">
+  <div class="location-box">
+    <h3>Prospekt Branch (Main)</h3>
+    <p>
+      📍 <a href="https://maps.app.goo.gl/qYUqRRJAwVKkpo2G7" target="_blank">
+        View on Google Maps
+      </a>
+    </p>
+    <p style="margin-top:16px;">
+      ☎ <a href="tel:+998951840770">+998 95 184 0770</a>
+    </p>
+  </div>
+
+  <div class="map-box">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3050.2487490362496!2d67.8321306!3d40.1367425!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38b297402ce2533f%3A0xc0df93ceda7ed301!2sHeadStart%20English%20School!5e1!3m2!1sen!2s!4v1769689895048!5m2!1sen!2s"
+      width="100%"
+      height="100%"
+      style="border:0;"
+      allowfullscreen
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+</div>
+
+<!-- SECOND BRANCH -->
+<div class="locations-grid" style="margin-top:96px;">
+  <div class="location-box">
+    <h3>Pushkin Branch</h3>
+    <p>
+      📍 <a href="https://maps.app.goo.gl/kuDv9Dba38rquouVA" target="_blank">
+        View on Google Maps
+      </a>
+    </p>
+    <p style="margin-top:16px;">
+      ☎ <a href="tel:+998995279080">+998 99 527 9080</a>
+    </p>
+  </div>
+
+  <div class="map-box">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3051.5293663676457!2d67.8213217!3d40.1082049!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38b295612f18a46b%3A0x854d632cb9cb3a10!2sHeadsStart%20Pushkin%20branch!5e1!3m2!1sen!2s!4v1769689932222!5m2!1sen!2s"
+      width="100%"
+      height="100%"
+      style="border:0;"
+      allowfullscreen
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+</div>
+
+  </div>
+</section>
+
+        <section id="performance">
+            <div class="container">
+                <h2>Student Performance</h2>
+                <div style="margin-top: 64px; color: var(--text-muted); font-size: 14px;">Benchmarked against global standards. Past results do not guarantee future performance.</div>
+            </div>
+        </section>
+
+        <section id="approach">
+            <div class="container">
+                <h2>Educational Approach</h2>
+                <div style="display: flex; flex-direction: column; gap: 48px; margin-top: 48px;">
+                    <div style="display: flex; gap: 32px;">
+                        <div style="width: 48px; height: 48px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">1</div>
+                        <div><strong>Personalized Learning</strong><br>Tailored curriculum based on student strengths and goals.</div>
+                    </div>
+                    <div style="display: flex; gap: 32px;">
+                        <div style="width: 48px; height: 48px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">2</div>
+                        <div><strong>Project-Based Mastery</strong><br>Real-world projects driving deep understanding.</div>
+                    </div>
+                    <div style="display: flex; gap: 32px;">
+                        <div style="width: 48px; height: 48px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">3</div>
+                        <div><strong>Holistic Development</strong><br>Academic + leadership + character education.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="safety">
+            <div class="container">
+                <h2>Safety & Well-being</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; margin-top: 48px;">
+                    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px;"><strong>24/7 Security</strong><br>Full campus surveillance and trained staff.</div>
+                    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px;"><strong>Health Protocols</strong><br>Medical center, regular screenings, and counseling.</div>
+                    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px;"><strong>Safe Environment</strong><br>Zero-tolerance bullying policy and support systems.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="teachers">
+            <div class="container">
+                <h2>Our Teachers</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; margin-top: 48px;">
+                    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; text-align: center;">
+                        <div style="width: 96px; height: 96px; background: var(--secondary); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: #fff;">YU</div>
+                        <strong>Yokubjon Umedovich</strong><br>Head of Academics<br>Oxford-educated, 15+ years IB experience.
+                    </div>
+                    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; text-align: center;">
+                        <div style="width: 96px; height: 96px; background: var(--secondary); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: #fff;">SJ</div>
+                        <strong>Saidjon</strong><br>STEM Director<br>MIT graduate, robotics specialist.
+                    </div>
+                    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; text-align: center;">
+                        <div style="width: 96px; height: 96px; background: var(--secondary); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: #fff;">MK</div>
+                        <strong>Madina Karimova</strong><br>University Counselor<br>Former admissions officer at top universities.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="container">
+                <h2>Contact & Enrollment</h2>
+                <form style="max-width: 640px; margin-top: 48px;">
+                    <input type="text" placeholder="Full Name" required style="width:100%; background:var(--bg-alt); border:1px solid var(--border); padding:16px; border-radius:8px; margin-bottom:24px;">
+                    <input type="email" placeholder="Parent/Guardian Email" required style="width:100%; background:var(--bg-alt); border:1px solid var(--border); padding:16px; border-radius:8px; margin-bottom:24px;">
+                    <select required style="width:100%; background:var(--bg-alt); border:1px solid var(--border); padding:16px; border-radius:8px; margin-bottom:24px;">
+                        <option>Student Grade Level</option>
+                        <option>Grade 6-8</option>
+                        <option>Grade 9-10</option>
+                        <option>Grade 11-12</option>
+                    </select>
+                    <textarea placeholder="Tell us about your child's goals..." rows="5" style="width:100%; background:var(--bg-alt); border:1px solid var(--border); padding:16px; border-radius:8px; margin-bottom:24px;"></textarea>
+                    <button type="submit" class="btn btn-primary" style="width:100%;">Submit Inquiry</button>
+                </form>
+                <div style="margin-top: 48px; font-size: 14px; color: var(--text-muted);">All inquiries receive a response within 24 hours. Tours available by appointment.</div>
+            </div>
+        </section>
+    </main>
+    <footer style="padding:48px; border-top:1px solid var(--border); font-size:13px; color:var(--text-muted); text-align:center;">
+        © 2026 HeadStart Education Center. All rights reserved.<br>
+        Excellence in education. Results-driven learning.
+    </footer>
+
+    <script>
+function smoothScroll(targetId) {
+    const target = document.querySelector(targetId);
+    if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    // Close mobile menu
+    const nav = document.getElementById('main-nav');
+    const hamburger = document.getElementById('hamburger');
+    if (nav.classList.contains('nav-open')) {
+        hamburger.classList.remove('active');
+        nav.classList.remove('nav-open');
+    }
+}
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const numbers = document.querySelectorAll('.stat-number');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                numbers.forEach(el => {
+                    const target = parseFloat(el.getAttribute('data-target'));
+                    let current = 0;
+                    const increment = target / 80;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(timer);
+                        }
+                        el.textContent = Number.isInteger(target) ? Math.floor(current) : current.toFixed(1);
+                    }, 25);
+                });
+                observer.disconnect();
+            }
+        });
+    }, { threshold: 0.3 });
+
+    observer.observe(document.querySelector('#stats'));
+});
+</script>
+
+<script>
+const hamburger = document.getElementById('hamburger');
+const nav = document.getElementById('main-nav');
+
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  nav.classList.toggle('nav-open');
+});
+</script>
+
+</body>
+</html>
