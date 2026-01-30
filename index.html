@@ -175,6 +175,18 @@
         transition: all 0.3s ease;
     }
 
+ /* UNIVERSAL HAMBURGER ANIMATION (DESKTOP + MOBILE) */
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
 
 @media (max-width: 1024px) {
 
@@ -205,24 +217,13 @@
         display: flex;              /* 🔥 CRITICAL FIX */
     }
 
-    nav#main-nav a {
-        font-size: 15px;
-        padding: 6px 0;
-    }
-
-    /* UNIVERSAL HAMBURGER ANIMATION (DESKTOP + MOBILE) */
-.hamburger.active span:nth-child(1) {
-    transform: rotate(45deg) translate(6px, 6px);
+  nav#main-nav a {
+    font-size: 15px;
+    padding: 6px 0;
 }
 
-.hamburger.active span:nth-child(2) {
-    opacity: 0;
 }
 
-.hamburger.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -7px);
-}
-}
 
 .hero-curve {
   position: absolute;
