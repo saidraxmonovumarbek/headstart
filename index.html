@@ -133,16 +133,6 @@
         padding: 0 48px;
     }
 
-    #hero-canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        opacity: 0.1;
-    }
-
     .btn {
         padding: 16px 32px;
         border-radius: 8px;
@@ -228,62 +218,17 @@
     }
 
     /* HAMBURGER ANIMATION */
-    .hamburger.active span:nth-child(1) {
-        transform: rotate(45deg) translate(6px, 6px);
-    }
-
-    .hamburger.active span:nth-child(2) {
-        opacity: 0;
-    }
-
-    .hamburger.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(7px, -7px);
-    }
+   .hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
 }
 
-
-#hero {
-    position: relative;
-    z-index: 1;
-}
-
-    .stat-card {
-    background: white;
-    border-radius: 16px;
-    padding: 32px 24px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-}
-
-.stat-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.12);
-}
-
-.stat-card .icon {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 16px;
-    stroke: #ccc;
-    transition: stroke 0.3s;
-}
-
-.stat-card:hover .icon {
-    stroke: #22c55e;
-}
-
-.stat-card .stat-number {
-    font-size: 56px;
-    font-weight: 800;
-    color: #2e7d32;
-    line-height: 1;
-}
-
-.stat-card p {
-    font-size: 18px;
-    color: #555;
-    margin-top: 12px;
-}
 .hero-curve {
   position: absolute;
   bottom: -1px;
@@ -380,16 +325,11 @@
   }
 }
 
-@media (max-width: 768px) {
-  .home-stats .stat-card {
-    transform: scale(0.85);   /* ~15% smaller */
-    transform-origin: center;
-  }
+
 
   .home-stats .container {
     gap: 20px; /* optional but recommended: tighter spacing */
   }
-}
 
 @media (max-width: 768px) {
 
@@ -409,20 +349,6 @@
   }
 }
 
-@media (max-width: 768px) {
-
-  .home-stats .container {
-    grid-template-columns: repeat(2, 1fr); /* ✅ 2 cards per row */
-    gap: 16px;                              /* tighter spacing */
-  }
-
-  .home-stats .stat-card {
-    aspect-ratio: 1 / 1;                   /* ✅ perfect square */
-    padding: 18px;
-  }
-
-}
-
 /* DESKTOP */
 .home-stats-grid {
   display: grid;
@@ -431,51 +357,139 @@
   text-align: center;
 }
 
-/* MOBILE: 2 buttons per row */
+/* ===============================
+   HERO METRICS (NEW BUTTONS)
+================================ */
+
+.hero-metrics {
+  background: #ffffff;
+  padding: 70px 48px 100px;
+}
+
+.metrics-container {
+  max-width: 920px;
+  margin-left: auto;
+  margin-right: auto;
+
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 300px;
+
+  justify-content: center;     /* 🔥 centers the grid itself */
+  justify-items: center;       /* centers cards inside cells */
+}
+
+/* CARD */
+.metric-card {
+  position: relative;
+  background: #ffffff;
+  border: 1.5px solid var(--accent);
+  border-radius: 24px;
+  aspect-ratio: 1 / 1;          /* 🔥 perfect square */
+  padding: 36px 20px;           /* ~10% smaller */
+  text-align: center;
+  transition: all 0.35s ease;
+  cursor: pointer;
+}
+
+/* subtle inner glow */
+.metric-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 rgba(0,0,0,0);
+  transition: all 0.35s ease;
+}
+
+/* NUMBER */
+.metric-number {
+  font-size: 40px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+/* LABEL */
+.metric-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* ===== HOVER STATE ===== */
+.metric-card:hover {
+  background: #f0fdf4;
+}
+
+.metric-card:hover::before {
+  box-shadow:
+    inset 0 0 22px rgba(34,197,94,0.14),
+    inset 0 0 48px rgba(34,197,94,0.08);
+}
+
+.metric-card:hover .metric-icon {
+  background: var(--accent);
+}
+
+.metric-card:hover .metric-svg {
+  stroke: #ffffff;
+}
+
+/* ===============================
+   MOBILE
+================================ */
 @media (max-width: 768px) {
-  .home-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-
-  .home-stats-grid .stat-card {
-    aspect-ratio: 1 / 1;   /* perfect square */
-    padding: 18px;
-
-    display: flex;
-    flex-direction: column;
+  .metrics-container {
+    max-width: 640px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 50px; 
+    row-gap: 14px;
     justify-content: center;
-    align-items: center;
   }
 }
 
-@media (max-width: 768px) {
-  .home-stats {
-    padding-left: 20px;
-    padding-right: 20px;
+  .metric-card {
+    padding: 20px 16px;   /* 👈 real size reduction */
   }
+
+  .metric-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .metric-number {
+    font-size: 28px;
+  }
+
+  .metric-label {
+    font-size: 13px;
+  }
+  
+.metric-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 20px;
+  border-radius: 16px;
+  background: rgba(34, 197, 94, 0.12); /* low-opacity green */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.35s ease;
 }
 
-@media (max-width: 768px) {
-  .home-stats .container {
-    max-width: 100%;
-    margin: 0 auto;
-  }
+.metric-svg {
+  width: 28px;
+  height: 28px;
+  stroke: var(--accent);
+  fill: none;
+  stroke-width: 2;
+  transition: all 0.35s ease;
 }
 
-.home-stats-grid {
-  transform: translateX(0);
-}
-
-@media (max-width: 768px) {
-  .home-stats-grid {
-    transform: translateX(-31px);
-  }
-}
 </style>
 </head>
 <body>
-    <canvas id="hero-canvas" aria-hidden="true"></canvas>
     <header>
         <div class="logo">HeadStart</div>
        <nav id="main-nav">
@@ -537,46 +551,60 @@
 </div>
 </section>
 
-<section class="home-stats"
-  style="background:#ffffff; padding:1px 48px 80px; border-bottom:none; margin-top:20px;">
-  <div class="container home-stats-grid">
-    <div class="stat-card">
-      <svg class="icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke-width="2">
-        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-        <path d="M6 12v5c3 2 9 2 12 0v-5"/>
-      </svg>
-      <div class="stat-number" data-target="98">0</div>
-      <p>University Acceptance</p>
-    </div>
+<section class="hero-metrics">
+  <div class="metrics-container">
 
-    <div class="stat-card">
-      <svg class="icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke-width="2">
-        <path d="M12 2L2 7l10 5 10-5"/>
-        <path d="M2 17l10 5 10-5"/>
-      </svg>
-      <div class="stat-number" data-target="45">0</div>
-      <p>Top-100 Universities</p>
-    </div>
+   <div class="metric-card">
+  <div class="metric-icon">
+    <svg viewBox="0 0 24 24" class="metric-svg">
+      <path d="M3 21h18"/>
+      <path d="M6 21V7l6-4 6 4v14"/>
+      <path d="M9 21v-6h6v6"/>
+    </svg>
+  </div>
+  <div class="metric-number">2</div>
+  <div class="metric-label">Branches</div>
+</div>
 
-    <div class="stat-card">
-      <svg class="icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke-width="2">
-        <circle cx="12" cy="12" r="10"/>
-        <polyline points="12 6 12 12 16 14"/>
-      </svg>
-      <div class="stat-number" data-target="7.8">0.0</div>
-      <p>Average IB Score</p>
-    </div>
+    <div class="metric-card">
+  <div class="metric-icon">
+    <svg viewBox="0 0 24 24" class="metric-svg">
+      <path d="M2 10l10-5 10 5-10 5-10-5z"/>
+      <path d="M6 12v5c3 2 9 2 12 0v-5"/>
+    </svg>
+  </div>
+  <div class="metric-number">+100</div>
+  <div class="metric-label">Students with IELTS 8.0–8.5</div>
+</div>
 
-    <div class="stat-card">
-      <svg class="icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke-width="2">
-        <circle cx="9" cy="7" r="4"/>
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5"/>
-      </svg>
-      <div class="stat-number" data-target="200">0</div>
-      <p>Graduates</p>
-    </div>
+   <div class="metric-card">
+  <div class="metric-icon">
+    <svg viewBox="0 0 24 24" class="metric-svg">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+      <path d="M4 4.5A2.5 2.5 0 0 1 6.5 7H20"/>
+      <path d="M6.5 7v10"/>
+    </svg>
+  </div>
+  <div class="metric-number">+500</div>
+  <div class="metric-label">Students with IELTS 7.0–7.5</div>
+</div>
+
+    <div class="metric-card">
+  <div class="metric-icon">
+    <svg viewBox="0 0 24 24" class="metric-svg">
+      <circle cx="9" cy="7" r="3"/>
+      <path d="M4 21v-2a4 4 0 0 1 4-4h2"/>
+      <path d="M14 10h7"/>
+      <path d="M17.5 7v6"/>
+    </svg>
+  </div>
+  <div class="metric-number">20+</div>
+  <div class="metric-label">Experienced Teachers</div>
+</div>
+
   </div>
 </section>
+  
 
   <section id="about">
   <div class="container">
@@ -808,40 +836,12 @@ function smoothScroll(targetId) {
 </script>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const numbers = document.querySelectorAll('.stat-number');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                numbers.forEach(el => {
-                    const target = parseFloat(el.getAttribute('data-target'));
-                    let current = 0;
-                    const increment = target / 80;
-                    const timer = setInterval(() => {
-                        current += increment;
-                        if (current >= target) {
-                            current = target;
-                            clearInterval(timer);
-                        }
-                        el.textContent = Number.isInteger(target) ? Math.floor(current) : current.toFixed(1);
-                    }, 25);
-                });
-                observer.disconnect();
-            }
-        });
-    }, { threshold: 0.3 });
-
-    observer.observe(document.querySelector('.home-stats'));
-});
-</script>
-
-<script>
 const hamburger = document.getElementById('hamburger');
 const nav = document.getElementById('main-nav');
 
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('active');
-  nav.classList.toggle('nav-open');
+hamburger?.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    nav.classList.toggle('nav-open');
 });
 </script>
 
