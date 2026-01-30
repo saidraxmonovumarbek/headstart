@@ -375,25 +375,72 @@
 }
 
 /* ===============================
-   HERO METRICS (NEW BUTTONS)
+   HERO METRICS (UNIFIED VERSION)
 ================================ */
 
 .hero-metrics {
   background: #ffffff;
-  padding: 70px 48px 100px;
+  padding: 80px 48px;
 }
 
-.metrics-container {
-  max-width: 920px;
-  margin-left: auto;
-  margin-right: auto;
+.stats-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  margin-top: -75px;
+
+  padding: 50px 40px;
+
+  border: 2px solid var(--accent);
+  border-radius: 32px;
+  background: #ffffff;
 
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 300px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
 
-  justify-content: center;     /* 🔥 centers the grid itself */
-  justify-items: center;       /* centers cards inside cells */
+  text-align: center;
+}
+
+/* Individual stat */
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Number */
+.metric-number {
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+/* Label */
+.stat-label {
+  font-size: 15px;
+  color: #6b7280;
+  max-width: 180px;
+}
+
+/* ===============================
+   MOBILE VERSION
+================================ */
+
+@media (max-width: 768px) {
+  .stats-wrapper {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    padding: 40px 24px;
+  }
+
+  .metric-number {
+    font-size: 32px;
+  }
+
+  .stat-label {
+    font-size: 14px;
+  }
 }
 
 /* CARD */
@@ -451,57 +498,6 @@
 
 .metric-card:hover .metric-svg {
   stroke: #ffffff;
-}
-
-/* ===============================
-   MOBILE
-================================ */
-@media (max-width: 768px) {
-  .metrics-container {
-    max-width: 640px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 50px; 
-    row-gap: 14px;
-    justify-content: center;
-  }
-}
-
-  .metric-card {
-    padding: 20px 16px;   /* 👈 real size reduction */
-  }
-
-  .metric-icon {
-    width: 48px;
-    height: 48px;
-  }
-
-  .metric-number {
-    font-size: 28px;
-  }
-
-  .metric-label {
-    font-size: 13px;
-  }
-  
-.metric-icon {
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 20px;
-  border-radius: 16px;
-  background: rgba(34, 197, 94, 0.12); /* low-opacity green */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.35s ease;
-}
-
-.metric-svg {
-  width: 28px;
-  height: 28px;
-  stroke: var(--accent);
-  fill: none;
-  stroke-width: 2;
-  transition: all 0.35s ease;
 }
 
 /* Typography */
@@ -620,59 +616,30 @@
 </section>
 
 <section class="hero-metrics">
-  <div class="metrics-container">
+  <div class="stats-wrapper">
 
-   <div class="metric-card">
-  <div class="metric-icon">
-    <svg viewBox="0 0 24 24" class="metric-svg">
-      <path d="M3 21h18"/>
-      <path d="M6 21V7l6-4 6 4v14"/>
-      <path d="M9 21v-6h6v6"/>
-    </svg>
-  </div>
-  <div class="metric-number" data-target="2">0</div>
-  <div class="metric-label">Branches</div>
-</div>
+    <div class="stat-item">
+      <div class="metric-number" data-target="2">0</div>
+      <div class="stat-label">Branches</div>
+    </div>
 
-    <div class="metric-card">
-  <div class="metric-icon">
-    <svg viewBox="0 0 24 24" class="metric-svg">
-      <path d="M2 10l10-5 10 5-10 5-10-5z"/>
-      <path d="M6 12v5c3 2 9 2 12 0v-5"/>
-    </svg>
-  </div>
-  <div class="metric-number" data-target="100">0</div>
-  <div class="metric-label">Students with IELTS 8.0–8.5</div>
-</div>
+    <div class="stat-item">
+      <div class="metric-number" data-target="+100">0</div>
+      <div class="stat-label">Students with IELTS 8.0–8.5</div>
+    </div>
 
-   <div class="metric-card">
-  <div class="metric-icon">
-    <svg viewBox="0 0 24 24" class="metric-svg">
-      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-      <path d="M4 4.5A2.5 2.5 0 0 1 6.5 7H20"/>
-      <path d="M6.5 7v10"/>
-    </svg>
-  </div>
-  <div class="metric-number" data-target="500">0</div>
-  <div class="metric-label">Students with IELTS 7.0–7.5</div>
-</div>
+    <div class="stat-item">
+      <div class="metric-number" data-target="+500">0</div>
+      <div class="stat-label">Students with IELTS 7.0–7.5</div>
+    </div>
 
-    <div class="metric-card">
-  <div class="metric-icon">
-    <svg viewBox="0 0 24 24" class="metric-svg">
-      <circle cx="9" cy="7" r="3"/>
-      <path d="M4 21v-2a4 4 0 0 1 4-4h2"/>
-      <path d="M14 10h7"/>
-      <path d="M17.5 7v6"/>
-    </svg>
-  </div>
-  <div class="metric-number" data-target="20">0</div>
-  <div class="metric-label">Experienced Teachers</div>
-</div>
+    <div class="stat-item">
+      <div class="metric-number" data-target="+20">0</div>
+      <div class="stat-label">Experienced Teachers</div>
+    </div>
 
   </div>
 </section>
-  
 
   <section id="about">
   <div class="container">
