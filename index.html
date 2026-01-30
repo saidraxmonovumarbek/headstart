@@ -558,6 +558,93 @@
   }
 }
 
+/* ===============================
+   COURSES SPLIT LAYOUT
+================================ */
+
+.courses-section {
+  min-height: 100vh;
+  border-bottom: none;
+}
+
+.courses-wrapper {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: calc(100vh - 72px);
+}
+
+/* LEFT SIDE */
+.courses-sidebar {
+  border-right: 1px solid var(--border);
+  padding: 60px 32px;
+  background: #ffffff;
+}
+
+.courses-sidebar h3 {
+  margin-bottom: 32px;
+  font-size: 20px;
+}
+
+.course-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 14px 0;
+  font-size: 15px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.course-btn:hover {
+  color: var(--accent);
+}
+
+.course-btn.active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* RIGHT SIDE */
+.courses-content {
+  padding: 80px;
+  background: #ffffff;
+  position: relative;
+}
+
+.course-placeholder {
+  color: var(--text-muted);
+  font-size: 18px;
+}
+
+/* Course content animation */
+.course-details {
+  animation: fadeInCourse 0.3s ease forwards;
+}
+
+@keyframes fadeInCourse {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .courses-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .courses-sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .courses-content {
+    padding: 48px 24px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -575,7 +662,6 @@
   <a href="#events" onclick="smoothScroll('#events'); return false;">Events</a>
   <a href="#mock-tests" onclick="smoothScroll('#mock-tests'); return false;">Mock Tests</a>
   <a href="#printing" onclick="smoothScroll('#printing'); return false;">Book Printing</a>
-  <a href="#careers" onclick="smoothScroll('#careers'); return false;">Careers</a>
   <a href="#faq" onclick="smoothScroll('#faq'); return false;">FAQ</a>
   <a href="#contact" onclick="smoothScroll('#contact'); return false;" style="color:#22c55e;font-weight:700;">Connect</a>
 </nav>
@@ -648,34 +734,47 @@
   </div>
 </section>
  
-        <section id="courses">
-            <div class="container">
-                <h2>Our Courses</h2>
-                <div style="margin-top: 48px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px;">
-    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; border-top: 4px solid #3b82f6;">
-        <strong>IELTS General</strong><br>Practical English for work and immigration.
+<section id="courses" class="courses-section">
+  <div class="courses-wrapper">
+
+    <!-- LEFT SIDE -->
+    <div class="courses-sidebar">
+      <h3>Our Courses</h3>
+
+      <button class="course-btn active" data-course="ielts">
+        IELTS Academic
+      </button>
+
+      <button class="course-btn" data-course="cefr">
+        CEFR
+      </button>
+
+      <button class="course-btn" data-course="sat">
+        SAT
+      </button>
+
+      <button class="course-btn" data-course="german">
+        German
+      </button>
+
+      <button class="course-btn" data-course="russian">
+        Russian
+      </button>
+
+      <button class="course-btn" data-course="turkish">
+        Turkish
+      </button>
     </div>
-    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; border-top: 4px solid #1d4ed8;">
-        <strong>IELTS Academic</strong><br>University-level English preparation.
+
+    <!-- RIGHT SIDE -->
+    <div class="courses-content" id="course-content">
+      <div class="course-placeholder">
+        Please select a course to see more information.
+      </div>
     </div>
-    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; border-top: 4px solid #22c55e;">
-        <strong>CEFR</strong><br>European language proficiency framework.
-    </div>
-    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; border-top: 4px solid #a855f7;">
-        <strong>SAT</strong><br>College entrance exam preparation.
-    </div>
-    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; border-top: 4px solid #ef4444;">
-        <strong>German</strong><br>Beginner to advanced German courses.
-    </div>
-    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; border-top: 4px solid #f97316;">
-        <strong>Russian</strong><br>Grammar, conversation, and culture.
-    </div>
-    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; border-top: 4px solid #14b8a6;">
-        <strong>Turkish</strong><br>Modern Turkish language training.
-    </div>
-</div>
-            </div>
-        </section>
+
+  </div>
+</section>
 
         <section id="results">
             <div class="container">
@@ -815,14 +914,6 @@
   </div>
 </section>
 
-<section id="careers">
-  <div class="container">
-    <h2>Careers</h2>
-    <p>Soon</p>
-  </div>
-</section>
-
-
 <section id="faq">
   <div class="container">
     <h2>FAQ</h2>
@@ -949,5 +1040,72 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const buttons = document.querySelectorAll(".course-btn");
+  const content = document.getElementById("course-content");
+
+  const courseData = {
+    ielts: `
+      <div class="course-details">
+        <h2>IELTS Academic</h2>
+        <p>Our flagship program focused on high band scores.</p>
+        <p><strong>Teachers:</strong> Experienced IELTS specialists</p>
+        <p><strong>Experience:</strong> 5+ years focused IELTS training</p>
+        <p style="margin-top:20px;color:var(--text-muted);">Available courses: Soon.</p>
+      </div>
+    `,
+    cefr: `
+      <div class="course-details">
+        <h2>CEFR Program</h2>
+        <p>Structured European-level English development.</p>
+        <p style="margin-top:20px;color:var(--text-muted);">Available courses: Soon.</p>
+      </div>
+    `,
+    sat: `
+      <div class="course-details">
+        <h2>SAT Preparation</h2>
+        <p>College entrance preparation program.</p>
+        <p style="margin-top:20px;color:var(--text-muted);">Available courses: Soon.</p>
+      </div>
+    `,
+    german: `
+      <div class="course-details">
+        <h2>German Program</h2>
+        <p>Beginner to advanced German training.</p>
+        <p style="margin-top:20px;color:var(--text-muted);">Available courses: Soon.</p>
+      </div>
+    `,
+    russian: `
+      <div class="course-details">
+        <h2>Russian Program</h2>
+        <p>Grammar, speaking and academic writing.</p>
+        <p style="margin-top:20px;color:var(--text-muted);">Available courses: Soon.</p>
+      </div>
+    `,
+    turkish: `
+      <div class="course-details">
+        <h2>Turkish Program</h2>
+        <p>Modern Turkish language development.</p>
+        <p style="margin-top:20px;color:var(--text-muted);">Available courses: Soon.</p>
+      </div>
+    `
+  };
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+
+      buttons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const selected = btn.getAttribute("data-course");
+      content.innerHTML = courseData[selected];
+
+    });
+  });
+
+});
+</script>
 </body>
 </html>
