@@ -50,12 +50,24 @@
         justify-content: space-between;
     }
 
-    .logo {
-        font-size: 24px;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-        color: var(--accent);
-    }
+   .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  height: 34px;
+  width: auto;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
 
     nav {
         display: flex;
@@ -734,7 +746,10 @@
 </head>
 <body>
     <header>
-        <div class="logo">HeadStart</div>
+        <div class="logo">
+  <img src="assets/logo-headstart.png" alt="HeadStart Logo" class="logo-img">
+  <span class="logo-text">HeadStart</span>
+</div>
        <nav id="main-nav">
   <a href="#hero" onclick="smoothScroll('#hero'); return false;">Home</a>
   <a href="#about" onclick="smoothScroll('#about'); return false;">About Us</a>
