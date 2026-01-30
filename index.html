@@ -629,62 +629,105 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* MOBILE */
 @media (max-width: 900px) {
 
   .courses-wrapper {
     grid-template-columns: 1fr;
   }
 
-  /* Make sidebar grid instead of vertical list */
- .courses-sidebar {
-  border-right: none;
-  border-bottom: 1px solid var(--border);
-  padding: 32px 24px;
+  .courses-sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 32px 24px;
 
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-
-  align-items: start; /* 🔥 prevents vertical stretching */
-}
-
-.course-btn {
-  background: var(--bg-alt);
-  padding: 14px;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 14px;
-
-  height: 48px;              /* 🔥 fixed height */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  transition: var(--transition);
-}
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
 
   .courses-sidebar h3 {
-    grid-column: 1 / -1; /* title takes full width */
+    grid-column: 1 / -1;
     margin-bottom: 16px;
   }
 
   .course-btn {
-    background: var(--bg-alt);
-    padding: 12px;
-    border-radius: 8px;
-    text-align: center;
+    padding: 6px 0;
     font-size: 14px;
-  }
-
-  .course-btn.active {
-    background: var(--accent);
-    color: white;
+    text-align: left;
   }
 
   .courses-content {
     padding: 48px 24px;
   }
+}
+/* ===============================
+   FAQ SECTION
+================================ */
+
+.faq-section {
+  padding: 100px 48px;
+  border-bottom: none;
+}
+
+.faq-container {
+  max-width: 800px;   /* keeps it centered & ~60% feel */
+  margin: 0 auto;
+  text-align: center;
+}
+
+.faq-item {
+  margin-top: 24px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.faq-question {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 20px 0;
+  font-size: 17px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
+  transition: var(--transition);
+  position: relative;
+}
+
+.faq-question:hover {
+  color: var(--accent);
+}
+
+/* Plus icon effect */
+.faq-question::after {
+  content: "+";
+  position: absolute;
+  right: 0;
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.faq-item.active .faq-question::after {
+  transform: rotate(45deg);
+}
+
+/* Answer */
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  padding-right: 24px;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 200px;
+  opacity: 1;
+  margin-bottom: 20px;
 }
 
 </style>
@@ -830,16 +873,16 @@
                 <h2>Our Teachers</h2>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; margin-top: 48px;">
                     <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; text-align: center;">
-                        <div style="width: 96px; height: 96px; background: var(--secondary); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: #fff;">YU</div>
-                        <strong>Yokubjon Umedovich</strong><br>Head of Academics<br>Oxford-educated, 15+ years IB experience.
+                        <div style="width: 96px; height: 96px; background: var(--secondary); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: #fff;">DI</div>
+                        <strong>Dilmurod Isakulov</strong><br>Founder of HeadStart English School<br>IELTS 8.5, 10+ years experience in teaching.
                     </div>
                     <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; text-align: center;">
-                        <div style="width: 96px; height: 96px; background: var(--secondary); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: #fff;">SJ</div>
-                        <strong>Saidjon</strong><br>STEM Director<br>MIT graduate, robotics specialist.
+                        <div style="width: 96px; height: 96px; background: var(--secondary); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: #fff;">OR</div>
+                        <strong>Otabek Ravshankulov</strong><br>Co-Founder of HeadStart English School<br>IELTS 8.5, 10+ years experience in teaching.
                     </div>
                     <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; text-align: center;">
-                        <div style="width: 96px; height: 96px; background: var(--secondary); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: #fff;">MK</div>
-                        <strong>Madina Karimova</strong><br>University Counselor<br>Former admissions officer at top universities.
+                        <div style="width: 96px; height: 96px; background: var(--secondary); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: #fff;">BI</div>
+                        <strong>Bunyod Inomov</strong><br>IELTS Teacher<br>IELTS 8.0, 500+ students.
                     </div>
                 </div>
             </div>
@@ -956,10 +999,55 @@
   </div>
 </section>
 
-<section id="faq">
-  <div class="container">
-    <h2>FAQ</h2>
-    <p>Soon</p>
+<section id="faq" class="faq-section">
+  <div class="container faq-container">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        How long does it take to achieve an IELTS 7.0+ score?
+      </button>
+      <div class="faq-answer">
+        It depends on your current level. On average, students require 3–6 months of focused preparation with consistent practice and mock testing.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        Do you offer placement tests before enrollment?
+      </button>
+      <div class="faq-answer">
+        Yes. Every student takes a diagnostic test so we can accurately determine their level and recommend the right program.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        How experienced are your teachers?
+      </button>
+      <div class="faq-answer">
+        Our instructors have multiple years of teaching experience and specialize in exam-focused preparation, including IELTS and SAT.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        Do you provide mock exams?
+      </button>
+      <div class="faq-answer">
+        Yes. We regularly conduct full mock examinations under real test conditions to track student progress and improve performance.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        Can I switch groups if my schedule changes?
+      </button>
+      <div class="faq-answer">
+        We try to accommodate schedule adjustments whenever possible, depending on seat availability and course structure.
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1144,6 +1232,29 @@ document.addEventListener("DOMContentLoaded", () => {
       const selected = btn.getAttribute("data-course");
       content.innerHTML = courseData[selected];
 
+    });
+  });
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const faqItems = document.querySelectorAll(".faq-item");
+
+  faqItems.forEach(item => {
+    const question = item.querySelector(".faq-question");
+
+    question.addEventListener("click", () => {
+
+      // Close others
+      faqItems.forEach(i => {
+        if (i !== item) i.classList.remove("active");
+      });
+
+      // Toggle current
+      item.classList.toggle("active");
     });
   });
 
