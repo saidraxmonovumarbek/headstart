@@ -210,13 +210,15 @@
         padding: 6px 0;
     }
 
-    /* HAMBURGER ANIMATION */
-   .hamburger.active span:nth-child(1) {
+    /* UNIVERSAL HAMBURGER ANIMATION (DESKTOP + MOBILE) */
+.hamburger.active span:nth-child(1) {
     transform: rotate(45deg) translate(6px, 6px);
 }
+
 .hamburger.active span:nth-child(2) {
     opacity: 0;
 }
+
 .hamburger.active span:nth-child(3) {
     transform: rotate(-45deg) translate(7px, -7px);
 }
@@ -501,53 +503,6 @@
   transition: all 0.35s ease;
 }
 
-/* ================= HERO ANIMATION BASE ================= */
-
-.hero-title span,
-.hero-subtitle span {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(40px) translateX(-20px) rotate(-8deg);
-}
-
-.hero-title span.show,
-.hero-subtitle span.show {
-  animation: wordReveal 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-}
-
-@keyframes wordReveal {
-  0% {
-    opacity: 0;
-    transform: translateY(40px) translateX(-20px) rotate(-8deg);
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(-6px) translateX(4px) rotate(2deg);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) translateX(0) rotate(0deg);
-  }
-}
-
-/* BUTTONS */
-
-.hero-buttons {
-  opacity: 0;
-  transform: translateY(60px);
-}
-
-.hero-buttons.show {
-  animation: buttonRise 0.3s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-}
-
-@keyframes buttonRise {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* Typography */
 
 .hero-title {
@@ -573,6 +528,37 @@
   gap: 24px;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+/* ================= HERO ANIMATION ================= */
+
+.hero-title,
+.hero-subtitle {
+  opacity: 0;
+  transform: translateY(60px);
+  animation: heroRise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.hero-subtitle {
+  animation-delay: 0.1s;
+}
+
+.hero-buttons {
+  opacity: 0;
+  transform: translateY(60px);
+  animation: heroRise 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.7s; /* waits until title finishes */
+}
+
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 </style>
@@ -605,17 +591,13 @@
 <section id="hero" class="hero-section">
   <div class="container hero-inner">
 
-    <h1 class="hero-title">
-      <span>HEADSTART</span>
-      <span>FOR</span>
-      <span>YOUR</span>
-      <span>FUTURE</span>
-    </h1>
+ <h1 class="hero-title">
+  HEADSTART FOR YOUR FUTURE
+</h1>
 
     <p class="hero-subtitle">
-      <span>A modern learning environment</span>
-      <span>— everything at HeadStart English School.</span>
-    </p>
+  A modern learning environment — everything at HeadStart English School.
+</p>
 
    <div class="hero-buttons">
   <a href="#courses" class="btn btn-primary">
@@ -933,31 +915,15 @@ hamburger?.addEventListener('click', () => {
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  const titleWords = document.querySelectorAll(".hero-title span");
-  const subtitleWords = document.querySelectorAll(".hero-subtitle span");
-  const buttons = document.querySelector(".hero-buttons");
+  const elements = [
+    document.querySelector(".hero-title"),
+    document.querySelector(".hero-subtitle"),
+    document.querySelector(".hero-buttons")
+  ];
 
-  const wordDelay = 100; // 100ms per word
-
-  titleWords.forEach((word, index) => {
-    setTimeout(() => {
-      word.classList.add("show");
-    }, index * wordDelay);
+  elements.forEach((el) => {
+    el.classList.add("hero-animate");
   });
-
-  const subtitleStart = titleWords.length * wordDelay;
-
-  subtitleWords.forEach((word, index) => {
-    setTimeout(() => {
-      word.classList.add("show");
-    }, subtitleStart + index * wordDelay);
-  });
-
-  const buttonStart = 700;
-
-  setTimeout(() => {
-    buttons.classList.add("show");
-  }, buttonStart);
 
 });
 </script>
