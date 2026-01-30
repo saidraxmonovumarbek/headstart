@@ -655,31 +655,108 @@
     grid-template-columns: 1fr;
   }
 
+  .courses-section {
+    padding: 60px 24px; /* 🔥 reduces big empty space above */
+  }
+
   .courses-sidebar {
     border-right: none;
     border-bottom: 1px solid var(--border);
-    padding: 32px 24px;
+    padding: 12px 20px 20px 20px; /* 🔥 smaller top padding */
 
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
+    display: flex;              /* no grid anymore */
+    flex-direction: column;
+    gap: 12px;
   }
 
   .courses-sidebar h3 {
-    grid-column: 1 / -1;
-    margin-bottom: 16px;
+    margin-bottom: 8px; /* small clean spacing */
   }
 
   .course-btn {
-    padding: 6px 0;
-    font-size: 14px;
-    text-align: left;
+    display: none; /* hide old buttons */
   }
 
   .courses-content {
-    padding: 48px 24px;
+    padding: 32px 20px;
+  }
+
+}
+
+/* ===============================
+   MOBILE COURSE DROPDOWN
+================================ */
+
+.course-dropdown {
+  display: none;
+  margin-bottom: 20px;
+}
+
+.course-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text);
+  transition: var(--transition);
+}
+
+.course-dropdown-header:hover {
+  border-color: var(--accent);
+}
+
+.dropdown-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-arrow {
+  transition: transform 0.3s ease;
+}
+
+.course-dropdown.active .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.course-dropdown-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  background: #ffffff;
+}
+
+.course-dropdown.active .course-dropdown-menu {
+  max-height: 300px;
+}
+
+.course-dropdown-menu div {
+  padding: 12px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.course-dropdown-menu div:hover {
+  background: var(--bg-alt);
+  color: var(--accent);
+}
+
+/* SHOW ONLY ON MOBILE */
+@media (max-width: 900px) {
+  .course-dropdown {
+    display: block;
   }
 }
+
 /* ===============================
    FAQ SECTION
 ================================ */
@@ -848,6 +925,25 @@
     <!-- LEFT SIDE -->
     <div class="courses-sidebar">
       <h3>Our Courses</h3>
+
+      <!-- MOBILE COURSE DROPDOWN -->
+<div class="course-dropdown">
+  <div class="course-dropdown-header" id="courseDropdownToggle">
+    <span class="dropdown-left">
+      🔍 <span id="selectedCourseText">Choose your course</span>
+    </span>
+    <span class="dropdown-arrow">⌄</span>
+  </div>
+
+  <div class="course-dropdown-menu" id="courseDropdownMenu">
+    <div data-course="ielts">IELTS Academic</div>
+    <div data-course="cefr">CEFR</div>
+    <div data-course="sat">SAT</div>
+    <div data-course="german">German</div>
+    <div data-course="russian">Russian</div>
+    <div data-course="turkish">Turkish</div>
+  </div>
+</div>
 
       <button class="course-btn active" data-course="ielts">
         IELTS Academic
@@ -1194,8 +1290,15 @@ document.addEventListener("DOMContentLoaded", () => {
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  const buttons = document.querySelectorAll(".course-btn");
   const content = document.getElementById("course-content");
+  const buttons = document.querySelectorAll(".course-btn");
+
+  const dropdown = document.querySelector(".course-dropdown");
+  const toggle = document.getElementById("courseDropdownToggle");
+  const menu = document.getElementById("courseDropdownMenu");
+  const selectedText = document.getElementById("selectedCourseText");
+
+  /* ================= COURSE DATA ================= */
 
   const courseData = {
     ielts: `
@@ -1204,45 +1307,41 @@ document.addEventListener("DOMContentLoaded", () => {
         <p>Our flagship program focused on high band scores.</p>
         <p><strong>Teachers:</strong> Experienced IELTS specialists</p>
         <p><strong>Experience:</strong> 5+ years focused IELTS training</p>
-        <p style="margin-top:20px;color:var(--text-muted);">Available courses: Soon.</p>
       </div>
     `,
     cefr: `
       <div class="course-details">
         <h2>CEFR Program</h2>
         <p>Structured European-level English development.</p>
-        <p style="margin-top:20px;color:var(--text-muted);">Available courses: Soon.</p>
       </div>
     `,
     sat: `
       <div class="course-details">
         <h2>SAT Preparation</h2>
         <p>College entrance preparation program.</p>
-        <p style="margin-top:20px;color:var(--text-muted);">Available courses: Soon.</p>
       </div>
     `,
     german: `
       <div class="course-details">
         <h2>German Program</h2>
         <p>Beginner to advanced German training.</p>
-        <p style="margin-top:20px;color:var(--text-muted);">Available courses: Soon.</p>
       </div>
     `,
     russian: `
       <div class="course-details">
         <h2>Russian Program</h2>
         <p>Grammar, speaking and academic writing.</p>
-        <p style="margin-top:20px;color:var(--text-muted);">Available courses: Soon.</p>
       </div>
     `,
     turkish: `
       <div class="course-details">
         <h2>Turkish Program</h2>
         <p>Modern Turkish language development.</p>
-        <p style="margin-top:20px;color:var(--text-muted);">Available courses: Soon.</p>
       </div>
     `
   };
+
+  /* ================= DESKTOP BUTTONS ================= */
 
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -1252,7 +1351,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const selected = btn.getAttribute("data-course");
       content.innerHTML = courseData[selected];
+    });
+  });
 
+  /* ================= MOBILE DROPDOWN ================= */
+
+  toggle?.addEventListener("click", () => {
+    dropdown.classList.toggle("active");
+  });
+
+  menu?.querySelectorAll("div").forEach(item => {
+    item.addEventListener("click", () => {
+
+      const selected = item.getAttribute("data-course");
+      selectedText.textContent = item.textContent;
+      dropdown.classList.remove("active");
+
+      content.innerHTML = courseData[selected];
     });
   });
 
