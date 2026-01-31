@@ -1298,6 +1298,10 @@ button {
   bottom: auto;
 }
 
+.teacher-arrow {
+    display: none;
+  }
+
 .teachers-title {
     font-size: 36px;
   }
@@ -1362,6 +1366,60 @@ button {
   height: 4px;
   background: var(--accent);
   border-radius: 2px;
+}
+
+/* ===============================
+   TEACHER NAME SYSTEM
+================================ */
+
+.teacher-name {
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Desktop version */
+.desktop-name {
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+/* Mobile version */
+.mobile-name {
+  display: none;
+  text-align: center;
+  font-size: 22px;
+  margin-top: 20px;
+}
+
+/* MOBILE BEHAVIOR */
+@media (max-width: 1024px) {
+
+  .desktop-name {
+    display: none;
+  }
+
+  .mobile-name {
+    display: block;
+  }
+
+}
+
+.teacher-swipe-hint {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+
+  .teacher-swipe-hint {
+    display: block;
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    text-align: center;
+    opacity: 0.8;
+  }
+
 }
 
 </style>
@@ -1605,7 +1663,13 @@ button {
       <div class="teacher-slide">
         <div class="teacher-left"></div>
 
-        <div class="teacher-right">
+<!-- MOBILE NAME -->
+<div class="teacher-name mobile-name">Dilmurod</div>
+
+<div class="teacher-right">
+
+  <!-- DESKTOP NAME -->
+  <div class="teacher-name desktop-name">Dilmurod</div>
 
           <div class="teacher-top">
             <div class="teacher-stats">
@@ -1634,8 +1698,12 @@ button {
           </div>
 
           <div class="teacher-bottom">
-            <div class="teacher-bio">More info soon, bro</div>
-          </div>
+  <div class="teacher-bio">More info here soon, bro</div>
+
+  <div class="teacher-swipe-hint">
+    Swipe left or right to see more →
+  </div>
+</div>
 
         </div>
       </div>
@@ -1645,7 +1713,13 @@ button {
       <div class="teacher-slide">
         <div class="teacher-left"></div>
 
-        <div class="teacher-right">
+<!-- MOBILE NAME -->
+<div class="teacher-name mobile-name">Otabek</div>
+
+<div class="teacher-right">
+
+  <!-- DESKTOP NAME -->
+  <div class="teacher-name desktop-name">Otabek</div>
 
           <div class="teacher-top">
             <div class="teacher-stats">
@@ -1674,8 +1748,12 @@ button {
           </div>
 
           <div class="teacher-bottom">
-            <div class="teacher-bio">More info soon, bro</div>
-          </div>
+  <div class="teacher-bio">More info soon here, bro</div>
+
+  <div class="teacher-swipe-hint">
+    Swipe left or right to see more →
+  </div>
+</div>
 
         </div>
       </div>
@@ -1685,7 +1763,13 @@ button {
       <div class="teacher-slide">
         <div class="teacher-left"></div>
 
-        <div class="teacher-right">
+<!-- MOBILE NAME -->
+<div class="teacher-name mobile-name">Bunyod</div>
+
+<div class="teacher-right">
+
+  <!-- DESKTOP NAME -->
+  <div class="teacher-name desktop-name">Bunyod</div>
 
           <div class="teacher-top">
             <div class="teacher-stats">
@@ -1714,8 +1798,12 @@ button {
           </div>
 
           <div class="teacher-bottom">
-            <div class="teacher-bio">More info soon, bro</div>
-          </div>
+  <div class="teacher-bio">More info here soon, bro</div>
+
+  <div class="teacher-swipe-hint">
+    Swipe left or right to see more →
+  </div>
+</div>
 
         </div>
       </div>
@@ -2263,6 +2351,7 @@ document.addEventListener("DOMContentLoaded", () => {
     track.style.transform = `translateX(-${index * 100}%)`;
   }
 
+  /* Desktop arrows */
   next?.addEventListener("click", () => {
     index = (index + 1) % total;
     updateSlider();
@@ -2271,6 +2360,34 @@ document.addEventListener("DOMContentLoaded", () => {
   prev?.addEventListener("click", () => {
     index = (index - 1 + total) % total;
     updateSlider();
+  });
+
+  /* =========================
+     MOBILE SWIPE SUPPORT
+  ========================== */
+
+  let startX = 0;
+  let endX = 0;
+
+  track.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+  });
+
+  track.addEventListener("touchmove", (e) => {
+    endX = e.touches[0].clientX;
+  });
+
+  track.addEventListener("touchend", () => {
+    const diff = startX - endX;
+
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        index = (index + 1) % total; // swipe left → next
+      } else {
+        index = (index - 1 + total) % total; // swipe right → prev
+      }
+      updateSlider();
+    }
   });
 
 });
