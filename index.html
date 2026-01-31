@@ -934,6 +934,18 @@ nav {
   margin-bottom: 20px;
 }
 
+/* Hide mobile-only links on desktop */
+.mobile-only {
+  display: none;
+}
+
+/* Show mobile-only links only on mobile */
+@media (max-width: 1024px) {
+  .mobile-only {
+    display: block;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -950,7 +962,9 @@ nav {
   <a href="#teachers" onclick="smoothScroll('#teachers'); return false;">Teachers</a>
   <a href="#locations" onclick="smoothScroll('#locations'); return false;">Locations</a>
   <div class="nav-item dropdown" id="atmosphereDropdown">
-  <a href="#atmosphere" id="atmosphereLink">
+  <a href="#atmosphere"
+   id="atmosphereLink"
+   onclick="smoothScroll('#atmosphere'); return false;">
     Atmosphere <span class="dropdown-arrow">⌄</span>
   </a>
 
@@ -960,6 +974,9 @@ nav {
     <a href="#printing" onclick="smoothScroll('#printing'); return false;">Printing</a>
   </div>
 </div>
+  <a href="#events" class="mobile-only" onclick="smoothScroll('#events'); return false;">Events</a>
+  <a href="#mock-tests" class="mobile-only" onclick="smoothScroll('#mock-tests'); return false;">Mock Tests</a>
+  <a href="#printing" class="mobile-only" onclick="smoothScroll('#printing'); return false;">Printing</a>
   <a href="#approach" onclick="smoothScroll('#approach'); return false;">Approach</a>
   <a href="#faq" onclick="smoothScroll('#faq'); return false;">FAQ</a>
   <a href="#contact" onclick="smoothScroll('#contact'); return false;" style="color:#22c55e;font-weight:700;">Connect</a>
@@ -1519,21 +1536,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
   link.addEventListener("click", (e) => {
 
-    if (window.innerWidth > 1024) {
+    // ONLY apply dropdown logic on desktop
+    if (window.matchMedia("(min-width: 1025px)").matches) {
 
       if (!dropdown.classList.contains("open")) {
-        e.preventDefault();               // first click = open only
+        e.preventDefault();          // first click = open
         dropdown.classList.add("open");
       } else {
-        dropdown.classList.remove("open"); // second click = go to section
+        dropdown.classList.remove("open"); // second click = go
       }
 
     }
+
+    // On mobile → do NOTHING special
+    // It will scroll normally
   });
 
-  // Close dropdown if clicking outside
+  // Close dropdown when clicking outside (desktop only)
   document.addEventListener("click", (e) => {
-    if (!dropdown.contains(e.target)) {
+    if (
+      window.matchMedia("(min-width: 1025px)").matches &&
+      !dropdown.contains(e.target)
+    ) {
       dropdown.classList.remove("open");
     }
   });
