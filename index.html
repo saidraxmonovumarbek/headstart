@@ -1157,6 +1157,213 @@ button {
   font-family: var(--font-main);
 }
 
+/* ===============================
+   CLEAN TEACHERS SLIDER
+================================ */
+
+.teachers-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;   /* 🔥 horizontal centering */
+  padding: 120px 48px;
+  overflow: hidden;
+  border-bottom: none;
+}
+
+.teacher-slider {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  overflow: hidden;   /* 🔥 important */
+}
+
+.teacher-track {
+  display: flex;
+  transition: transform 0.8s cubic-bezier(0.22,1,0.36,1);
+}
+
+.teacher-slide {
+  min-width: 100%;
+  display: grid;
+  grid-template-columns: 420px auto;
+  gap: 60px;
+  justify-content: center; /* 🔥 TRUE CENTERING */
+  align-items: center;
+}
+
+/* LEFT IMAGE */
+.teacher-left {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background: white;
+  border: 4px solid var(--accent);
+  border-radius: 28px;
+}
+
+/* RIGHT SIDE */
+.teacher-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* TOP 40% */
+.teacher-top {
+  margin-bottom: 40px;
+}
+
+/* BOTTOM 60% */
+.teacher-bottom {
+  flex: 0 0 60%;
+}
+
+/* STATS */
+.teacher-stats {
+  display: grid;
+  grid-template-columns: auto auto; /* 🔥 NO STRETCH */
+  gap: 18px 40px;
+  justify-content: start; /* keeps them compact */
+}
+
+.teacher-stat .stat-big {
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.teacher-stat .stat-small {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* BIO */
+.teacher-bio {
+  font-size: 16px;
+  color: var(--text-muted);
+  max-width: 500px;
+  margin-top: 10px;
+}
+
+/* ARROWS */
+.teacher-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(34,197,94,0.25);
+  z-index: 10;
+}
+
+.teacher-arrow:hover {
+  transform: translateY(-50%) scale(1.08);
+  background: var(--accent-dark);
+}
+
+.teacher-arrow.left {
+  left: 10px;
+}
+
+.teacher-arrow.right {
+  right: 10px;
+}
+
+/* MOBILE */
+@media (max-width: 1024px) {
+
+  .teacher-slide {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .teacher-left {
+    aspect-ratio: 4 / 5;
+  }
+
+.teacher-arrow {
+  width: 36px;
+  height: 36px;
+  top: 80%;
+  transform: translateY(-50%);
+  bottom: auto;
+}
+
+.teachers-title {
+    font-size: 36px;
+  }
+
+  .teachers-header {
+    margin-bottom: 50px;
+  }
+
+.teacher-arrow.left  { left: 10px; }
+.teacher-arrow.right { right: 10px; }
+
+  /* CENTER STATS ONLY ON MOBILE */
+.teacher-stats {
+  justify-content: center;     /* center grid itself */
+  column-gap: 24px;            /* tighter horizontal spacing */
+  row-gap: 20px;               /* tighter vertical spacing */
+}
+
+.teacher-stat {
+  text-align: center;
+}
+
+.teacher-right {
+  align-items: center;         /* center right column content */
+}
+
+.teacher-bio {
+  text-align: center;
+}
+}
+
+/* ===============================
+   TEACHERS SECTION TITLE
+================================ */
+
+.teachers-section {
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.teachers-header {
+  margin-bottom: 80px;
+}
+
+.teachers-title {
+  font-size: 56px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  position: relative;
+  display: inline-block;
+}
+
+.teachers-title::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
 </style>
 </head>
 <body>
@@ -1370,25 +1577,153 @@ button {
   </div>
 </section>
 
-        <section id="teachers">
-            <div class="container">
-                <h2>Our Teachers</h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; margin-top: 48px;">
-                    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; text-align: center;">
-                        <div style="width: 96px; height: 96px; background: var(--secondary); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: #fff;">DI</div>
-                        <strong>Dilmurod Isakulov</strong><br>Founder of HeadStart English School<br>IELTS 8.5, 10+ years experience in teaching.
-                    </div>
-                    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; text-align: center;">
-                        <div style="width: 96px; height: 96px; background: var(--secondary); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: #fff;">OR</div>
-                        <strong>Otabek Ravshankulov</strong><br>Co-Founder of HeadStart English School<br>IELTS 8.5, 10+ years experience in teaching.
-                    </div>
-                    <div style="background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 32px; text-align: center;">
-                        <div style="width: 96px; height: 96px; background: var(--secondary); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: #fff;">BI</div>
-                        <strong>Bunyod Inomov</strong><br>IELTS Teacher<br>IELTS 8.0, 500+ students.
-                    </div>
-                </div>
+<section id="teachers" class="teachers-section">
+
+  <div class="teachers-header">
+    <h2 class="teachers-title">Our Teachers</h2>
+  </div>
+
+  <div class="teacher-slider">
+
+    <!-- LEFT ARROW -->
+    <div class="teacher-arrow left">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <!-- RIGHT ARROW -->
+    <div class="teacher-arrow right">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M9 6L15 12L9 18" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <div class="teacher-track">
+
+      <!-- TEACHER 1 -->
+      <div class="teacher-slide">
+        <div class="teacher-left"></div>
+
+        <div class="teacher-right">
+
+          <div class="teacher-top">
+            <div class="teacher-stats">
+
+              <div class="teacher-stat">
+                <div class="stat-big">8.5</div>
+                <div class="stat-small">IELTS</div>
+              </div>
+
+              <div class="teacher-stat">
+                <div class="stat-big">CEFR C1</div>
+                <div class="stat-small">Certificate</div>
+              </div>
+
+              <div class="teacher-stat">
+                <div class="stat-big">10+</div>
+                <div class="stat-small">Years Experience</div>
+              </div>
+
+              <div class="teacher-stat">
+                <div class="stat-big">2000+</div>
+                <div class="stat-small">Students</div>
+              </div>
+
             </div>
-        </section>
+          </div>
+
+          <div class="teacher-bottom">
+            <div class="teacher-bio">More info soon, bro</div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- TEACHER 2 -->
+      <div class="teacher-slide">
+        <div class="teacher-left"></div>
+
+        <div class="teacher-right">
+
+          <div class="teacher-top">
+            <div class="teacher-stats">
+
+              <div class="teacher-stat">
+                <div class="stat-big">8.5</div>
+                <div class="stat-small">IELTS</div>
+              </div>
+
+              <div class="teacher-stat">
+                <div class="stat-big">CEFR C2</div>
+                <div class="stat-small">Certificate</div>
+              </div>
+
+              <div class="teacher-stat">
+                <div class="stat-big">8+</div>
+                <div class="stat-small">Years Experience</div>
+              </div>
+
+              <div class="teacher-stat">
+                <div class="stat-big">1200+</div>
+                <div class="stat-small">Students</div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="teacher-bottom">
+            <div class="teacher-bio">More info soon, bro</div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- TEACHER 3 -->
+      <div class="teacher-slide">
+        <div class="teacher-left"></div>
+
+        <div class="teacher-right">
+
+          <div class="teacher-top">
+            <div class="teacher-stats">
+
+              <div class="teacher-stat">
+                <div class="stat-big">8.0</div>
+                <div class="stat-small">IELTS</div>
+              </div>
+
+              <div class="teacher-stat">
+                <div class="stat-big">CEFR C1</div>
+                <div class="stat-small">Certificate</div>
+              </div>
+
+              <div class="teacher-stat">
+                <div class="stat-big">7+</div>
+                <div class="stat-small">Years Experience</div>
+              </div>
+
+              <div class="teacher-stat">
+                <div class="stat-big">800+</div>
+                <div class="stat-small">Students</div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="teacher-bottom">
+            <div class="teacher-bio">More info soon, bro</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
 
 <section id="locations">
   <div class="container">
@@ -1908,6 +2243,36 @@ document.addEventListener("DOMContentLoaded", () => {
     index = (index + 1) % slides.length;
     slides[index].classList.add("active");
   }, 4000);
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const track = document.querySelector(".teacher-track");
+  const slides = document.querySelectorAll(".teacher-slide");
+  const prev = document.querySelector(".teacher-arrow.left");
+  const next = document.querySelector(".teacher-arrow.right");
+
+  if (!track || slides.length === 0) return;
+
+  let index = 0;
+  const total = slides.length;
+
+  function updateSlider() {
+    track.style.transform = `translateX(-${index * 100}%)`;
+  }
+
+  next?.addEventListener("click", () => {
+    index = (index + 1) % total;
+    updateSlider();
+  });
+
+  prev?.addEventListener("click", () => {
+    index = (index - 1 + total) % total;
+    updateSlider();
+  });
+
 });
 </script>
 
