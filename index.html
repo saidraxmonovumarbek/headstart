@@ -369,6 +369,26 @@ nav a:hover::after {
   color: white;
 }
 
+/* Fix Atmosphere vertical alignment (desktop only) */
+@media (min-width: 1025px) {
+
+  nav {
+    align-items: center; /* ensures perfect vertical alignment */
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-item > a {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+}
+
 /* ✅ MOBILE FONT FIX (homepage hero only) */
 @media (max-width: 768px) {
 
