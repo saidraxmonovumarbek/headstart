@@ -1041,20 +1041,14 @@ nav a:hover::after {
 
 /* Answer */
 .faq-answer {
-  max-height: 0;
+  height: 0;
   overflow: hidden;
-  transition: max-height 0.4s ease, opacity 0.3s ease;
   opacity: 0;
+  transition: height 0.4s ease, opacity 0.3s ease;
   font-size: 15px;
   color: var(--text-muted);
   line-height: 1.6;
   padding-right: 24px;
-}
-
-.faq-item.active .faq-answer {
-  max-height: 200px;
-  opacity: 1;
-  margin-bottom: 20px;
 }
 
 /* Hide mobile-only links on desktop */
@@ -1137,6 +1131,10 @@ nav a:hover::after {
 
 html {
   scroll-behavior: smooth;
+}
+
+button {
+  font-family: var(--font-main);
 }
 
 </style>
@@ -1495,23 +1493,34 @@ html {
 
     <div class="faq-item">
       <button class="faq-question">
-        Do you offer placement tests before enrollment?
+        How do you determine which level or group is right for me?
       </button>
       <div class="faq-answer">
-        Yes. Every student takes a diagnostic test so we can accurately determine their level and recommend the right program.
+        Before enrollment, we conduct a short diagnostic assessment that evaluates grammar, vocabulary, reading, listening, and speaking skills. Based on your results, we recommend the most suitable level and group so you can progress efficiently without feeling overwhelmed or under-challenged.
       </div>
     </div>
 
     <div class="faq-item">
       <button class="faq-question">
-        How experienced are your teachers?
+        If I order a printed book from your center, how much does it cost on average and how long does it take?
       </button>
       <div class="faq-answer">
-        Our instructors have multiple years of teaching experience and specialize in exam-focused preparation, including IELTS and SAT.
+        On average, printing a standard study book costs around 15,0000-30,0000 UZS, depending on the number of pages and paper quality. Most orders are ready within 1-4 hours. For larger or customized orders, we confirm the timeline in advance to ensure everything is delivered on schedule.
       </div>
     </div>
 
     <div class="faq-item">
+      <button class="faq-question">
+        What makes HeadStart different from other learning centers?
+      </button>
+      <div class="faq-answer">
+        At HeadStart, students receive free support from additional teachers even after lessons. We combine experienced instructors, a motivating atmosphere, and modern study spaces where students can prepare comfortably all day.
+
+Strong teaching. Strong environment. Strong results.
+      </div>
+    </div>
+
+     <div class="faq-item">
       <button class="faq-question">
         Do you provide mock exams?
       </button>
@@ -1519,6 +1528,7 @@ html {
         Yes. We regularly conduct full mock examinations under real test conditions to track student progress and improve performance.
       </div>
     </div>
+
 
     <div class="faq-item">
       <button class="faq-question">
@@ -1770,16 +1780,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   faqItems.forEach(item => {
     const question = item.querySelector(".faq-question");
+    const answer = item.querySelector(".faq-answer");
 
     question.addEventListener("click", () => {
 
-      // Close others
+      const isOpen = item.classList.contains("active");
+
+      // Close all others
       faqItems.forEach(i => {
-        if (i !== item) i.classList.remove("active");
+        const a = i.querySelector(".faq-answer");
+        i.classList.remove("active");
+        a.style.height = "0px";
+        a.style.opacity = "0";
       });
 
-      // Toggle current
-      item.classList.toggle("active");
+      // Open clicked one if it was closed
+      if (!isOpen) {
+        item.classList.add("active");
+        answer.style.height = answer.scrollHeight + "px";
+        answer.style.opacity = "1";
+      }
+
     });
   });
 
