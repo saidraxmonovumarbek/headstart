@@ -639,28 +639,15 @@ nav {
 
 /* ================= HERO ANIMATION ================= */
 
-.hero-title {
-  opacity: 0;
-  transform: translateY(60px);
-  animation: heroRise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-.hero-subtitle {
-  opacity: 0;
-  transform: translateY(60px);
-  animation: heroRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 1.3s;
-}
-
-.hero-subtitle {
-  animation-delay: 1.3s;
-}
-
+.hero-subtitle,
 .hero-buttons {
   opacity: 0;
   transform: translateY(60px);
-  animation: heroRise 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.7s; /* waits until title finishes */
+}
+
+.hero-subtitle.animate,
+.hero-buttons.animate {
+  animation: heroRise 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* ===============================
@@ -1444,14 +1431,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const title = document.querySelector(".hero-animated");
   const letters = title.querySelectorAll(".word span");
+  const subtitle = document.querySelector(".hero-subtitle");
+  const buttons = document.querySelector(".hero-buttons");
 
+  // Stagger letters
   letters.forEach((letter, index) => {
     letter.style.transitionDelay = `${index * 40}ms`;
   });
 
+  // Start title animation
   setTimeout(() => {
     title.classList.add("animate");
   }, 200);
+
+  // Calculate total letter animation time
+  const totalDelay = letters.length * 40 + 700;
+
+  // Trigger subtitle AFTER title completes
+  setTimeout(() => {
+    subtitle.classList.add("animate");
+  }, totalDelay);
+
+  // Trigger buttons AFTER subtitle completes
+  setTimeout(() => {
+    buttons.classList.add("animate");
+  }, totalDelay + 500);
 
 });
 </script>
