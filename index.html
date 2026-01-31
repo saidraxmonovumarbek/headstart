@@ -1422,6 +1422,50 @@ button {
 
 }
 
+.teacher-swipe-hint {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+
+  .teacher-swipe-hint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 24px;
+  }
+
+  .hint-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+
+  .hint-icons {
+    display: flex;
+    gap: 28px;
+    justify-content: center;
+  }
+
+  .hint-icons svg {
+    width: 28px;              /* 🔥 bigger */
+    height: 28px;
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    fill: none;
+    opacity: 0.9;
+    cursor: pointer;          /* 🔥 clickable */
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .hint-icons svg:active {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+
+}
+
 </style>
 </head>
 <body>
@@ -1698,10 +1742,22 @@ button {
           </div>
 
           <div class="teacher-bottom">
-  <div class="teacher-bio">More info here soon, bro</div>
+  <div class="teacher-bio">More info soon, bro</div>
 
   <div class="teacher-swipe-hint">
-    Swipe left or right to see more →
+    <div class="hint-text">
+      Use arrows to see more
+    </div>
+
+    <div class="hint-icons">
+      <svg viewBox="0 0 24 24">
+        <path d="M15 18L9 12L15 6"/>
+      </svg>
+
+      <svg viewBox="0 0 24 24">
+        <path d="M9 6L15 12L9 18"/>
+      </svg>
+    </div>
   </div>
 </div>
 
@@ -1748,10 +1804,22 @@ button {
           </div>
 
           <div class="teacher-bottom">
-  <div class="teacher-bio">More info soon here, bro</div>
+  <div class="teacher-bio">More info soon, bro</div>
 
   <div class="teacher-swipe-hint">
-    Swipe left or right to see more →
+    <div class="hint-text">
+      Use arrows to see more
+    </div>
+
+    <div class="hint-icons">
+      <svg viewBox="0 0 24 24">
+        <path d="M15 18L9 12L15 6"/>
+      </svg>
+
+      <svg viewBox="0 0 24 24">
+        <path d="M9 6L15 12L9 18"/>
+      </svg>
+    </div>
   </div>
 </div>
 
@@ -1797,11 +1865,23 @@ button {
             </div>
           </div>
 
-          <div class="teacher-bottom">
-  <div class="teacher-bio">More info here soon, bro</div>
+         <div class="teacher-bottom">
+  <div class="teacher-bio">More info soon, bro</div>
 
   <div class="teacher-swipe-hint">
-    Swipe left or right to see more →
+    <div class="hint-text">
+      Use arrows to see more
+    </div>
+
+    <div class="hint-icons">
+      <svg viewBox="0 0 24 24">
+        <path d="M15 18L9 12L15 6"/>
+      </svg>
+
+      <svg viewBox="0 0 24 24">
+        <path d="M9 6L15 12L9 18"/>
+      </svg>
+    </div>
   </div>
 </div>
 
@@ -2362,32 +2442,24 @@ document.addEventListener("DOMContentLoaded", () => {
     updateSlider();
   });
 
-  /* =========================
-     MOBILE SWIPE SUPPORT
-  ========================== */
+  /* Mobile hint icons — attach to ALL teachers */
+  const allHints = document.querySelectorAll(".hint-icons");
 
-  let startX = 0;
-  let endX = 0;
+  allHints.forEach(hint => {
 
-  track.addEventListener("touchstart", (e) => {
-    startX = e.touches[0].clientX;
-  });
+    const leftIcon = hint.querySelector("svg:first-child");
+    const rightIcon = hint.querySelector("svg:last-child");
 
-  track.addEventListener("touchmove", (e) => {
-    endX = e.touches[0].clientX;
-  });
-
-  track.addEventListener("touchend", () => {
-    const diff = startX - endX;
-
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        index = (index + 1) % total; // swipe left → next
-      } else {
-        index = (index - 1 + total) % total; // swipe right → prev
-      }
+    rightIcon?.addEventListener("click", () => {
+      index = (index + 1) % total;
       updateSlider();
-    }
+    });
+
+    leftIcon?.addEventListener("click", () => {
+      index = (index - 1 + total) % total;
+      updateSlider();
+    });
+
   });
 
 });
