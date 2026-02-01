@@ -61,10 +61,15 @@
   padding: 0 48px;
 }
 
-   .logo {
+ .logo {
   display: flex;
   align-items: center;
   gap: 10px;
+  text-decoration: none;   /* 🔥 remove underline */
+}
+
+.logo:hover {
+  text-decoration: none;
 }
 
 .logo-img {
@@ -2004,10 +2009,10 @@ button {
 </head>
 <body>
     <header>
-        <div class="logo">
+        <a href="#hero" class="logo" onclick="smoothScroll('#hero'); return false;">
   <img src="assets/headstart.png" alt="HeadStart Logo" class="logo-img">
   <span class="logo-text">HeadStart</span>
-</div>
+</a>
        <nav id="main-nav">
   <a href="#hero" onclick="smoothScroll('#hero'); return false;">Home</a>
   <a href="#about" onclick="smoothScroll('#about'); return false;">Why Us?</a>
@@ -2374,12 +2379,6 @@ button {
     <div class="testimonial">
       <p>“Best preparation system in the city.”</p>
       <strong>— Maruf's Parents</strong>
-    </div>
-
-    <div class="testimonial-wrapper">
-    <div class="testimonial">
-      <p>“Working at HeadStart means being part of a supportive, professional team that truly cares about students’ progress.”</p>
-      <strong>— Nigina</strong>
     </div>
 
     <div class="testimonial-wrapper">
