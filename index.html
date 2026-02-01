@@ -1570,6 +1570,17 @@ button {
   font-size: 22px;
 }
 
+/* Fix SVG icons inside why section */
+.why-icon svg {
+  width: 32px;
+  height: 32px;
+  stroke: currentColor;     /* 🔥 inherit icon color */
+  stroke-width: 2.2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 /* Icon colors */
 .icon-orange { background: #fde68a; color: #92400e; }
 .icon-green  { background: #bbf7d0; color: #166534; }
@@ -1763,6 +1774,11 @@ button {
 .why-section.animate .why-center-animate {
   transition-delay: 0.7s;
 }
+
+.coffee-icon svg {
+  width: 38px;
+  height: 38px;
+}
 </style>
 </head>
 <body>
@@ -1896,7 +1912,27 @@ button {
       <div class="why-col">
 
         <div class="why-card why-left">
-          <div class="why-icon icon-orange">📘</div>
+        <div class="why-icon icon-orange">
+  <svg viewBox="0 0 64 48" fill="none">
+    <!-- Left page -->
+    <path d="M6 8
+             Q20 0 32 8
+             V40
+             Q20 32 6 40
+             Z" />
+             
+    <!-- Right page -->
+    <path d="M58 8
+             Q44 0 32 8
+             V40
+             Q44 32 58 40
+             Z" />
+             
+    <!-- Bottom curve -->
+    <path d="M6 40
+             Q32 48 58 40" />
+  </svg>
+</div>
           <h3>Free Second Teacher</h3>
           <p>
             If you need additional explanation, assistant teachers are always
@@ -1905,7 +1941,20 @@ button {
         </div>
 
         <div class="why-card why-left">
-          <div class="why-icon icon-green">✔</div>
+        <div class="why-icon icon-green">
+  <svg viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"
+            stroke="currentColor"
+            stroke-width="2"
+            fill="none"/>
+    <path d="M7.5 12.5L11 16L17 9"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          fill="none"/>
+  </svg>
+</div>
           <h3>Official Mock Exams</h3>
           <p>
             We conduct full mock exams under real test conditions to track
@@ -1929,7 +1978,29 @@ button {
       <div class="why-col">
 
         <div class="why-card why-right">
-          <div class="why-icon icon-red">🏆</div>
+        <div class="why-icon icon-red">
+  <svg viewBox="0 0 64 64">
+    
+    <!-- Cup body -->
+    <path d="M20 10h24v8c0 10-6 16-12 18-6-2-12-8-12-18v-8z"/>
+
+    <!-- Left handle -->
+    <path d="M20 14h-6c0 8 4 14 10 14"/>
+
+    <!-- Right handle -->
+    <path d="M44 14h6c0 8-4 14-10 14"/>
+
+    <!-- Stem -->
+    <path d="M32 36v8"/>
+
+    <!-- Base top -->
+    <rect x="22" y="44" width="20" height="8"/>
+
+    <!-- Base bottom -->
+    <rect x="18" y="52" width="28" height="6"/>
+
+  </svg>
+</div>
           <h3>Free Events & Community</h3>
           <p>
             Educational events, activities, and student gatherings that create
@@ -1938,7 +2009,49 @@ button {
         </div>
 
         <div class="why-card why-right">
-          <div class="why-icon icon-gray">☕</div>
+       <div class="why-icon icon-gray coffee-icon">
+  <svg viewBox="0 0 24 24">
+    
+    <!-- cup body -->
+    <path d="M5 11h11v4a4 4 0 01-4 4H9a4 4 0 01-4-4v-4z"
+          stroke="currentColor"
+          stroke-width="1.3"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <!-- handle -->
+    <path d="M16 12h2a2.5 2.5 0 010 4h-2"
+          stroke="currentColor"
+          stroke-width="1.3"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <!-- steam 1 -->
+    <path d="M8 6c0-1 1-1.6 1-2.6"
+          stroke="currentColor"
+          stroke-width="1.3"
+          fill="none"
+          stroke-linecap="round"/>
+
+    <!-- steam 2 -->
+    <path d="M11 5.5c0-1 1-1.6 1-2.6"
+          stroke="currentColor"
+          stroke-width="1.3"
+          fill="none"
+          stroke-linecap="round"/>
+
+    <!-- steam 3 -->
+    <path d="M14 6c0-1 1-1.6 1-2.6"
+          stroke="currentColor"
+          stroke-width="1.3"
+          fill="none"
+          stroke-linecap="round"/>
+
+  </svg>
+</div>
+   
           <h3>Modern Study Zones</h3>
           <p>
             Comfortable co-working areas where students can study independently
