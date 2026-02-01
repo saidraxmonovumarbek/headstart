@@ -37,28 +37,35 @@
     }
 
     body {
-        font-family: var(--font-main);
-        background: var(--bg);
-        color: var(--text);
-        line-height: 1.6;
-        overflow-x: hidden;
-    }
+    font-family: var(--font-main);
+    background: #ffffff;
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
 
     header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 20px;                 /* floating */
+  left: 50%;
+  transform: translateX(-50%);
   height: 72px;
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
+  width: calc(100% - 80px);
+  max-width: 1300px;
+
+  background: #ffffff;
+
+  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: 50px;
+
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+
   z-index: 1000;
 
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  padding: 0 48px;
+  padding: 0 40px;
 }
 
  .logo {
@@ -123,12 +130,13 @@ nav a:hover::after {
 }
 
     main {
-        padding-top: 72px;
-    }
+    padding-top: 92px;
+}
 
     section {
   padding: 120px 48px;
   border-bottom: 1px solid var(--border);
+  background: #ffffff;
 }
 
     h2 {
@@ -168,27 +176,27 @@ nav a:hover::after {
     }
 
     .btn-primary {
-    background: white;
-    color: #1b941b; /* darker gradient green */
-    border: 2px solid white;
+    background: var(--accent);
+    color: white;
+    border: 2px solid var(--accent);
     transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
-    background: #1b941b;
-    color: white;
+    background: white;
+    color: var(--accent);
     transform: translateY(-2px);
 }
 
    .btn-secondary {
-    background: transparent;
-    color: white;                /* ← change here */
-    border: 2px solid white;     /* cleaner contrast on green */
+    background: white;
+    color: var(--accent);
+    border: 2px solid var(--accent);
 }
 
 .btn-secondary:hover {
-    background: white;
-    color: #1b941b;              /* darker green from gradient */
+    background: var(--accent);
+    color: white;
 }
 
     .hamburger {
@@ -349,29 +357,79 @@ nav a:hover::after {
   display: block;
 }
 
-#hero {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  padding: 140px 48px 180px;
-  background: linear-gradient(135deg, #3eaf3e 0%, #1b941b 100%);
-}
 
 #hero {
   border-bottom: none !important;
 }
 
-.hero-inner {
+#hero {
+  margin-top: -92px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  padding: 0 48px;
+}
+
+.hero-wrapper {
   width: 100%;
-  max-width: 1100px;
+  max-width: 1300px;
   margin: 0 auto;
-  text-align: center;
-  z-index: 2;
+
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: 60px;
+}
+
+/* LEFT */
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* RIGHT */
+.hero-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-image {
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  object-fit: contain;
+}
+
+.hero-right {
+  position: relative; /* 🔥 required for overlay positioning */
+}
+
+.main-image {
   position: relative;
-  color: white;
+  z-index: 1;
+}
+
+.icon-overlay {
+  position: absolute;
+  bottom: 70px;
+  left: 70px;
+  width: 100px;
+  height: auto;
+  z-index: 3;
+  pointer-events: none;
+
+  /* 🔥 animation starting state */
+  opacity: 0;
+  transform: translateX(80px);
+  transition: all 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+
+.icon-overlay.animate {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 /* Fix Atmosphere vertical alignment (desktop only) */
@@ -395,27 +453,31 @@ nav a:hover::after {
 }
 
 /* ✅ MOBILE FONT FIX (homepage hero only) */
-@media (max-width: 768px) {
-
-  #hero h1 {
-    font-size: 38px !important;
-    line-height: 1.15;
-  }
-
-  #hero p {
-    font-size: 18px !important;
-    line-height: 1.5;
-  }
-
-  #hero a {
-    font-size: 16px !important;
-    padding: 14px 28px !important;
-  }
+@media (max-width: 1024px) {
 
   #hero {
-    padding: 120px 24px 160px !important;
+    padding: 120px 24px 60px !important;
+  }
+
+  .hero-wrapper {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .hero-left {
+    align-items: center;
+  }
+
+  .hero-right {
+    margin-top: 40px;
+  }
+
+  .hero-image {
+    max-width: 380px;
   }
 }
+
+
 
 /* ================================
    LOCATIONS – DESKTOP 2x2 STRUCTURE
@@ -480,162 +542,6 @@ nav a:hover::after {
   }
 }
 
-  .home-stats .container {
-    gap: 20px; /* optional but recommended: tighter spacing */
-  }
-
-@media (max-width: 768px) {
-
-  .home-stats .container {
-    grid-template-columns: repeat(2, 1fr); /* 2x2 layout */
-  }
-
-  .home-stats .stat-card {
-    aspect-ratio: 1 / 1;   /* 🔥 forces perfect square */
-    padding: 20px;
-    
-    /* center everything vertically */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-}
-
-/* DESKTOP */
-.home-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
-  text-align: center;
-}
-
-/* ===============================
-   HERO METRICS (UNIFIED VERSION)
-================================ */
-
-.hero-metrics {
-  background: var(--bg);
-  padding: 80px 48px;
-}
-
-.stats-wrapper {
-  max-width: 1100px;
-  margin: 0 auto;
-  margin-top: -75px;
-
-  padding: 50px 40px;
-
-  border: 2px solid var(--accent);
-  border-radius: 32px;
-  background: var(--bg);
-
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 40px;
-
-  text-align: center;
-}
-
-/* Individual stat */
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Number */
-.metric-number {
-  font-size: 42px;
-  font-weight: 800;
-  color: var(--accent);
-  margin-bottom: 10px;
-}
-
-/* Label */
-.stat-label {
-  font-size: 15px;
-  color: #6b7280;
-  max-width: 180px;
-}
-
-/* ===============================
-   MOBILE VERSION
-================================ */
-
-@media (max-width: 768px) {
-  .stats-wrapper {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-    padding: 40px 24px;
-  }
-
-  .metric-number {
-    font-size: 32px;
-  }
-
-  .stat-label {
-    font-size: 14px;
-  }
-}
-
-/* CARD */
-.metric-card {
-  position: relative;
-  background: #ffffff;
-  border: 1.5px solid var(--accent);
-  border-radius: 24px;
-  aspect-ratio: 1 / 1;          /* 🔥 perfect square */
-  padding: 36px 20px;           /* ~10% smaller */
-  text-align: center;
-  transition: all 0.35s ease;
-  cursor: pointer;
-}
-
-/* subtle inner glow */
-.metric-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 rgba(0,0,0,0);
-  transition: all 0.35s ease;
-}
-
-/* NUMBER */
-.metric-number {
-  font-size: 40px;
-  font-weight: 800;
-  color: #111827;
-  margin-bottom: 8px;
-}
-
-/* LABEL */
-.metric-label {
-  font-size: 15px;
-  font-weight: 500;
-  color: #6b7280;
-}
-
-/* ===== HOVER STATE ===== */
-.metric-card:hover {
-  background: #f0fdf4;
-}
-
-.metric-card:hover::before {
-  box-shadow:
-    inset 0 0 22px rgba(34,197,94,0.14),
-    inset 0 0 48px rgba(34,197,94,0.08);
-}
-
-.metric-card:hover .metric-icon {
-  background: var(--accent);
-}
-
-.metric-card:hover .metric-svg {
-  stroke: #ffffff;
-}
-
 /* Typography */
 
 .hero-title {
@@ -644,7 +550,7 @@ nav a:hover::after {
   font-size: 64px;
   line-height: 1.1;
   text-transform: uppercase;
-  color: white;
+  color: var(--accent);
 }
 
 .hero-subtitle {
@@ -652,7 +558,7 @@ nav a:hover::after {
   font-weight: 500;
   font-size: 22px;
   margin-top: 24px;
-  color: white;
+  color: var(--text-muted);
 }
 
 .hero-buttons {
@@ -668,12 +574,25 @@ nav a:hover::after {
 .hero-subtitle,
 .hero-buttons {
   opacity: 0;
-  transform: translateY(60px);
+  transform: translateX(-80px);   /* from left */
 }
 
 .hero-subtitle.animate,
 .hero-buttons.animate {
   animation: heroRise 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* HERO IMAGE ANIMATION */
+
+.hero-image {
+  opacity: 0;
+  transform: translateX(80px);   /* start from right */
+  transition: all 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+
+.hero-image.animate {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 /* ===============================
@@ -1189,15 +1108,6 @@ button {
   align-items: center;
 }
 
-/* LEFT IMAGE */
-.teacher-left {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  background: white;
-  border: 4px solid var(--accent);
-  border-radius: 28px;
-}
-
 .teacher-left {
   position: relative;
   width: 100%;
@@ -1415,10 +1325,6 @@ button {
     display: block;
   }
 
-}
-
-.teacher-swipe-hint {
-  display: none;
 }
 
 @media (max-width: 1024px) {
@@ -2047,77 +1953,63 @@ button {
     <main>
 
 <section id="hero" class="hero-section">
-  <div class="container hero-inner">
 
-<h1 class="hero-title hero-animated">
+  <div class="hero-wrapper">
 
-  <span class="line">
-    <span class="word">
-      <span>H</span><span>E</span><span>A</span><span>D</span><span>S</span><span>T</span><span>A</span><span>R</span><span>T</span>
-    </span>
+    <!-- LEFT SIDE -->
+    <div class="hero-left">
 
-    <span class="word">
-      <span>F</span><span>O</span><span>R</span>
-    </span>
+      <h1 class="hero-title hero-animated">
+        <span class="line">
+          <span class="word">
+            <span>H</span><span>E</span><span>A</span><span>D</span><span>S</span><span>T</span><span>A</span><span>R</span><span>T</span>
+          </span>
 
-    <span class="word">
-      <span>Y</span><span>O</span><span>U</span><span>R</span>
-    </span>
+          <span class="word">
+            <span>F</span><span>O</span><span>R</span>
+          </span>
 
-    <span class="word">
-      <span>F</span><span>U</span><span>T</span><span>U</span><span>R</span><span>E</span>
-    </span>
-  </span>
+          <span class="word">
+            <span>Y</span><span>O</span><span>U</span><span>R</span>
+          </span>
 
-</h1>
+          <span class="word">
+            <span>F</span><span>U</span><span>T</span><span>U</span><span>R</span><span>E</span>
+          </span>
+        </span>
+      </h1>
 
-    <p class="hero-subtitle">
-  A modern learning environment — everything at HeadStart English School.
-</p>
+      <p class="hero-subtitle">
+        A modern learning environment — everything at HeadStart English School.
+      </p>
 
-   <div class="hero-buttons">
-  <a href="#courses" class="btn btn-primary">
-    Explore Courses →
-  </a>
+      <div class="hero-buttons">
+        <a href="#courses" class="btn btn-primary">
+          Explore Courses →
+        </a>
 
-  <a href="#results" class="btn btn-secondary">
-    See Our Results →
-  </a>
+        <a href="#results" class="btn btn-secondary">
+          See Our Results →
+        </a>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="hero-right">
+
+  <img src="assets/curved.png" 
+       alt="HeadStart Teacher" 
+       class="hero-image main-image">
+
+  <img src="assets/icon1.png" 
+     alt="Icon Decoration" 
+     class="icon-overlay">
+
 </div>
 
   </div>
 
-  <div class="hero-curve">
-    <svg viewBox="0 0 1440 140" preserveAspectRatio="none">
-      <path d="M0,40 C240,0 480,0 720,20 960,40 1200,80 1440,120 L1440,140 L0,140 Z" fill="#ffffff"/>
-    </svg>
-  </div>
-</section>
-
-<section class="hero-metrics">
-  <div class="stats-wrapper">
-
-    <div class="stat-item">
-      <div class="metric-number" data-target="2">0</div>
-      <div class="stat-label">Branches</div>
-    </div>
-
-    <div class="stat-item">
-      <div class="metric-number" data-target="+100">0</div>
-      <div class="stat-label">Students with IELTS 8.0–8.5</div>
-    </div>
-
-    <div class="stat-item">
-      <div class="metric-number" data-target="+500">0</div>
-      <div class="stat-label">Students with IELTS 7.0–7.5</div>
-    </div>
-
-    <div class="stat-item">
-      <div class="metric-number" data-target="+20">0</div>
-      <div class="stat-label">Experienced Teachers</div>
-    </div>
-
-  </div>
 </section>
 
 <section id="about" class="why-section">
@@ -2359,50 +2251,47 @@ button {
             </div>
         </section>
 
-        <section id="testimonials">
+<section id="testimonials">
   <div class="container testimonial-container">
     <h2>What Our Students Say</h2>
 
     <div class="testimonial-wrapper">
-    <div class="testimonial active">
-      <p>“HeadStart helped me reach IELTS 7.5.”</p>
-      <strong>— Umarbek Saidraxmonov</strong>
-    </div>
 
-    <div class="testimonial-wrapper">
-    <div class="testimonial">
-      <p>“HeadStart has become our second home”</p>
-      <strong>— Fotima and Zuhra</strong>
-    </div>
+      <div class="testimonial active">
+        <p>“HeadStart helped me reach IELTS 7.5.”</p>
+        <strong>— Umarbek Saidraxmonov</strong>
+      </div>
 
-    <div class="testimonial-wrapper">
-    <div class="testimonial">
-      <p>“Best preparation system in the city.”</p>
-      <strong>— Maruf's Parents</strong>
-    </div>
+      <div class="testimonial">
+        <p>“HeadStart has become our second home.”</p>
+        <strong>— Fotima and Zuhra</strong>
+      </div>
 
-    <div class="testimonial-wrapper">
-     <div class="testimonial">
-      <p>“The atmosphere at HeadStart keeps me focused and motivated. I enjoy studying here every day”</p>
-      <strong>— Mirmuhsin</strong>
-    </div>
+      <div class="testimonial">
+        <p>“Best preparation system in the city.”</p>
+        <strong>— Maruf's Parents</strong>
+      </div>
 
-    <div class="testimonial-wrapper">
-     <div class="testimonial">
-      <p>“HeadStart is not just a learning center — it’s a reliable path toward achieving bigger goals.”</p>
-      <strong>— Odina Mamatqulova, IELTS 8.0</strong>
-    </div>
+      <div class="testimonial">
+        <p>“The atmosphere at HeadStart keeps me focused and motivated. I enjoy studying here every day.”</p>
+        <strong>— Mirmuhsin</strong>
+      </div>
 
-    <div class="testimonial-wrapper">
-     <div class="testimonial">
-      <p>“What I appreciate most about our teacher is that they work individually with each student and make every lesson engaging and enjoyable.”</p>
-      <strong>— Dilso'z Abdukayumova, IELTS 7.0</strong>
-    </div>
+      <div class="testimonial">
+        <p>“HeadStart is not just a learning center — it’s a reliable path toward achieving bigger goals.”</p>
+        <strong>— Odina Mamatqulova, IELTS 8.0</strong>
+      </div>
 
-    <div class="testimonial-wrapper">
-     <div class="testimonial">
-      <p>“HeadStart helped me improve from 6.5 to 7.5 in just three months.”</p>
-      <strong>— Sirojiddin Murodov</strong>
+      <div class="testimonial">
+        <p>“What I appreciate most about our teacher is that they work individually with each student and make every lesson engaging and enjoyable.”</p>
+        <strong>— Dilso'z Abdukayumova, IELTS 7.0</strong>
+      </div>
+
+      <div class="testimonial">
+        <p>“HeadStart helped me improve from 6.5 to 7.5 in just three months.”</p>
+        <strong>— Sirojiddin Murodov</strong>
+      </div>
+
     </div>
 
   </div>
@@ -2965,7 +2854,7 @@ button {
         If I order a printed book from your center, how much does it cost on average and how long does it take?
       </button>
       <div class="faq-answer">
-        On average, printing a standard study book costs around 15,0000-30,0000 UZS, depending on the number of pages and paper quality. Most orders are ready within 1-4 hours. For larger or customized orders, we confirm the timeline in advance to ensure everything is delivered on schedule.
+        On average, printing a standard study book costs around 15,000–30,000 UZS, depending on the number of pages and paper quality. Most orders are ready within 1-4 hours. For larger or customized orders, we confirm the timeline in advance to ensure everything is delivered on schedule.
       </div>
     </div>
 
@@ -3057,7 +2946,9 @@ window.addEventListener("load", () => {
 
   const title = document.querySelector(".hero-animated");
   const subtitle = document.querySelector(".hero-subtitle");
+  const image = document.querySelector(".hero-image");
   const buttons = document.querySelector(".hero-buttons");
+  const icon = document.querySelector(".icon-overlay");
 
   if (!title) return;
 
@@ -3080,68 +2971,21 @@ window.addEventListener("load", () => {
   // Total title animation time
   const totalTitleTime = letters.length * stagger + letterDuration + baseDelay;
 
-  // ✨ Subtitle appears after title finishes
-  setTimeout(() => {
-    subtitle?.classList.add("animate");
-  }, totalTitleTime);
+ // Subtitle + Image start together after title finishes
+setTimeout(() => {
+  subtitle?.classList.add("animate");
+  image?.classList.add("animate");
+}, totalTitleTime);
 
-  // 🚀 Buttons appear slightly after subtitle
-  setTimeout(() => {
-    buttons?.classList.add("animate");
-  }, totalTitleTime + 500);
+// Buttons appear AFTER subtitle + image animation
+setTimeout(() => {
+  buttons?.classList.add("animate");
+}, totalTitleTime + 900);
 
-});
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-  const counters = document.querySelectorAll(".metric-number");
-  const statsSection = document.querySelector(".hero-metrics");
-
-  let hasAnimated = false; // prevents re-triggering
-
-  function animateCounter(counter) {
-    const target = +counter.getAttribute("data-target");
-    const duration = 1500; // 1.5 seconds
-    const startTime = performance.now();
-
-    function update(currentTime) {
-      const progress = Math.min((currentTime - startTime) / duration, 1);
-
-      // ease-out effect (fast → slow)
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-
-      const value = Math.floor(easeOut * target);
-
-      counter.textContent =
-        counter.getAttribute("data-target").startsWith("+")
-          ? "+" + value
-          : value;
-
-      if (progress < 1) {
-        requestAnimationFrame(update);
-      } else {
-        counter.textContent = counter.dataset.target.includes("+")
-          ? counter.dataset.target
-          : target;
-      }
-    }
-
-    requestAnimationFrame(update);
-  }
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0].isIntersecting && !hasAnimated) {
-        counters.forEach(counter => animateCounter(counter));
-        hasAnimated = true;
-      }
-    },
-    { threshold: 0.4 } // triggers when 40% visible
-  );
-
-  observer.observe(statsSection);
+// Icon appears AFTER buttons animation
+setTimeout(() => {
+  icon?.classList.add("animate");
+}, totalTitleTime + 1800);
 
 });
 </script>
