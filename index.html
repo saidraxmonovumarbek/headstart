@@ -1115,23 +1115,6 @@ nav a:hover::after {
   to   { transform: translateX(-50%) translateY(20px); }
 }
 
-/* ===============================
-   ULTRA CLEAN LOADER
-================================ */
-
-#site-loader {
-  position: fixed;
-  inset: 0;
-  background: #ffffff;
-  z-index: 9999;
-  transition: opacity 0.6s ease, visibility 0.6s ease;
-}
-
-#site-loader.hide {
-  opacity: 0;
-  visibility: hidden;
-}
-
 @keyframes pulse {
   0% { opacity: 0.4; }
   50% { opacity: 1; }
@@ -1779,10 +1762,193 @@ button {
   width: 38px;
   height: 38px;
 }
+
+/* ===============================
+   ATMOSPHERE SPLIT LAYOUT
+================================ */
+
+.atmosphere-section {
+  padding: 120px 48px;
+  border-bottom: none;
+}
+
+.atmosphere-wrapper {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 60px;
+  margin-top: 80px;
+  align-items: start;   /* ✅ stop stretching */
+}
+
+/* ================= TABLE ================= */
+
+.atmosphere-table {
+  border-radius: 28px;
+  overflow: hidden;
+  border: 3px solid var(--accent);
+}
+
+.atmo-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  padding: 20px 28px;
+  align-items: center;
+  font-size: 15px;
+}
+
+.atmo-row:not(.atmo-header) {
+  border-top: 1px solid var(--border);
+}
+
+/* Header */
+.atmo-header {
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+}
+
+/* Left label column */
+.atmo-label {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Other centers */
+.atmo-bad {
+  color: #6b7280;
+}
+
+/* HeadStart column */
+.atmo-good {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* ================= RIGHT SIDE (Single Image) ================= */
+
+.atmosphere-image {
+  display: flex;
+  align-items: stretch;
+}
+
+.atmo-image-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;   /* ✅ force proper height */
+  border-radius: 28px;
+  border: 4px solid var(--accent);
+  background: #ffffff;
+}
+
+.atmosphere-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.atmo-caption {
+  margin-top: 16px;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 1024px) {
+
+  .atmosphere-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .atmosphere-table {
+    font-size: 13px;
+  }
+
+  .atmosphere-image {
+  justify-content: center;
+}
+
+.atmo-image-placeholder {
+  width: 100%;
+  max-width: 420px;
+}
+
+  .atmo-row {
+    grid-template-columns: 1.1fr 0.9fr 1fr; /* controlled proportions */
+    padding: 14px 16px;
+    column-gap: 10px;
+  }
+
+  .atmo-label {
+    font-size: 13px;
+  }
+
+  .atmo-bad,
+  .atmo-good {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .atmo-good,
+.atmo-bad {
+  word-break: break-word;
+}
+
+ .atmo-good {
+    white-space: normal;   /* allow wrapping again */
+  }
+
+  .atmo-inline {
+  display: inline;
+}
+
+.atmo-check {
+  display: inline;
+}
+
+}
+
+.atmo-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.atmo-check {
+  font-weight: 700;
+}
+
+.atmo-slider {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 28px;
+  border: 4px solid var(--accent);
+  overflow: hidden;
+  position: relative;
+  background: #ffffff;
+}
+
+.atmo-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.atmo-slide.active {
+  opacity: 1;
+}
+
+.atmo-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 </style>
 </head>
 <body>
-<div id="site-loader"></div>
     <header>
         <div class="logo">
   <img src="assets/headstart.png" alt="HeadStart Logo" class="logo-img">
@@ -2136,7 +2302,7 @@ button {
 
         <section id="testimonials">
   <div class="container testimonial-container">
-    <h2>Testimonials</h2>
+    <h2>What Our Students Say</h2>
 
     <div class="testimonial active">
       <p>“HeadStart helped me reach IELTS 7.5.”</p>
@@ -2560,10 +2726,93 @@ button {
   </div>
 </section>
 
-<section id="atmosphere">
+<section id="atmosphere" class="atmosphere-section">
   <div class="container">
+
     <h2>Atmosphere</h2>
-    <p>Soon</p>
+
+    <div class="atmosphere-wrapper">
+
+      <!-- LEFT SIDE (Comparison Table) -->
+      <div class="atmosphere-table">
+
+        <div class="atmo-row atmo-header">
+          <div></div>
+          <div>Other Centers</div>
+          <div>HeadStart</div>
+        </div>
+
+        <div class="atmo-row">
+          <div class="atmo-label">Average IELTS Result</div>
+          <div class="atmo-bad">6.0–6.5</div>
+          <div class="atmo-good">7.0–7.5 ✓</div>
+        </div>
+
+        <div class="atmo-row">
+          <div class="atmo-label">Mock Exams</div>
+          <div class="atmo-bad">Occasional practice</div>
+          <div class="atmo-good">
+  <span class="atmo-inline">
+    Full real-condition exams
+    <span class="atmo-check">✓</span>
+  </span>
+</div>
+        </div>
+
+        <div class="atmo-row">
+          <div class="atmo-label">Study Environment</div>
+          <div class="atmo-bad">Standard classroom</div>
+          <div class="atmo-good">Modern study zones ✓</div>
+        </div>
+
+        <div class="atmo-row">
+          <div class="atmo-label">Teacher Support</div>
+          <div class="atmo-bad">Single teacher</div>
+          <div class="atmo-good">Main + assistant support ✓</div>
+        </div>
+
+        <div class="atmo-row">
+          <div class="atmo-label">Progress Tracking</div>
+          <div class="atmo-bad">General feedback</div>
+          <div class="atmo-good">Structured analysis ✓</div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDE (Portrait Layout) -->
+   <div class="atmosphere-image">
+
+  <div class="atmo-slider">
+
+    <div class="atmo-slide active">
+  <img src="assets/atmo1.jpg" alt="HeadStart atmosphere 1">
+</div>
+
+<div class="atmo-slide">
+  <img src="assets/atmo2.jpg" alt="HeadStart atmosphere 2">
+</div>
+
+<div class="atmo-slide">
+  <img src="assets/atmo3.jpg" alt="HeadStart atmosphere 3">
+</div>
+
+    <!-- FUTURE IMAGES WILL GO HERE -->
+    <!--
+    <div class="atmo-slide">
+      <img src="assets/photo1.jpg" alt="HeadStart atmosphere">
+    </div>
+    -->
+
+  </div>
+
+  <div class="atmo-caption">
+    Life at HeadStart (pictures will be added soon bro)
+  </div>
+
+</div>
+
+    </div>
+
   </div>
 </section>
 
@@ -2997,18 +3246,6 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 <script>
-window.addEventListener("load", () => {
-
-  const loader = document.getElementById("site-loader");
-
-  setTimeout(() => {
-    loader?.classList.add("hide");
-  }, 400);
-
-});
-</script>
-
-<script>
 document.addEventListener("DOMContentLoaded", () => {
   const slides = document.querySelectorAll(".testimonial");
   let index = 0;
@@ -3087,6 +3324,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }, { threshold: 0.3 });
 
   observer.observe(whySection);
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const slides = document.querySelectorAll(".atmo-slide");
+  let index = 0;
+
+  if (slides.length <= 1) return;
+
+  setInterval(() => {
+    slides[index].classList.remove("active");
+    index = (index + 1) % slides.length;
+    slides[index].classList.add("active");
+  }, 3000); // 3 seconds
 
 });
 </script>
