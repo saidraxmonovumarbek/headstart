@@ -1726,14 +1726,39 @@ button {
   transform: translateY(80px);
 }
 
-/* Active state */
-.why-section.animate .why-animate,
-.why-section.animate .why-left,
-.why-section.animate .why-right,
-.why-section.animate .why-center-animate {
+/* ===============================
+   WHY HEADER SEQUENCE
+================================ */
+
+.why-title {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+
+.why-subtitle {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
+}
+
+.why-section.header-animate .why-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.why-section.header-animate .why-subtitle {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.3s;
+}
+
+.why-section.cards-animate .why-left,
+.why-section.cards-animate .why-right,
+.why-section.cards-animate .why-center-animate {
   opacity: 1;
   transform: translate(0,0);
-  transition: all 0.6s cubic-bezier(0.22,1,0.36,1);
+  transition: all 1.5s cubic-bezier(0.22,1,0.36,1);
 }
 
 /* Stagger timing */
@@ -1761,6 +1786,27 @@ button {
 .coffee-icon svg {
   width: 38px;
   height: 38px;
+}
+
+/* ===============================
+   WHY MOBILE SCROLL REVEAL
+================================ */
+
+@media (max-width: 1024px) {
+
+  .why-card,
+  .why-center {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .why-card.reveal,
+  .why-center.reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
 }
 
 /* ===============================
@@ -3312,25 +3358,6 @@ document.addEventListener("DOMContentLoaded", () => {
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  const whySection = document.querySelector(".why-section");
-
-  if (!whySection) return;
-
-  const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) {
-      whySection.classList.add("animate");
-      observer.disconnect(); // animate once
-    }
-  }, { threshold: 0.3 });
-
-  observer.observe(whySection);
-
-});
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
   const slides = document.querySelectorAll(".atmo-slide");
   let index = 0;
 
@@ -3341,6 +3368,74 @@ document.addEventListener("DOMContentLoaded", () => {
     index = (index + 1) % slides.length;
     slides[index].classList.add("active");
   }, 3000); // 3 seconds
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const whySection = document.querySelector(".why-section");
+  const whyGrid = document.querySelector(".why-grid");
+
+  if (!whySection || !whyGrid) return;
+
+  /* HEADER ANIMATION */
+  const headerObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      whySection.classList.add("header-animate");
+      headerObserver.disconnect();
+    }
+  }, { threshold: 0.2 });
+
+  headerObserver.observe(whySection);
+
+  /* CARDS ANIMATION */
+
+const isDesktop = window.matchMedia("(min-width: 1025px)").matches;
+
+if (isDesktop) {
+
+  // Desktop = group cinematic animation
+  const cardsObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      whySection.classList.add("cards-animate");
+      cardsObserver.disconnect();
+    }
+  }, { threshold: 0.5 });
+
+  cardsObserver.observe(whyGrid);
+
+} else {
+
+  // 🔥 MOBILE = individual scroll reveal
+
+  const mobileCards = document.querySelectorAll(
+    ".why-card, .why-center"
+  );
+
+  mobileCards.forEach(card => {
+
+    // reset desktop transforms
+    card.classList.remove("why-left", "why-right", "why-center-animate");
+
+    card.style.opacity = "0";
+    card.style.transform = "translateY(60px)";
+    card.style.transition = "all 0.7s cubic-bezier(0.22,1,0.36,1)";
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        card.style.opacity = "1";
+        card.style.transform = "translateY(0)";
+        observer.disconnect();
+      }
+    }, { threshold: 0.35 });
+
+    observer.observe(card);
+
+  });
+
+}
 
 });
 </script>
