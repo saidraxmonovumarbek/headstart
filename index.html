@@ -1228,7 +1228,7 @@ button {
 .filter-btn {
   position: relative;
   z-index: 4;          /* ABOVE slider */
-  pointer-events: none;
+  pointer-events: auto;   /* 🔥 restore clicking */
   padding: 10px 28px;
   border: none;
   background: none;
@@ -3110,6 +3110,10 @@ document.addEventListener("DOMContentLoaded", () => {
 const mobileNext = document.getElementById("mobileNext");
   const buttons = document.querySelectorAll(".filter-btn");
   const slider = document.querySelector(".filter-slider");
+  const filterContainer = document.querySelector(".teacher-filter");
+
+filterContainer.addEventListener("mousedown", startDrag);
+filterContainer.addEventListener("touchstart", startDrag);
 
   let index = 0;
   let currentGroup = "ielts";
@@ -3342,10 +3346,10 @@ let isDragging = false;
 let startX = 0;
 let currentLeft = 0;
 
-slider.addEventListener("mousedown", startDrag);
-slider.addEventListener("touchstart", startDrag);
-
 function startDrag(e) {
+
+  // Only left click
+  if (e.type === "mousedown" && e.button !== 0) return;
 
   isDragging = true;
   slider.classList.add("dragging");
@@ -3366,7 +3370,6 @@ function onDrag(e) {
   if (!isDragging) return;
 
   const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-
   const delta = clientX - startX;
 
   let newLeft = currentLeft + delta;
@@ -3377,6 +3380,17 @@ function onDrag(e) {
   newLeft = Math.max(6, Math.min(newLeft, max));
 
   slider.style.left = newLeft + "px";
+
+  // 🔥 NEW: live active button detection
+  const buttons = document.querySelectorAll(".filter-btn");
+  const sliderCenter = newLeft + slider.offsetWidth / 2;
+
+  buttons.forEach(btn => {
+    const btnCenter = btn.offsetLeft + btn.offsetWidth / 2;
+    const isActive = Math.abs(btnCenter - sliderCenter) < btn.offsetWidth / 2;
+
+    btn.classList.toggle("active", isActive);
+  });
 }
 
 function endDrag() {
