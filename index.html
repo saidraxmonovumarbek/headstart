@@ -369,6 +369,7 @@ nav a:hover::after {
   align-items: center;
   background: #ffffff;
   padding: 0 48px;
+  position: relative;   /* 🔥 ADD THIS */
 }
 
 .hero-wrapper {
@@ -456,7 +457,8 @@ nav a:hover::after {
 @media (max-width: 1024px) {
 
   #hero {
-    padding: 120px 24px 60px !important;
+    min-height: 100vh;
+    padding: 140px 24px 60px;
   }
 
   .hero-wrapper {
@@ -465,15 +467,20 @@ nav a:hover::after {
   }
 
   .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - 200px);
     align-items: center;
   }
 
   .hero-right {
-    margin-top: 40px;
+    margin-top: 120px; /* pushes image below fold */
+    transform: translateY(-110px);
   }
 
   .hero-image {
-    max-width: 380px;
+    max-width: 340px;
   }
 }
 
@@ -574,6 +581,11 @@ nav a:hover::after {
   gap: 24px;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.hero-buttons {
+  position: relative;
+  z-index: 5;
 }
 
 /* ================= HERO ANIMATION ================= */
@@ -1039,6 +1051,10 @@ nav a:hover::after {
   filter: blur(80px);
   animation: heroFloat 12s ease-in-out infinite alternate;
   z-index: 1;
+}
+
+#hero::before {
+  pointer-events: none;   /* 🔥 CRITICAL FIX */
 }
 
 @keyframes heroFloat {
@@ -1995,9 +2011,11 @@ button {
           Explore Courses →
         </a>
 
-        <a href="#results" class="btn btn-secondary">
-          See Our Results →
-        </a>
+        <a href="#results" 
+   class="btn btn-secondary"
+   onclick="smoothScroll('#results'); return false;">
+  See Our Results →
+</a>
       </div>
 
     </div>
@@ -2990,11 +3008,37 @@ setTimeout(() => {
 }, totalTitleTime + 900);
 
 // Icon appears AFTER buttons animation
-setTimeout(() => {
-  icon?.classList.add("animate");
-}, totalTitleTime + 1800);
+if (window.matchMedia("(min-width: 1025px)").matches) {
+  setTimeout(() => {
+    icon?.classList.add("animate");
+  }, totalTitleTime + 1800);
+}
 
 });
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  if (!window.matchMedia("(max-width: 1024px)").matches) return;
+
+  const heroImage = document.querySelector(".main-image");
+  const icon = document.querySelector(".icon-overlay");
+
+  if (!heroImage || !icon) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      icon.classList.add("animate");
+      observer.disconnect();
+    }
+  }, { threshold: 0.9 }); // triggers when 90% visible
+
+  observer.observe(heroImage);
+
+});
+
 </script>
 
 <script>
