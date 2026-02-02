@@ -1227,7 +1227,8 @@ button {
 
 .filter-btn {
   position: relative;
-  z-index: 2;
+  z-index: 4;          /* ABOVE slider */
+  pointer-events: none;
   padding: 10px 28px;
   border: none;
   background: none;
@@ -1248,13 +1249,35 @@ button {
 
 .filter-slider {
   position: absolute;
+  pointer-events: auto;
+  cursor: grab;
   top: 6px;
-  left: 0; /* important */
+  left: 6px;
   height: calc(100% - 12px);
-  border-radius: 40px;
+  width: 0;
+  border-radius: 50px;
   background: var(--accent);
-  transition: left 0.45s cubic-bezier(0.22,1,0.36,1),
-              width 0.45s cubic-bezier(0.22,1,0.36,1);
+
+  transition:
+  left 0.45s cubic-bezier(0.22,1,0.36,1),
+  width 0.45s cubic-bezier(0.22,1,0.36,1),
+  background 0.25s ease,
+  box-shadow 0.25s ease,
+  transform 0.25s ease;
+
+  z-index: 3; /* above buttons */
+}
+
+.filter-slider {
+  user-select: none;
+  touch-action: none;
+}
+
+.filter-slider.dragging {
+  background: rgba(34, 197, 94, 0.35);  /* light glass green */
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(34,197,94,0.25);
+  transform: scale(1.05);
 }
 
 /* MOBILE */
@@ -2837,15 +2860,34 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ================= DESKTOP BUTTONS ================= */
 
   buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
 
-      buttons.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
+  btn.parentElement.addEventListener("click", (e) => {
 
-      const selected = btn.getAttribute("data-course");
-      content.innerHTML = courseData[selected];
-    });
+    if (!e.target.classList.contains("filter-btn")) return;
+
+    const clicked = e.target;
+
+    document.querySelector(".filter-btn.active")
+      ?.classList.remove("active");
+
+    clicked.classList.add("active");
+
+    currentGroup = clicked.dataset.filter;
+
+    track.style.opacity = "0";
+    track.style.transform = "translateY(10px)";
+
+    setTimeout(() => {
+      buildTeachers(currentGroup);
+      track.style.opacity = "1";
+      track.style.transform = "translateY(0)";
+    }, 350);
+
+    moveSlider(clicked);
+
   });
+
+});
 
   /* ================= MOBILE DROPDOWN ================= */
 
@@ -3291,6 +3333,97 @@ function moveSlider(btn) {
 
   /* INIT */
   buildTeachers("ielts");
+
+  /* ===============================
+   APPLE DRAG UPGRADE
+=============================== */
+
+let isDragging = false;
+let startX = 0;
+let currentLeft = 0;
+
+slider.addEventListener("mousedown", startDrag);
+slider.addEventListener("touchstart", startDrag);
+
+function startDrag(e) {
+
+  isDragging = true;
+  slider.classList.add("dragging");
+
+  slider.style.transition = "none";
+
+  startX = e.touches ? e.touches[0].clientX : e.clientX;
+  currentLeft = parseFloat(slider.style.left) || 0;
+
+  document.addEventListener("mousemove", onDrag);
+  document.addEventListener("touchmove", onDrag);
+  document.addEventListener("mouseup", endDrag);
+  document.addEventListener("touchend", endDrag);
+}
+
+function onDrag(e) {
+
+  if (!isDragging) return;
+
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+
+  const delta = clientX - startX;
+
+  let newLeft = currentLeft + delta;
+
+  const parent = slider.parentElement;
+  const max = parent.offsetWidth - slider.offsetWidth - 6;
+
+  newLeft = Math.max(6, Math.min(newLeft, max));
+
+  slider.style.left = newLeft + "px";
+}
+
+function endDrag() {
+
+  if (!isDragging) return;
+
+  isDragging = false;
+  slider.classList.remove("dragging");
+
+  slider.style.transition =
+  "left 0.45s cubic-bezier(0.22,1,0.36,1), width 0.45s cubic-bezier(0.22,1,0.36,1)";
+
+  snapToClosest();
+
+  document.removeEventListener("mousemove", onDrag);
+  document.removeEventListener("touchmove", onDrag);
+  document.removeEventListener("mouseup", endDrag);
+  document.removeEventListener("touchend", endDrag);
+}
+
+function snapToClosest() {
+
+  const buttons = document.querySelectorAll(".filter-btn");
+  const sliderCenter =
+    slider.offsetLeft + slider.offsetWidth / 2;
+
+  let closest = null;
+  let minDistance = Infinity;
+
+  buttons.forEach(btn => {
+
+    const btnCenter =
+      btn.offsetLeft + btn.offsetWidth / 2;
+
+    const distance = Math.abs(btnCenter - sliderCenter);
+
+    if (distance < minDistance) {
+      minDistance = distance;
+      closest = btn;
+    }
+
+  });
+
+  if (closest) {
+    closest.click(); // uses your existing system
+  }
+}
 
 });
 </script>
