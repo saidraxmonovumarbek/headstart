@@ -1258,6 +1258,9 @@ button {
   border-radius: 50px;
   background: var(--accent);
 
+  will-change: left, width;
+transform: translateZ(0);
+
   transition:
   left 0.45s cubic-bezier(0.22,1,0.36,1),
   width 0.45s cubic-bezier(0.22,1,0.36,1),
@@ -1268,9 +1271,14 @@ button {
   z-index: 3; /* above buttons */
 }
 
+html, body {
+  overflow-x: hidden;
+}
+
 .filter-slider {
   user-select: none;
   touch-action: none;
+  -webkit-user-drag: none;
 }
 
 .filter-slider.dragging {
@@ -3352,15 +3360,17 @@ function startDrag(e) {
   if (e.type === "mousedown" && e.button !== 0) return;
 
   isDragging = true;
-  slider.classList.add("dragging");
 
+  if (e.cancelable) e.preventDefault();
+
+  slider.classList.add("dragging");
   slider.style.transition = "none";
 
   startX = e.touches ? e.touches[0].clientX : e.clientX;
   currentLeft = parseFloat(slider.style.left) || 0;
 
   document.addEventListener("mousemove", onDrag);
-  document.addEventListener("touchmove", onDrag);
+  document.addEventListener("touchmove", onDrag, { passive: false });
   document.addEventListener("mouseup", endDrag);
   document.addEventListener("touchend", endDrag);
 }
