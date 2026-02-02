@@ -3148,7 +3148,7 @@ filterContainer.addEventListener("touchstart", startDrag);
         image: "",
         stats: [
           ["8.5","IELTS"],
-          ["CEFR C2","Certificate"],
+          ["CEFR C1","Certificate"],
           ["6+","Years Experience"],
           ["1500+","Students"]
         ],
@@ -3351,17 +3351,21 @@ function moveSlider(btn) {
 =============================== */
 
 let isDragging = false;
+let hasMoved = false;
 let startX = 0;
 let currentLeft = 0;
 
+slider.addEventListener("touchstart", startDrag, { passive: true });
+slider.addEventListener("mousedown", startDrag);
+
 function startDrag(e) {
 
-  // Only left click
-  if (e.type === "mousedown" && e.button !== 0) return;
-
   isDragging = true;
+  hasMoved = false;
 
-  if (e.cancelable) e.preventDefault();
+  // remove active state while dragging
+document.querySelector(".filter-btn.active")
+  ?.classList.remove("active");
 
   slider.classList.add("dragging");
   slider.style.transition = "none";
@@ -3382,6 +3386,11 @@ function onDrag(e) {
   const clientX = e.touches ? e.touches[0].clientX : e.clientX;
   const delta = clientX - startX;
 
+  if (Math.abs(delta) > 5) {
+    hasMoved = true;
+    if (e.cancelable) e.preventDefault();
+  }
+
   let newLeft = currentLeft + delta;
 
   const parent = slider.parentElement;
@@ -3390,17 +3399,6 @@ function onDrag(e) {
   newLeft = Math.max(6, Math.min(newLeft, max));
 
   slider.style.left = newLeft + "px";
-
-  // 🔥 NEW: live active button detection
-  const buttons = document.querySelectorAll(".filter-btn");
-  const sliderCenter = newLeft + slider.offsetWidth / 2;
-
-  buttons.forEach(btn => {
-    const btnCenter = btn.offsetLeft + btn.offsetWidth / 2;
-    const isActive = Math.abs(btnCenter - sliderCenter) < btn.offsetWidth / 2;
-
-    btn.classList.toggle("active", isActive);
-  });
 }
 
 function endDrag() {
@@ -3411,9 +3409,11 @@ function endDrag() {
   slider.classList.remove("dragging");
 
   slider.style.transition =
-  "left 0.45s cubic-bezier(0.22,1,0.36,1), width 0.45s cubic-bezier(0.22,1,0.36,1)";
+    "left 0.45s cubic-bezier(0.22,1,0.36,1), width 0.45s cubic-bezier(0.22,1,0.36,1)";
 
-  snapToClosest();
+  if (hasMoved) {
+    snapToClosest();
+  }
 
   document.removeEventListener("mousemove", onDrag);
   document.removeEventListener("touchmove", onDrag);
