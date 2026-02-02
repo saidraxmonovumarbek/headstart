@@ -94,6 +94,15 @@
   color: var(--accent);
 }
 
+@media (max-width: 1024px) {
+
+  .logo {
+    position: relative;
+    left: -13px;   /* 🔥 adjust this number */
+  }
+
+}
+
 nav {
   display: flex;
   gap: 32px;
@@ -240,6 +249,11 @@ nav a:hover::after {
         display: flex;
         margin-left: auto;
     }
+
+    .hamburger {
+    position: relative;
+    right: -13px;   /* 🔥 adjust this */
+  }
 
     /* HIDE NAV COMPLETELY BY DEFAULT */
     nav#main-nav {
