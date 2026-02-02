@@ -2275,45 +2275,42 @@ html, body {
   </div>
 
   <div class="course-dropdown-menu" id="courseDropdownMenu">
-    <div data-course="ielts">IELTS Academic</div>
-    <div data-course="cefr">CEFR</div>
-    <div data-course="sat">SAT</div>
-    <div data-course="german">German</div>
-    <div data-course="russian">Russian</div>
-    <div data-course="turkish">Turkish</div>
+   <div data-course="general">General English</div>
+<div data-course="preielts">Pre-IELTS</div>
+<div data-course="ielts">IELTS</div>
+<div data-course="cefr">CEFR</div>
+<div data-course="satenglish">SAT English</div>
+<div data-course="satmath">SAT Math</div>
   </div>
 </div>
 
-      <button class="course-btn active" data-course="ielts">
-        IELTS Academic
-      </button>
+     <button class="course-btn active" data-course="general">
+  General English
+</button>
 
-      <button class="course-btn" data-course="cefr">
-        CEFR
-      </button>
+<button class="course-btn" data-course="preielts">
+  Pre-IELTS
+</button>
 
-      <button class="course-btn" data-course="sat">
-        SAT
-      </button>
+<button class="course-btn" data-course="ielts">
+  IELTS
+</button>
 
-      <button class="course-btn" data-course="german">
-        German
-      </button>
+<button class="course-btn" data-course="cefr">
+  CEFR
+</button>
 
-      <button class="course-btn" data-course="russian">
-        Russian
-      </button>
+<button class="course-btn" data-course="satenglish">
+  SAT English
+</button>
 
-      <button class="course-btn" data-course="turkish">
-        Turkish
-      </button>
+<button class="course-btn" data-course="satmath">
+  SAT Math
+</button>
     </div>
 
-    <!-- RIGHT SIDE -->
+    <!-- RIGHT SIDE CONTENT -->
     <div class="courses-content" id="course-content">
-      <div class="course-placeholder">
-        Please select a course to see more information.
-      </div>
     </div>
 
   </div>
@@ -2824,46 +2821,54 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ================= COURSE DATA ================= */
 
-  const courseData = {
-    ielts: `
-      <div class="course-details">
-        <h2>IELTS Academic</h2>
-        <p>Our flagship program focused on high band scores.</p>
-        <p><strong>Teachers:</strong> Experienced IELTS specialists</p>
-        <p><strong>Experience:</strong> 10+ years focused IELTS training</p>
-      </div>
-    `,
-    cefr: `
-      <div class="course-details">
-        <h2>CEFR Program</h2>
-        <p>Structured European-level English development.</p>
-      </div>
-    `,
-    sat: `
-      <div class="course-details">
-        <h2>SAT Preparation</h2>
-        <p>College entrance preparation program.</p>
-      </div>
-    `,
-    german: `
-      <div class="course-details">
-        <h2>German Program</h2>
-        <p>Beginner to advanced German training.</p>
-      </div>
-    `,
-    russian: `
-      <div class="course-details">
-        <h2>Russian Program</h2>
-        <p>Grammar, speaking and academic writing.</p>
-      </div>
-    `,
-    turkish: `
-      <div class="course-details">
-        <h2>Turkish Program</h2>
-        <p>Modern Turkish language development.</p>
-      </div>
-    `
-  };
+const courseData = {
+
+  general: `
+    <div class="course-details">
+      <h2>General English</h2>
+      <p>Comprehensive English development focused on grammar, vocabulary, fluency and confidence.</p>
+    </div>
+  `,
+
+  preielts: `
+    <div class="course-details">
+      <h2>Pre-IELTS</h2>
+      <p>Foundation program preparing students for full IELTS training with structured skill building.</p>
+    </div>
+  `,
+
+  ielts: `
+    <div class="course-details">
+      <h2>IELTS</h2>
+      <p>Advanced IELTS preparation targeting Band 7.0–8.5 with full mock exam system.</p>
+    </div>
+  `,
+
+  cefr: `
+    <div class="course-details">
+      <h2>CEFR</h2>
+      <p>Level-based European framework training from A1 to C1.</p>
+    </div>
+  `,
+
+  satenglish: `
+    <div class="course-details">
+      <h2>SAT English</h2>
+      <p>Reading and Writing mastery for high SAT performance.</p>
+    </div>
+  `,
+
+  satmath: `
+    <div class="course-details">
+      <h2>SAT Math</h2>
+      <p>Advanced algebra and problem-solving strategies for competitive SAT scores.</p>
+    </div>
+  `
+};
+
+  // Set default course on first load
+  content.innerHTML = courseData["general"];
+
 
   /* ================= DESKTOP BUTTONS ================= */
 
