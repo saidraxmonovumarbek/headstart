@@ -139,6 +139,10 @@ nav a:hover::after {
   background: #ffffff;
 }
 
+#hero {
+  border-bottom: none;
+}
+
     h2 {
         font-size: 42px;
         font-weight: 700;
@@ -339,27 +343,6 @@ nav a:hover::after {
     display: none;
   }
 
-}
-
-.hero-curve {
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 100%;
-  height: 118px;
-  z-index: 3;
-  pointer-events: none;
-}
-
-.hero-curve svg {
-  width: 115%;
-  height: 100%;
-  display: block;
-}
-
-
-#hero {
-  border-bottom: none !important;
 }
 
 #hero {
@@ -581,9 +564,6 @@ nav a:hover::after {
   gap: 24px;
   justify-content: center;
   flex-wrap: wrap;
-}
-
-.hero-buttons {
   position: relative;
   z-index: 5;
 }
@@ -688,7 +668,6 @@ nav a:hover::after {
 
 .courses-section {
   min-height: 100vh;
-  border-bottom: none;
 }
 
 .courses-wrapper {
@@ -1027,14 +1006,12 @@ nav a:hover::after {
 }
 
 .location-box,
-.metric-card,
 .courses-content {
   transition: transform 0.4s cubic-bezier(0.22,1,0.36,1),
               box-shadow 0.4s ease;
 }
 
-.location-box:hover,
-.metric-card:hover {
+.location-box:hover {
   transform: translateY(-8px);
   box-shadow: 0 30px 60px rgba(0,0,0,0.05);
 }
@@ -1051,10 +1028,7 @@ nav a:hover::after {
   filter: blur(80px);
   animation: heroFloat 12s ease-in-out infinite alternate;
   z-index: 1;
-}
-
-#hero::before {
-  pointer-events: none;   /* 🔥 CRITICAL FIX */
+  pointer-events: none;
 }
 
 @keyframes heroFloat {
@@ -1083,8 +1057,13 @@ nav a:hover::after {
 
 .testimonial-wrapper {
   position: relative;
-  margin-top: 48px; /* spacing below title */
-  min-height: 120px; /* adjust if needed */
+  margin-top: 32px;
+  min-height: 90px;
+}
+
+#testimonials {
+  padding: 60px 48px 40px 48px;
+  border-bottom: 1px solid var(--border);
 }
 
 html {
@@ -1102,11 +1081,12 @@ button {
 .teachers-section {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;   /* 🔥 horizontal centering */
+  justify-content: center;
   padding: 120px 48px;
   overflow: hidden;
-  border-bottom: none;
+  text-align: center;
 }
 
 .teacher-slider {
@@ -1224,6 +1204,59 @@ button {
   right: 10px;
 }
 
+/* ===============================
+   TEACHER FILTER (LIQUID)
+================================ */
+
+.teacher-filter-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 60px;
+}
+
+.teacher-filter {
+  position: relative;
+  display: inline-flex;
+  padding: 6px;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+}
+
+.filter-btn {
+  position: relative;
+  z-index: 2;
+  padding: 10px 28px;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 40px;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-btn.active {
+  color: white;
+}
+
+.filter-slider {
+  position: absolute;
+  top: 6px;
+  left: 0; /* important */
+  height: calc(100% - 12px);
+  border-radius: 40px;
+  background: var(--accent);
+  transition: left 0.45s cubic-bezier(0.22,1,0.36,1),
+              width 0.45s cubic-bezier(0.22,1,0.36,1);
+}
+
 /* MOBILE */
 @media (max-width: 1024px) {
 
@@ -1283,14 +1316,8 @@ button {
    TEACHERS SECTION TITLE
 ================================ */
 
-.teachers-section {
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
-
 .teachers-header {
-  margin-bottom: 80px;
+  margin-bottom: 72px;   /* reduced by 10% */
 }
 
 .teachers-title {
@@ -1438,14 +1465,6 @@ button {
   max-width: 720px;
   margin-left: auto;
   margin-right: auto;
-}
-
-/* Grid */
-.why-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
-  gap: 36px;
-  align-items: stretch;
 }
 
 /* Side columns */
@@ -2327,6 +2346,15 @@ button {
   <div class="teachers-header">
     <h2 class="teachers-title">Our Teachers</h2>
   </div>
+  
+  <div class="teacher-filter-wrapper">
+  <div class="teacher-filter">
+    <button class="filter-btn active" data-filter="ielts">IELTS</button>
+    <button class="filter-btn" data-filter="english">English</button>
+    <button class="filter-btn" data-filter="sat">SAT</button>
+    <div class="filter-slider"></div>
+  </div>
+</div>
 
   <div class="teacher-slider">
 
@@ -2346,318 +2374,29 @@ button {
 
     <div class="teacher-track">
 
-      <!-- TEACHER 1 -->
-      <div class="teacher-slide">
-        <div class="teacher-left">
-  <img src="assets/dilmurod.png" alt="Dilmurod" class="teacher-img">
-</div>
-
-<!-- MOBILE NAME -->
-<div class="teacher-name mobile-name">Dilmurod Isakulov</div>
-
-<div class="teacher-right">
-
-  <!-- DESKTOP NAME -->
-  <div class="teacher-name desktop-name">Dilmurod Isakulov</div>
-
-          <div class="teacher-top">
-            <div class="teacher-stats">
-
-              <div class="teacher-stat">
-                <div class="stat-big">8.5</div>
-                <div class="stat-small">IELTS</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">CEFR C1</div>
-                <div class="stat-small">Certificate</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">10+</div>
-                <div class="stat-small">Years Experience</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">2000+</div>
-                <div class="stat-small">Students</div>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="teacher-bottom">
-  <div class="teacher-bio">More info soon, bro</div>
+    </div>
+  </div>
 
   <div class="teacher-swipe-hint">
-    <div class="hint-text">
-      Use arrows to see more
-    </div>
+  <div class="hint-text">Swipe to see more</div>
+ <div class="hint-icons">
+  <svg id="mobilePrev" viewBox="0 0 24 24">
+    <path d="M15 18L9 12L15 6"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"/>
+  </svg>
 
-    <div class="hint-icons">
-      <svg viewBox="0 0 24 24">
-        <path d="M15 18L9 12L15 6"/>
-      </svg>
-
-      <svg viewBox="0 0 24 24">
-        <path d="M9 6L15 12L9 18"/>
-      </svg>
-    </div>
-  </div>
+  <svg id="mobileNext" viewBox="0 0 24 24">
+    <path d="M9 6L15 12L9 18"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"/>
+  </svg>
 </div>
-
-        </div>
-      </div>
-
-
-      <!-- TEACHER 2 -->
-      <div class="teacher-slide">
-        <div class="teacher-left"></div>
-
-<!-- MOBILE NAME -->
-<div class="teacher-name mobile-name">Otabek Ravshankulov</div>
-
-<div class="teacher-right">
-
-  <!-- DESKTOP NAME -->
-  <div class="teacher-name desktop-name">Otabek Ravshankulov</div>
-
-          <div class="teacher-top">
-            <div class="teacher-stats">
-
-              <div class="teacher-stat">
-                <div class="stat-big">8.5</div>
-                <div class="stat-small">IELTS</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">CEFR C2</div>
-                <div class="stat-small">Certificate</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">6+</div>
-                <div class="stat-small">Years Experience</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">1500+</div>
-                <div class="stat-small">Students</div>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="teacher-bottom">
-  <div class="teacher-bio">More info soon, bro</div>
-
-  <div class="teacher-swipe-hint">
-    <div class="hint-text">
-      Use arrows to see more
-    </div>
-
-    <div class="hint-icons">
-      <svg viewBox="0 0 24 24">
-        <path d="M15 18L9 12L15 6"/>
-      </svg>
-
-      <svg viewBox="0 0 24 24">
-        <path d="M9 6L15 12L9 18"/>
-      </svg>
-    </div>
-  </div>
 </div>
-
-        </div>
-      </div>
-
-
-      <!-- TEACHER 3 -->
-      <div class="teacher-slide">
-        <div class="teacher-left"></div>
-
-<!-- MOBILE NAME -->
-<div class="teacher-name mobile-name">Bunyod Inomov</div>
-
-<div class="teacher-right">
-
-  <!-- DESKTOP NAME -->
-  <div class="teacher-name desktop-name">Bunyod Inomov</div>
-
-          <div class="teacher-top">
-            <div class="teacher-stats">
-
-              <div class="teacher-stat">
-                <div class="stat-big">8.0</div>
-                <div class="stat-small">IELTS</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">CEFR C1</div>
-                <div class="stat-small">Certificate</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">7+</div>
-                <div class="stat-small">Years Experience</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">800+</div>
-                <div class="stat-small">Students</div>
-              </div>
-
-            </div>
-          </div>
-
-         <div class="teacher-bottom">
-  <div class="teacher-bio">More info soon, bro</div>
-
-  <div class="teacher-swipe-hint">
-    <div class="hint-text">
-      Use arrows to see more
-    </div>
-
-    <div class="hint-icons">
-      <svg viewBox="0 0 24 24">
-        <path d="M15 18L9 12L15 6"/>
-      </svg>
-
-      <svg viewBox="0 0 24 24">
-        <path d="M9 6L15 12L9 18"/>
-      </svg>
-    </div>
-  </div>
-</div>
-
-        </div>
-      </div>
-
-
-  <!-- TEACHER 4 -->
-      <div class="teacher-slide">
-        <div class="teacher-left"></div>
-
-<!-- MOBILE NAME -->
-<div class="teacher-name mobile-name">Kamron Inatillayev</div>
-
-<div class="teacher-right">
-
-  <!-- DESKTOP NAME -->
-  <div class="teacher-name desktop-name">Kamron Inatillayev</div>
-
-          <div class="teacher-top">
-            <div class="teacher-stats">
-
-              <div class="teacher-stat">
-                <div class="stat-big">8.0</div>
-                <div class="stat-small">IELTS</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">CEFR C1</div>
-                <div class="stat-small">Certificate</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">3+</div>
-                <div class="stat-small">Years Experience</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">300+</div>
-                <div class="stat-small">Students</div>
-              </div>
-
-            </div>
-          </div>
-
-         <div class="teacher-bottom">
-  <div class="teacher-bio">More info soon, bro</div>
-
-  <div class="teacher-swipe-hint">
-    <div class="hint-text">
-      Use arrows to see more
-    </div>
-
-    <div class="hint-icons">
-      <svg viewBox="0 0 24 24">
-        <path d="M15 18L9 12L15 6"/>
-      </svg>
-
-      <svg viewBox="0 0 24 24">
-        <path d="M9 6L15 12L9 18"/>
-      </svg>
-    </div>
-  </div>
-</div>
-
-        </div>
-      </div>
-
-      <!-- TEACHER 5 -->
-      <div class="teacher-slide">
-        <div class="teacher-left"></div>
-
-<!-- MOBILE NAME -->
-<div class="teacher-name mobile-name">Madina Ravshanova</div>
-
-<div class="teacher-right">
-
-  <!-- DESKTOP NAME -->
-  <div class="teacher-name desktop-name">Madina Ravshanova</div>
-
-          <div class="teacher-top">
-            <div class="teacher-stats">
-
-              <div class="teacher-stat">
-                <div class="stat-big">8.0</div>
-                <div class="stat-small">IELTS</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">CEFR C1</div>
-                <div class="stat-small">Certificate</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">3+</div>
-                <div class="stat-small">Years Experience</div>
-              </div>
-
-              <div class="teacher-stat">
-                <div class="stat-big">250+</div>
-                <div class="stat-small">Students</div>
-              </div>
-
-            </div>
-          </div>
-
-         <div class="teacher-bottom">
-  <div class="teacher-bio">More info soon, bro</div>
-
-  <div class="teacher-swipe-hint">
-    <div class="hint-text">
-      Use arrows to see more
-    </div>
-
-    <div class="hint-icons">
-      <svg viewBox="0 0 24 24">
-        <path d="M15 18L9 12L15 6"/>
-      </svg>
-
-      <svg viewBox="0 0 24 24">
-        <path d="M9 6L15 12L9 18"/>
-      </svg>
-    </div>
-  </div>
-</div>
-
-        </div>
-      </div>
-
-    </div>
-  </div>
 
 </section>
 
@@ -3237,57 +2976,6 @@ document.addEventListener("DOMContentLoaded", () => {
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  const track = document.querySelector(".teacher-track");
-  const slides = document.querySelectorAll(".teacher-slide");
-  const prev = document.querySelector(".teacher-arrow.left");
-  const next = document.querySelector(".teacher-arrow.right");
-
-  if (!track || slides.length === 0) return;
-
-  let index = 0;
-  const total = slides.length;
-
-  function updateSlider() {
-    track.style.transform = `translateX(-${index * 100}%)`;
-  }
-
-  /* Desktop arrows */
-  next?.addEventListener("click", () => {
-    index = (index + 1) % total;
-    updateSlider();
-  });
-
-  prev?.addEventListener("click", () => {
-    index = (index - 1 + total) % total;
-    updateSlider();
-  });
-
-  /* Mobile hint icons — attach to ALL teachers */
-  const allHints = document.querySelectorAll(".hint-icons");
-
-  allHints.forEach(hint => {
-
-    const leftIcon = hint.querySelector("svg:first-child");
-    const rightIcon = hint.querySelector("svg:last-child");
-
-    rightIcon?.addEventListener("click", () => {
-      index = (index + 1) % total;
-      updateSlider();
-    });
-
-    leftIcon?.addEventListener("click", () => {
-      index = (index - 1 + total) % total;
-      updateSlider();
-    });
-
-  });
-
-});
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
   const slides = document.querySelectorAll(".atmo-slide");
   let index = 0;
 
@@ -3366,6 +3054,243 @@ if (isDesktop) {
   });
 
 }
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const track = document.querySelector(".teacher-track");
+  const prev = document.querySelector(".teacher-arrow.left");
+  const next = document.querySelector(".teacher-arrow.right");
+  const mobilePrev = document.getElementById("mobilePrev");
+const mobileNext = document.getElementById("mobileNext");
+  const buttons = document.querySelectorAll(".filter-btn");
+  const slider = document.querySelector(".filter-slider");
+
+  let index = 0;
+  let currentGroup = "ielts";
+
+  /* ===============================
+     TEACHER DATABASE
+  =============================== */
+
+  const teachers = {
+    ielts: [
+      {
+        name: "Dilmurod Isakulov",
+        image: "assets/dilmurod.png",
+        stats: [
+          ["8.5","IELTS"],
+          ["CEFR C1","Certificate"],
+          ["10+","Years Experience"],
+          ["2000+","Students"]
+        ],
+        bio: "IELTS specialist with elite band 8.5 results."
+      },
+      {
+        name: "Otabek Ravshankulov",
+        image: "",
+        stats: [
+          ["8.5","IELTS"],
+          ["CEFR C2","Certificate"],
+          ["6+","Years Experience"],
+          ["1500+","Students"]
+        ],
+        bio: "Advanced IELTS instructor."
+      },
+      {
+        name: "Bunyod Inomov",
+        image: "",
+        stats: [
+          ["8.0","IELTS"],
+          ["CEFR C1","Certificate"],
+          ["7+","Years Experience"],
+          ["800+","Students"]
+        ],
+        bio: "Structured IELTS methodology expert."
+      }
+    ],
+
+    english: [
+      {
+        name: "Kamron Inatillayev",
+        image: "",
+        stats: [
+          ["8.0","IELTS"],
+          ["CEFR C1","Certificate"],
+          ["3+","Years Experience"],
+          ["300+","Students"]
+        ],
+        bio: "English foundation specialist."
+      },
+      {
+        name: "Madina Ravshanova",
+        image: "",
+        stats: [
+          ["8.0","IELTS"],
+          ["CEFR C1","Certificate"],
+          ["3+","Years Experience"],
+          ["250+","Students"]
+        ],
+        bio: "Modern communicative English teacher."
+      }
+    ],
+
+    sat: [
+      {
+        name: "Donald",
+        image: "",
+        stats: [
+          ["1520","SAT"],
+          ["790","Math"],
+          ["730","Evidence-Based Reading"],
+          ["5+","Years Experience"]
+        ],
+        bio: "SAT preparation specialist."
+      }
+    ]
+  };
+
+  /* ===============================
+     BUILD TEACHERS
+  =============================== */
+
+  function buildTeachers(group) {
+
+    track.innerHTML = "";
+    index = 0;
+
+    teachers[group].forEach(t => {
+
+      const slide = document.createElement("div");
+      slide.className = "teacher-slide";
+
+      slide.innerHTML = `
+        <div class="teacher-left">
+          ${t.image ? `<img src="${t.image}" class="teacher-img">` : ``}
+        </div>
+
+        <div class="teacher-name mobile-name">${t.name}</div>
+
+        <div class="teacher-right">
+
+          <div class="teacher-name desktop-name">${t.name}</div>
+
+          <div class="teacher-top">
+            <div class="teacher-stats">
+              ${t.stats.map(stat => `
+                <div class="teacher-stat">
+                  <div class="stat-big">${stat[0]}</div>
+                  <div class="stat-small">${stat[1]}</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+
+          <div class="teacher-bottom">
+            <div class="teacher-bio">${t.bio}</div>
+          </div>
+
+        </div>
+      `;
+
+      track.appendChild(slide);
+
+    });
+
+    updateSlider();
+  }
+
+  /* ===============================
+     SLIDER CONTROL
+  =============================== */
+
+  function updateSlider() {
+    track.style.transform = `translateX(-${index * 100}%)`;
+  }
+
+  next?.addEventListener("click", () => {
+    index = (index + 1) % teachers[currentGroup].length;
+    updateSlider();
+  });
+
+  prev?.addEventListener("click", () => {
+    index = (index - 1 + teachers[currentGroup].length) %
+            teachers[currentGroup].length;
+    updateSlider();
+  });
+
+  mobileNext?.addEventListener("click", () => {
+  index = (index + 1) % teachers[currentGroup].length;
+  updateSlider();
+});
+
+mobilePrev?.addEventListener("click", () => {
+  index = (index - 1 + teachers[currentGroup].length) %
+          teachers[currentGroup].length;
+  updateSlider();
+});
+
+  /* ===============================
+     LIQUID FILTER SYSTEM
+  =============================== */
+
+function moveSlider(btn) {
+
+  const baseWidth = btn.offsetWidth * 0.85; // keep 15% shorter
+  slider.style.width = baseWidth + "px";
+
+  let baseLeft = btn.offsetLeft + 
+                 (btn.offsetWidth - baseWidth) / 2;
+
+  /* ===============================
+     MANUAL MICRO OFFSETS
+     (change these numbers yourself)
+  =============================== */
+
+  const offsets = {
+    ielts:  -0.5,   // negative = move LEFT
+    english: 0.4,   // positive = move RIGHT
+    sat:    0.4    // negative = move LEFT
+  };
+
+  baseLeft += offsets[btn.dataset.filter] || 0;
+
+  slider.style.left = baseLeft + "px";
+}
+
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+
+      document.querySelector(".filter-btn.active")
+        ?.classList.remove("active");
+
+      btn.classList.add("active");
+
+      currentGroup = btn.dataset.filter;
+
+      track.style.opacity = "0";
+      track.style.transform = "translateY(10px)";
+
+      setTimeout(() => {
+        buildTeachers(currentGroup);
+        track.style.opacity = "1";
+        track.style.transform = "translateY(0)";
+      }, 350);
+
+      moveSlider(btn);
+    });
+  });
+
+  window.addEventListener("load", () => {
+    moveSlider(document.querySelector(".filter-btn.active"));
+  });
+
+  /* INIT */
+  buildTeachers("ielts");
 
 });
 </script>
