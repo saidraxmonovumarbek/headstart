@@ -2867,34 +2867,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ================= DESKTOP BUTTONS ================= */
 
-  buttons.forEach(btn => {
+  /* ================= DESKTOP COURSE BUTTONS ================= */
 
-  btn.parentElement.addEventListener("click", (e) => {
+buttons.forEach(btn => {
+  btn.addEventListener("click", () => {
 
-    if (!e.target.classList.contains("filter-btn")) return;
-
-    const clicked = e.target;
-
-    document.querySelector(".filter-btn.active")
+    // remove active from others
+    document.querySelector(".course-btn.active")
       ?.classList.remove("active");
 
-    clicked.classList.add("active");
+    // activate clicked
+    btn.classList.add("active");
 
-    currentGroup = clicked.dataset.filter;
+    const selected = btn.dataset.course;
 
-    track.style.opacity = "0";
-    track.style.transform = "translateY(10px)";
-
-    setTimeout(() => {
-      buildTeachers(currentGroup);
-      track.style.opacity = "1";
-      track.style.transform = "translateY(0)";
-    }, 350);
-
-    moveSlider(clicked);
+    // inject correct content
+    content.innerHTML = courseData[selected];
 
   });
-
 });
 
   /* ================= MOBILE DROPDOWN ================= */
