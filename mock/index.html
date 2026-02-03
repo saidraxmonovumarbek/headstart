@@ -1,1 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mock Exams – HeadStart</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --accent: #22c55e;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: var(--font-main);
+  background:#ffffff;
+  color:var(--text);
+  line-height:1.6;
+}
+
+.container {
+  max-width:1200px;
+  margin:0 auto;
+  padding:160px 24px;
+}
+
+.mock-back {
+  display:inline-block;
+  margin-bottom:50px;
+  font-size:14px;
+  color:var(--text-muted);
+  text-decoration:none;
+  font-weight:500;
+  transition:0.3s ease;
+}
+
+.mock-back:hover {
+  color:var(--accent);
+  transform:translateX(-4px);
+}
+
+.mock-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:80px;
+  align-items:center;
+}
+
+.mock-title {
+  font-size:64px;
+  font-weight:800;
+  line-height:1.15;
+  margin-bottom:32px;
+  overflow:hidden;
+}
+
+.mock-title .line {
+  display:block;
+}
+
+.mock-title .word {
+  display:inline-block;
+  margin-right:12px;
+  overflow:hidden;
+}
+
+.mock-title .word span {
+  display:inline-block;
+  transform:translateY(120%);
+  animation:letterUp 0.6s forwards;
+}
+
+@keyframes letterUp {
+  to { transform:translateY(0); }
+}
+
+.mock-description {
+  font-size:18px;
+  color:var(--text-muted);
+  margin-bottom:40px;
+  opacity:0;
+  transform:translateY(30px);
+  animation:fadeUp 0.8s forwards;
+  animation-delay:1.4s;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.mock-buttons {
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  opacity:0;
+  transform:translateY(40px);
+  animation:fadeUp 0.8s forwards;
+  animation-delay:2.2s;
+}
+
+.btn-primary {
+  padding:16px 36px;
+  background:var(--accent);
+  color:#fff;
+  text-decoration:none;
+  border-radius:14px;
+  font-weight:600;
+  transition:0.3s ease;
+  border:2px solid var(--accent);
+}
+
+.btn-primary:hover {
+  background:#fff;
+  color:var(--accent);
+}
+
+.btn-outline {
+  padding:16px 36px;
+  border:2px solid var(--accent);
+  color:var(--accent);
+  border-radius:14px;
+  font-weight:600;
+  text-decoration:none;
+  transition:0.3s ease;
+}
+
+.btn-outline:hover {
+  background:var(--accent);
+  color:#fff;
+}
+
+.mock-right {
+  min-height:400px;
+}
+
+@media (max-width: 900px) {
+
+  .mock-grid {
+    grid-template-columns:1fr;
+  }
+
+  .mock-title {
+    font-size:40px;
+  }
+
+  /* 🔥 Smaller buttons on mobile only */
+  .btn-primary,
+  .btn-outline {
+    padding:12px 20px;     /* reduced from 16px 36px */
+    font-size:14px;        /* slightly smaller text */
+    border-radius:10px;    /* slightly tighter */
+  }
+
+  .mock-buttons {
+    gap:14px;              /* slightly less spacing */
+  }
+
+}
+
+/* ===============================
+   SAFE 6-7 TREND DANCE (SEPARATE PAGE)
+================================ */
+
+@keyframes trendDance {
+  0%   { transform: translateY(0) scale(1); }
+  25%  { transform: translateY(-6px) scale(1.04); }
+  50%  { transform: translateY(0) scale(1); }
+  75%  { transform: translateY(-4px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.btn-primary.dance,
+.btn-outline.dance {
+  animation: trendDance 0.7s ease forwards;
+}
+
+/* Hover always dances */
+.btn-primary:hover,
+.btn-outline:hover {
+  animation: trendDance 0.8s ease;
+}
+</style>
+</head>
+
+<body>
+
+  <section class="mock-hero">
+    <div class="container mock-grid">
+
+      <!-- LEFT SIDE -->
+      <div class="mock-left">
+        <a href="../index.html" class="mock-back">
+  ← Back to Homepage
+</a>
+
+        <h1 class="mock-title" id="animatedTitle">
+  Join Our Official IELTS Mock Examinations
+</h1>
+
+<p class="mock-description">
+  Experience a fully simulated computer-based IELTS environment designed to mirror the official test. Receive structured performance analysis, personalized feedback, and sharpen your strategy with confidence.
+</p>
+
+<div class="mock-buttons">
+  <a href="#" class="btn-primary">
+    Register for IELTS Mock Exam →
+  </a>
+
+  <a href="#" class="btn-outline">
+    Register for CEFR Mock Exam →
+  </a>
+</div>
+
+      </div>
+
+      <!-- RIGHT SIDE (EMPTY FOR FUTURE VISUALS) -->
+      <div class="mock-right"></div>
+
+    </div>
+  </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const title = document.getElementById("animatedTitle");
+  const description = document.querySelector(".mock-description");
+  const buttonsWrapper = document.querySelector(".mock-buttons");
+  const buttons = document.querySelectorAll(".btn-primary, .btn-outline");
+
+  /* ================= TITLE LETTER ANIMATION ================= */
+
+  const text = title.textContent.trim();
+  const words = text.split(" ");
+
+  title.innerHTML = `
+    <span class="line">
+      ${words.map((word, wIndex) => `
+        <span class="word">
+          ${word.split("").map((letter, lIndex) =>
+            `<span style="animation-delay:${(wIndex * 0.15) + (lIndex * 0.04)}s">${letter}</span>`
+          ).join("")}
+        </span>
+      `).join("")}
+    </span>
+  `;
+
+  /* ================= DANCE SEQUENCE ================= */
+
+  // Calculate approximate title animation duration
+  const totalLetters = title.querySelectorAll("span span").length;
+  const letterDuration = totalLetters * 40 + 600;
+
+  // After title + description + button fade finish
+  setTimeout(() => {
+
+    setTimeout(() => {
+
+      buttons.forEach(btn => {
+        btn.classList.add("dance");
+
+        setTimeout(() => {
+          btn.classList.remove("dance");
+        }, 800);
+
+      });
+
+    }, 900); // wait after buttons fade
+
+  }, letterDuration + 1400); // wait for description animation
+
+});
+</script>
+
+</body>
+</html>
