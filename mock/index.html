@@ -25,10 +25,132 @@ body {
   line-height:1.6;
 }
 
+/* ================= MOCK NAVBAR (CLONE OF MAIN) ================= */
+
+.mock-nav {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 60%;
+max-width: 780px;   /* 60% of 1300px */
+
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: 50px;
+
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 18px 40px;
+    height: 70px;
+}
+
+/* LOGO */
+
+.mock-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.mock-logo img {
+  height: 37px;
+  width: auto;
+}
+
+/* ================= LANGUAGE SYSTEM (HOVER VERSION) ================= */
+
+.mock-language {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.mock-language-current {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.mock-flag {
+  width: 22px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.mock-arrow {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+/* Dropdown */
+.mock-language-dropdown {
+  position: absolute;
+  top: 130%;
+  right: 0;
+
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 0;
+  min-width: 130px;
+
+  display: flex;
+  flex-direction: column;
+
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: all 0.25s ease;
+}
+
+/* HOVER OPEN */
+.mock-language:hover .mock-language-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.mock-language:hover .mock-arrow {
+  transform: rotate(180deg);
+}
+
+.mock-language-option {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.mock-language-option:hover {
+  background: #f1f5f9;
+}
+
 .container {
   max-width:1200px;
   margin:0 auto;
-  padding:160px 24px;
+  padding:140px 24px 160px;
 }
 
 .mock-back {
@@ -153,6 +275,11 @@ body {
     font-size:40px;
   }
 
+    .mock-nav {
+    width: calc(100% - 60px);   /* same mobile width as main nav */
+    max-width: none;
+  }
+
   /* 🔥 Smaller buttons on mobile only */
   .btn-primary,
   .btn-outline {
@@ -193,6 +320,39 @@ body {
 </head>
 
 <body>
+
+<header class="mock-nav">
+
+  <!-- LEFT -->
+  <a href="../index.html" class="mock-logo">
+    <img src="../assets/headstart.png" alt="HeadStart Logo">
+    <span>HeadStart</span>
+  </a>
+
+  <!-- RIGHT -->
+  <div class="mock-language" id="mockLanguage">
+
+    <div class="mock-language-current">
+      <img src="https://flagcdn.com/w40/gb.png" class="mock-flag" id="mockCurrentFlag">
+      <span id="mockCurrentText">ENG</span>
+      <span class="mock-arrow">⌄</span>
+    </div>
+
+    <div class="mock-language-dropdown">
+      <div class="mock-language-option" data-lang="en">
+        <img src="https://flagcdn.com/w40/gb.png" class="mock-flag">
+        ENG
+      </div>
+
+      <div class="mock-language-option" data-lang="uz">
+        <img src="https://flagcdn.com/w40/uz.png" class="mock-flag">
+        UZB
+      </div>
+    </div>
+
+  </div>
+
+</header>
 
   <section class="mock-hero">
     <div class="container mock-grid">
@@ -277,6 +437,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 900); // wait after buttons fade
 
   }, letterDuration + 1400); // wait for description animation
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const switcher = document.getElementById("mockLanguage");
+  const options = document.querySelectorAll(".mock-language-option");
+  const currentText = document.getElementById("mockCurrentText");
+  const currentFlag = document.getElementById("mockCurrentFlag");
+
+  options.forEach(option => {
+    option.addEventListener("click", () => {
+      const lang = option.dataset.lang;
+
+      if (lang === "en") {
+        currentText.textContent = "ENG";
+        currentFlag.src = "https://flagcdn.com/w40/gb.png";
+      } else {
+        currentText.textContent = "UZB";
+        currentFlag.src = "https://flagcdn.com/w40/uz.png";
+      }
+    });
+  });
 
 });
 </script>
