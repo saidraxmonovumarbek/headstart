@@ -1194,9 +1194,15 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 120px 48px;
+
+  padding: 40px 48px 120px; /* 🔥 reduced top padding */
+
   overflow: hidden;
   text-align: center;
+}
+
+.teachers-title {
+  transform: translateY(35px); /* 🔥 moves title down slightly */
 }
 
 .teacher-slider {
@@ -1205,6 +1211,7 @@ button {
   max-width: 1100px;
   margin: 0 auto;
   overflow: hidden;   /* 🔥 important */
+  transform: translateY(-50px); /* 🔥 move everything up */
 }
 
 .teacher-track {
@@ -2219,42 +2226,40 @@ html, body {
   <img src="assets/headstart.png" alt="HeadStart Logo" class="logo-img">
   <span class="logo-text">HeadStart</span>
 </a>
-      <nav id="main-nav">
+    <nav id="main-nav">
   <a href="#hero" data-i18n="nav_home" onclick="smoothScroll('#hero'); return false;">Home</a>
   <a href="#about" data-i18n="nav_why" onclick="smoothScroll('#about'); return false;">Why Us?</a>
   <a href="#courses" data-i18n="nav_courses" onclick="smoothScroll('#courses'); return false;">Courses</a>
   <a href="#results" data-i18n="nav_results" onclick="smoothScroll('#results'); return false;">Results</a>
   <a href="#teachers" data-i18n="nav_teachers" onclick="smoothScroll('#teachers'); return false;">Teachers</a>
-  <a href="#locations" data-i18n="nav_locations" onclick="smoothScroll('#locations'); return false;">Locations</a>
 
+  <!-- ✅ Approach stays AFTER Teachers -->
+  <a href="#approach" data-i18n="nav_approach" onclick="smoothScroll('#approach'); return false;">Approach</a>
+
+  <!-- Atmosphere Dropdown -->
   <div class="nav-item dropdown" id="atmosphereDropdown">
     <a href="#atmosphere"
-   id="atmosphereLink"
-   onclick="smoothScroll('#atmosphere'); return false;">
-
-  <span data-i18n="nav_atmosphere">Atmosphere</span>
-  <span class="dropdown-arrow">⌄</span>
-
-</a>
+       id="atmosphereLink"
+       onclick="smoothScroll('#atmosphere'); return false;">
+      <span data-i18n="nav_atmosphere">Atmosphere</span>
+      <span class="dropdown-arrow">⌄</span>
+    </a>
 
     <div class="dropdown-menu">
       <a href="#events" data-i18n="nav_events" onclick="smoothScroll('#events'); return false;">Events</a>
-      <a href="#mock" data-i18n="nav_mock"
-   onclick="smoothScroll('#mock'); return false;">
-  Mock Tests
-</a>
+      <a href="#mock" data-i18n="nav_mock" onclick="smoothScroll('#mock'); return false;">Mock Tests</a>
       <a href="#printing" data-i18n="nav_printing" onclick="smoothScroll('#printing'); return false;">Printing</a>
     </div>
   </div>
 
+  <!-- ✅ Locations AFTER Atmosphere -->
+  <a href="#locations" data-i18n="nav_locations" onclick="smoothScroll('#locations'); return false;">Locations</a>
+
+  <!-- Mobile-only links -->
   <a href="#events" class="mobile-only" data-i18n="nav_events" onclick="smoothScroll('#events'); return false;">Events</a>
-  <a href="#mock" class="mobile-only" data-i18n="nav_mock"
-   onclick="smoothScroll('#mock'); return false;">
-  Mock Tests
-</a>
+  <a href="#mock" class="mobile-only" data-i18n="nav_mock" onclick="smoothScroll('#mock'); return false;">Mock Tests</a>
   <a href="#printing" class="mobile-only" data-i18n="nav_printing" onclick="smoothScroll('#printing'); return false;">Printing</a>
 
-  <a href="#approach" data-i18n="nav_approach" onclick="smoothScroll('#approach'); return false;">Approach</a>
   <a href="#faq" data-i18n="nav_faq" onclick="smoothScroll('#faq'); return false;">FAQ</a>
   <a href="#contact" data-i18n="nav_connect" onclick="smoothScroll('#contact'); return false;" style="color:#22c55e;font-weight:700;">Connect</a>
 </nav>
@@ -2688,63 +2693,64 @@ html, body {
 
 </section>
 
-<section id="locations">
+<section id="approach">
   <div class="container">
+    <h2 data-i18n="nav_approach">Educational Approach</h2>
 
-    <h2 data-i18n="locations_title">Our Locations</h2>
+    <div style="display: flex; flex-direction: column; gap: 48px; margin-top: 48px;">
 
-    <div class="locations-wrapper">
+      <!-- STEP 1 -->
+      <div style="display: flex; gap: 32px;">
+        <div style="width: 48px; height: 48px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+          1
+        </div>
 
-      <!-- FIRST BRANCH INFO -->
-      <div class="location-box">
-        <h3 data-i18n="branch_prospekt">Prospekt Branch (Main)</h3>
-        <p>
-          📍 <a href="https://maps.app.goo.gl/qYUqRRJAwVKkpo2G7" target="_blank">
-            View on Google Maps
-          </a>
-        </p>
-        <p style="margin-top:16px;">
-          ☎ <a href="tel:+998951840770">+998 95 184 0770</a>
-        </p>
+        <div>
+          <strong data-i18n="approach_1_title">
+            Personalized Learning
+          </strong>
+          <br>
+          <span data-i18n="approach_1_desc">
+            Tailored curriculum based on student strengths and goals.
+          </span>
+        </div>
       </div>
 
-      <!-- SECOND BRANCH INFO -->
-      <div class="location-box">
-        <h3 data-i18n="branch_pushkin">Pushkin Branch</h3>
-        <p>
-          📍 <a href="https://maps.app.goo.gl/kuDv9Dba38rquouVA" target="_blank">
-            View on Google Maps
-          </a>
-        </p>
-        <p style="margin-top:16px;">
-          ☎ <a href="tel:+998995279080">+998 99 527 9080</a>
-        </p>
+      <!-- STEP 2 -->
+      <div style="display: flex; gap: 32px;">
+        <div style="width: 48px; height: 48px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+          2
+        </div>
+
+        <div>
+          <strong data-i18n="approach_2_title">
+            Project-Based Mastery
+          </strong>
+          <br>
+          <span data-i18n="approach_2_desc">
+            Real-world projects driving deep understanding.
+          </span>
+        </div>
       </div>
 
-      <!-- FIRST MAP -->
-      <div class="map-box">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3050.2487490362496!2d67.8321306!3d40.1367425!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38b297402ce2533f%3A0xc0df93ceda7ed301!2sHeadStart%20English%20School!5e1!3m2!1sen!2s!4v1769689895048!5m2!1sen!2s"
-          width="100%"
-          height="100%"
-          style="border:0;"
-          loading="lazy">
-        </iframe>
-      </div>
+      <!-- STEP 3 -->
+      <div style="display: flex; gap: 32px;">
+        <div style="width: 48px; height: 48px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+          3
+        </div>
 
-      <!-- SECOND MAP -->
-      <div class="map-box">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3051.5293663676457!2d67.8213217!3d40.1082049!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38b295612f18a46b%3A0x854d632cb9cb3a10!2sHeadsStart%20Pushkin%20branch!5e1!3m2!1sen!2s!4v1769689932222!5m2!1sen!2s"
-          width="100%"
-          height="100%"
-          style="border:0;"
-          loading="lazy">
-        </iframe>
+        <div>
+          <strong data-i18n="approach_3_title">
+            Holistic Development
+          </strong>
+          <br>
+          <span data-i18n="approach_3_desc">
+            Academic + leadership + character education.
+          </span>
+        </div>
       </div>
 
     </div>
-
   </div>
 </section>
 
@@ -2885,64 +2891,63 @@ html, body {
   </div>
 </section>
 
-<section id="approach">
+<section id="locations">
   <div class="container">
-    <h2 data-i18n="nav_approach">Educational Approach</h2>
 
-    <div style="display: flex; flex-direction: column; gap: 48px; margin-top: 48px;">
+    <h2 data-i18n="locations_title">Our Locations</h2>
 
-      <!-- STEP 1 -->
-      <div style="display: flex; gap: 32px;">
-        <div style="width: 48px; height: 48px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">
-          1
-        </div>
+    <div class="locations-wrapper">
 
-        <div>
-          <strong data-i18n="approach_1_title">
-            Personalized Learning
-          </strong>
-          <br>
-          <span data-i18n="approach_1_desc">
-            Tailored curriculum based on student strengths and goals.
-          </span>
-        </div>
+      <!-- FIRST BRANCH INFO -->
+      <div class="location-box">
+        <h3 data-i18n="branch_prospekt">Prospekt Branch (Main)</h3>
+        <p>
+          📍 <a href="https://maps.app.goo.gl/qYUqRRJAwVKkpo2G7" target="_blank">
+            View on Google Maps
+          </a>
+        </p>
+        <p style="margin-top:16px;">
+          ☎ <a href="tel:+998951840770">+998 95 184 0770</a>
+        </p>
       </div>
 
-      <!-- STEP 2 -->
-      <div style="display: flex; gap: 32px;">
-        <div style="width: 48px; height: 48px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">
-          2
-        </div>
-
-        <div>
-          <strong data-i18n="approach_2_title">
-            Project-Based Mastery
-          </strong>
-          <br>
-          <span data-i18n="approach_2_desc">
-            Real-world projects driving deep understanding.
-          </span>
-        </div>
+      <!-- SECOND BRANCH INFO -->
+      <div class="location-box">
+        <h3 data-i18n="branch_pushkin">Pushkin Branch</h3>
+        <p>
+          📍 <a href="https://maps.app.goo.gl/kuDv9Dba38rquouVA" target="_blank">
+            View on Google Maps
+          </a>
+        </p>
+        <p style="margin-top:16px;">
+          ☎ <a href="tel:+998995279080">+998 99 527 9080</a>
+        </p>
       </div>
 
-      <!-- STEP 3 -->
-      <div style="display: flex; gap: 32px;">
-        <div style="width: 48px; height: 48px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">
-          3
-        </div>
+      <!-- FIRST MAP -->
+      <div class="map-box">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3050.2487490362496!2d67.8321306!3d40.1367425!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38b297402ce2533f%3A0xc0df93ceda7ed301!2sHeadStart%20English%20School!5e1!3m2!1sen!2s!4v1769689895048!5m2!1sen!2s"
+          width="100%"
+          height="100%"
+          style="border:0;"
+          loading="lazy">
+        </iframe>
+      </div>
 
-        <div>
-          <strong data-i18n="approach_3_title">
-            Holistic Development
-          </strong>
-          <br>
-          <span data-i18n="approach_3_desc">
-            Academic + leadership + character education.
-          </span>
-        </div>
+      <!-- SECOND MAP -->
+      <div class="map-box">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3051.5293663676457!2d67.8213217!3d40.1082049!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38b295612f18a46b%3A0x854d632cb9cb3a10!2sHeadsStart%20Pushkin%20branch!5e1!3m2!1sen!2s!4v1769689932222!5m2!1sen!2s"
+          width="100%"
+          height="100%"
+          style="border:0;"
+          loading="lazy">
+        </iframe>
       </div>
 
     </div>
+
   </div>
 </section>
 
@@ -4194,11 +4199,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const currentText = document.getElementById("currentLangText");
   const currentFlag = document.getElementById("currentFlag");
 
-  // Toggle dropdown
-  current.addEventListener("click", (e) => {
-    e.stopPropagation();
-    switcher.classList.toggle("open");
+  /* DESKTOP HOVER OPEN */
+if (window.matchMedia("(min-width: 1025px)").matches) {
+
+  switcher.addEventListener("mouseenter", () => {
+    switcher.classList.add("open");
   });
+
+  switcher.addEventListener("mouseleave", () => {
+    switcher.classList.remove("open");
+  });
+
+}
 
   // Close when clicking outside
   document.addEventListener("click", (e) => {
