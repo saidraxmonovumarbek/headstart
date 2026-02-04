@@ -122,14 +122,14 @@ max-width: 780px;   /* 60% of 1300px */
   transition: all 0.25s ease;
 }
 
-/* HOVER OPEN */
-.mock-language:hover .mock-language-dropdown {
+/* OPEN STATE (JS CONTROLLED) */
+.mock-language.open .mock-language-dropdown {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
 }
 
-.mock-language:hover .mock-arrow {
+.mock-language.open .mock-arrow {
   transform: rotate(180deg);
 }
 
@@ -265,6 +265,73 @@ max-width: 780px;   /* 60% of 1300px */
   min-height:400px;
 }
 
+/* ================= MOCK RIGHT IMAGE ================= */
+
+.mock-image-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible; /* allow speech text outside */
+}
+
+.mock-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+
+  animation: imageReveal 1.2s ease forwards, 
+             floatMotion 6s ease-in-out 3s infinite alternate;
+}
+
+@keyframes imageReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes floatMotion {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-15px); }
+}
+
+/* ================= MEGAPHONE SPEECH (FIXED PROJECTION) ================= */
+
+
+/* Speech container */
+.mega-speech {
+  position: absolute;
+
+  /* Adjust these two numbers to match megaphone mouth exactly */
+  top: 18%;
+  left: 75%;
+
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+/* Single line speech */
+.speech-text {
+  font-weight: 700;
+  color: var(--accent);
+  white-space: nowrap;
+
+  font-size: 14px;
+
+  transform: rotate(-18deg) scale(0.85);
+  opacity: 0;
+}
+
+/* ===== DESKTOP IMAGE POSITION ===== */
+.mock-image {
+  transform: translateX(0px) translateY(0px);
+}
+
 @media (max-width: 900px) {
 
   .mock-grid {
@@ -291,6 +358,25 @@ max-width: 780px;   /* 60% of 1300px */
   .mock-buttons {
     gap:14px;              /* slightly less spacing */
   }
+
+  .mock-image {
+  max-width: 80%;
+  margin-top: 40px;
+
+  transform: translateX(-30px);
+}
+
+/* ===== MOBILE SPEECH POSITION ===== */
+
+.mega-speech {
+  top: 24%;      
+  left: 70%;    
+}
+
+/* ===== MOVE IMAGE LEFT ON MOBILE ONLY ===== */
+.mock-image-wrapper {
+  transform: translateX(-60px);
+}
 
 }
 
@@ -383,8 +469,16 @@ max-width: 780px;   /* 60% of 1300px */
 
       </div>
 
-      <!-- RIGHT SIDE (EMPTY FOR FUTURE VISUALS) -->
-      <div class="mock-right"></div>
+      <!-- RIGHT SIDE IMAGE -->
+<div class="mock-right">
+  <div class="mock-image-wrapper">
+    <img src="../assets/mega.png" alt="Mock Exam Illustration" class="mock-image">
+
+    <div class="mega-speech">
+      <div class="speech-text" id="speechText"></div>
+    </div>
+  </div>
+</div>
 
     </div>
   </section>
@@ -438,6 +532,54 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }, letterDuration + 1400); // wait for description animation
 
+  /* ================= MEGAPHONE TYPEWRITER (PROJECTED) ================= */
+
+const speechEl = document.getElementById("speechText");
+
+const speechTexts = [
+  "HeadStart IELTS Mock",
+  "HeadStart CEFR Mock"
+];
+
+let speechIndex = 0;
+
+function typeSpeech() {
+
+  const text = speechTexts[speechIndex];
+  speechEl.textContent = "";
+  speechEl.style.opacity = "1";
+
+  let i = 0;
+
+  const typing = setInterval(() => {
+
+    speechEl.textContent += text[i];
+    i++;
+
+    // grow slightly as it types (projection effect)
+    speechEl.style.transform =
+      `rotate(-18deg) scale(${0.85 + (i / text.length) * 0.3})`;
+
+    if (i >= text.length) {
+      clearInterval(typing);
+
+      setTimeout(() => {
+        speechEl.style.opacity = "0";
+
+        setTimeout(() => {
+          speechIndex = (speechIndex + 1) % speechTexts.length;
+          typeSpeech();
+        }, 400);
+
+      }, 1800);
+    }
+
+  }, 60);
+
+}
+
+typeSpeech();
+
 });
 </script>
 
@@ -445,12 +587,31 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
 
   const switcher = document.getElementById("mockLanguage");
+  const current = switcher.querySelector(".mock-language-current");
   const options = document.querySelectorAll(".mock-language-option");
   const currentText = document.getElementById("mockCurrentText");
   const currentFlag = document.getElementById("mockCurrentFlag");
 
+  /* OPEN / CLOSE */
+
+  current.addEventListener("click", (e) => {
+    e.stopPropagation();
+    switcher.classList.toggle("open");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!switcher.contains(e.target)) {
+      switcher.classList.remove("open");
+    }
+  });
+
+  /* LANGUAGE CHANGE */
+
   options.forEach(option => {
-    option.addEventListener("click", () => {
+    option.addEventListener("click", (e) => {
+
+      e.stopPropagation();
+
       const lang = option.dataset.lang;
 
       if (lang === "en") {
@@ -460,6 +621,9 @@ document.addEventListener("DOMContentLoaded", () => {
         currentText.textContent = "UZB";
         currentFlag.src = "https://flagcdn.com/w40/uz.png";
       }
+
+      switcher.classList.remove("open");
+
     });
   });
 
