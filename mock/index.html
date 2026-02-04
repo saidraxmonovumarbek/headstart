@@ -357,10 +357,27 @@ max-width: 780px;   /* 60% of 1300px */
 .btn-outline:hover {
   animation: trendDance 0.8s ease;
 }
+
+/* ===============================
+   PREMIUM SCROLL PROGRESS BAR
+================================ */
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  z-index: 5000;
+  transition: width 0.15s ease-out;
+}
 </style>
 </head>
 
 <body>
+
+  <div class="scroll-progress" id="scrollProgress"></div>
 
 <header class="mock-nav">
 
@@ -536,6 +553,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+});
+</script>
+
+<script>
+document.addEventListener("scroll", () => {
+  const progress = document.getElementById("scrollProgress");
+  const scrollTop = window.scrollY;
+  const height = document.documentElement.scrollHeight - window.innerHeight;
+  const percent = (scrollTop / height) * 100;
+  progress.style.width = percent + "%";
 });
 </script>
 
