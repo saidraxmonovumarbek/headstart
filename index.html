@@ -491,7 +491,8 @@ nav a:hover::after {
 
 .language-dropdown {
   position: absolute;
-  top: 130%;
+  top: 100%;
+  margin-top: 8px;
   right: 0;
   background: white;
   border: 1px solid var(--border);
@@ -4194,78 +4195,54 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const switcher = document.getElementById("languageSwitch");
   const current = document.getElementById("languageCurrent");
-  const dropdown = document.getElementById("languageDropdown");
   const options = document.querySelectorAll(".lang-option");
   const currentText = document.getElementById("currentLangText");
   const currentFlag = document.getElementById("currentFlag");
 
-  /* DESKTOP HOVER OPEN */
-if (window.matchMedia("(min-width: 1025px)").matches) {
+  /* OPEN / CLOSE */
 
-  switcher.addEventListener("mouseenter", () => {
-    switcher.classList.add("open");
+  current.addEventListener("click", (e) => {
+    e.stopPropagation();
+    switcher.classList.toggle("open");
   });
 
-  switcher.addEventListener("mouseleave", () => {
-    switcher.classList.remove("open");
-  });
-
-}
-
-  // Close when clicking outside
   document.addEventListener("click", (e) => {
     if (!switcher.contains(e.target)) {
       switcher.classList.remove("open");
     }
   });
 
-  // Language selection
-  function updateLanguageUI(lang) {
+  /* LANGUAGE SELECT */
 
-  if (lang === "en") {
-    currentText.textContent = "ENG";
-    currentFlag.src = "https://flagcdn.com/w40/gb.png";
-  } else {
-    currentText.textContent = "UZB";
-    currentFlag.src = "https://flagcdn.com/w40/uz.png";
+  function updateLanguageUI(lang) {
+    if (lang === "en") {
+      currentText.textContent = "ENG";
+      currentFlag.src = "https://flagcdn.com/w40/gb.png";
+    } else {
+      currentText.textContent = "UZB";
+      currentFlag.src = "https://flagcdn.com/w40/uz.png";
+    }
   }
 
-}
+  options.forEach(option => {
+    option.addEventListener("click", (e) => {
 
-options.forEach(option => {
-  option.addEventListener("click", () => {
+      e.stopPropagation();
 
-    const lang = option.dataset.lang;
+      const lang = option.dataset.lang;
 
-    // Apply translation system
-    if (window.applyLanguage) {
-      window.applyLanguage(lang);
-    }
+      if (window.applyLanguage) {
+        window.applyLanguage(lang);
+      }
 
-    // Update UI (flag + text)
-    updateLanguageUI(lang);
+      updateLanguageUI(lang);
 
-    // Refresh course content
-    const content = document.getElementById("course-content");
+      switcher.classList.remove("open");
 
-if (content && window.getCourseData) {
-  const data = getCourseData(currentLang);
-  content.innerHTML = data[currentCourse];
-}
-
-const selectedText = document.getElementById("selectedCourseText");
-if (selectedText) {
-  selectedText.textContent =
-    window.translations[currentLang][`course_${currentCourse}`];
-}
-
-    switcher.classList.remove("open");
+    });
   });
-});
 
-/* 🔥 Sync icon on page load */
-updateLanguageUI(currentLang);
-
+  updateLanguageUI(currentLang);
 
 });
 
