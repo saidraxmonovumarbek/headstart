@@ -347,10 +347,6 @@ nav a:hover::after {
   transform: rotate(180deg);
 }
 
-.nav-item.open .dropdown-arrow {
-  transform: rotate(180deg);
-}
-
 /* Hide dropdown system completely on mobile */
 @media (max-width: 1024px) {
 
@@ -453,6 +449,15 @@ nav a:hover::after {
     height: 100%;
   }
 
+}
+
+nav a.active-nav {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+nav a.active-nav::after {
+  width: 100%;
 }
 
 /* ===============================
@@ -2219,9 +2224,133 @@ html, body {
   border-bottom: 1px solid var(--border);
 }
 
+/* ===============================
+   PREMIUM SCROLL PROGRESS BAR
+================================ */
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  z-index: 5000;
+  transition: width 0.15s ease-out;
+}
+
+/* ===============================
+   FLOATING MOBILE CTA
+================================ */
+
+.floating-cta {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--accent);
+  color: white;
+  padding: 14px 22px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 20px 40px rgba(34,197,94,0.25);
+  z-index: 4000;
+  display: none;
+  transition: transform 0.3s ease;
+}
+
+.floating-cta:hover {
+  transform: translateY(-4px);
+}
+
+@media (max-width: 1024px) {
+  .floating-cta {
+    display: block;
+  }
+}
+
+/* ===============================
+   SECTION GLOW TRANSITION
+================================ */
+
+section {
+  position: relative;
+}
+
+section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center,
+              rgba(34,197,94,0.05),
+              transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+section.reveal::before {
+  opacity: 1;
+}
+
+/* ===============================
+   MICRO 3D CARD EFFECT
+================================ */
+
+.why-card,
+.location-box,
+.teacher-left {
+  transition: transform 0.4s ease;
+  transform-style: preserve-3d;
+}
+
+.why-card:hover,
+.location-box:hover,
+.teacher-left:hover {
+  transform: perspective(1000px) rotateX(4deg) rotateY(-4deg);
+}
+
+/* ===============================
+   LUXURY LOADER
+================================ */
+
+#loader {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.loader-logo {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  animation: pulseLogo 1.4s ease-in-out infinite;
+}
+
+@keyframes pulseLogo {
+  0% { opacity: 0.4; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.4; transform: scale(0.95); }
+}
+
+body.loaded #loader {
+  opacity: 0;
+  visibility: hidden;
+}
+
 </style>
 </head>
 <body>
+  <div id="loader">
+  <div class="loader-logo">HeadStart</div>
+</div>
+  <div class="scroll-progress" id="scrollProgress"></div>
     <header>
         <a href="#hero" class="logo" onclick="smoothScroll('#hero'); return false;">
   <img src="assets/headstart.png" alt="HeadStart Logo" class="logo-img">
@@ -3065,6 +3194,11 @@ html, body {
   </div>
 
 </footer>
+
+<a href="#contact" class="floating-cta">
+  Enroll Now →
+</a>
+
     <script>
 let currentLang = "en";
 let currentCourse = "general";
@@ -4300,6 +4434,54 @@ document.addEventListener("DOMContentLoaded", () => {
 
   observer.observe(mockSection);
 
+});
+</script>
+
+<script>
+document.addEventListener("scroll", () => {
+  const progress = document.getElementById("scrollProgress");
+  const scrollTop = window.scrollY;
+  const height = document.documentElement.scrollHeight - window.innerHeight;
+  const percent = (scrollTop / height) * 100;
+  progress.style.width = percent + "%";
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const sections = document.querySelectorAll("section[id]");
+  const navLinks = document.querySelectorAll("nav a[href^='#']");
+
+  function activateNav() {
+
+    let scrollPos = window.scrollY + 150;
+
+    sections.forEach(section => {
+      const top = section.offsetTop;
+      const bottom = top + section.offsetHeight;
+
+      if (scrollPos >= top && scrollPos <= bottom) {
+
+        navLinks.forEach(link => link.classList.remove("active-nav"));
+
+        const active = document.querySelector(
+          `nav a[href="#${section.id}"]`
+        );
+
+        if (active) active.classList.add("active-nav");
+      }
+    });
+  }
+
+  window.addEventListener("scroll", activateNav);
+
+});
+</script>
+
+<script>
+window.addEventListener("load", () => {
+  document.body.classList.add("loaded");
 });
 </script>
 
