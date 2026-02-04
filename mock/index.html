@@ -207,27 +207,30 @@ max-width: 780px;   /* 60% of 1300px */
   font-size:18px;
   color:var(--text-muted);
   margin-bottom:40px;
+
   opacity:0;
   transform:translateY(30px);
-  animation:fadeUp 0.8s forwards;
-  animation-delay:1.4s;
+  transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@keyframes fadeUp {
-  to {
-    opacity:1;
-    transform:translateY(0);
-  }
+.mock-description.active {
+  opacity:1;
+  transform:translateY(0);
 }
 
 .mock-buttons {
   display:flex;
   gap:20px;
   flex-wrap:wrap;
+
   opacity:0;
   transform:translateY(40px);
-  animation:fadeUp 0.8s forwards;
-  animation-delay:2.2s;
+  transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mock-buttons.active {
+  opacity:1;
+  transform:translateY(0);
 }
 
 .btn-primary {
@@ -273,7 +276,7 @@ max-width: 780px;   /* 60% of 1300px */
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: visible; /* allow speech text outside */
+  overflow: hidden;
 }
 
 .mock-image {
@@ -282,54 +285,13 @@ max-width: 780px;   /* 60% of 1300px */
   object-fit: contain;
 
   opacity: 0;
-  transform: translateY(40px) scale(0.95);
-
-  animation: imageReveal 1.2s ease forwards, 
-             floatMotion 6s ease-in-out 3s infinite alternate;
+  transform: translateX(80px);
+  transition: all 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@keyframes imageReveal {
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes floatMotion {
-  from { transform: translateY(0); }
-  to   { transform: translateY(-15px); }
-}
-
-/* ================= MEGAPHONE SPEECH (FIXED PROJECTION) ================= */
-
-
-/* Speech container */
-.mega-speech {
-  position: absolute;
-
-  /* Adjust these two numbers to match megaphone mouth exactly */
-  top: 18%;
-  left: 75%;
-
-  transform-origin: left center;
-  pointer-events: none;
-}
-
-/* Single line speech */
-.speech-text {
-  font-weight: 700;
-  color: var(--accent);
-  white-space: nowrap;
-
-  font-size: 14px;
-
-  transform: rotate(-18deg) scale(0.85);
-  opacity: 0;
-}
-
-/* ===== DESKTOP IMAGE POSITION ===== */
-.mock-image {
-  transform: translateX(0px) translateY(0px);
+.mock-image.active {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 @media (max-width: 900px) {
@@ -363,14 +325,7 @@ max-width: 780px;   /* 60% of 1300px */
   max-width: 80%;
   margin-top: 40px;
 
-  transform: translateX(-30px);
-}
-
-/* ===== MOBILE SPEECH POSITION ===== */
-
-.mega-speech {
-  top: 24%;      
-  left: 70%;    
+  margin-left: -30px;
 }
 
 /* ===== MOVE IMAGE LEFT ON MOBILE ONLY ===== */
@@ -473,10 +428,6 @@ max-width: 780px;   /* 60% of 1300px */
 <div class="mock-right">
   <div class="mock-image-wrapper">
     <img src="../assets/mega.png" alt="Mock Exam Illustration" class="mock-image">
-
-    <div class="mega-speech">
-      <div class="speech-text" id="speechText"></div>
-    </div>
   </div>
 </div>
 
@@ -510,75 +461,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ================= DANCE SEQUENCE ================= */
 
-  // Calculate approximate title animation duration
-  const totalLetters = title.querySelectorAll("span span").length;
-  const letterDuration = totalLetters * 40 + 600;
+// Calculate title animation duration
+const totalLetters = title.querySelectorAll("span span").length;
+const letterDuration = totalLetters * 40 + 600;
 
-  // After title + description + button fade finish
+// After title finishes
+setTimeout(() => {
+
+  // Animate description + mega.png together
+  document.querySelector(".mock-description").classList.add("active");
+  document.querySelector(".mock-image").classList.add("active");
+
+  // After description + image finish
   setTimeout(() => {
 
-    setTimeout(() => {
+    document.querySelector(".mock-buttons").classList.add("active");
 
+    // Trigger button dance
+    setTimeout(() => {
       buttons.forEach(btn => {
         btn.classList.add("dance");
-
-        setTimeout(() => {
-          btn.classList.remove("dance");
-        }, 800);
-
+        setTimeout(() => btn.classList.remove("dance"), 800);
       });
+    }, 300);
 
-    }, 900); // wait after buttons fade
+  }, 900);
 
-  }, letterDuration + 1400); // wait for description animation
-
-  /* ================= MEGAPHONE TYPEWRITER (PROJECTED) ================= */
-
-const speechEl = document.getElementById("speechText");
-
-const speechTexts = [
-  "HeadStart IELTS Mock",
-  "HeadStart CEFR Mock"
-];
-
-let speechIndex = 0;
-
-function typeSpeech() {
-
-  const text = speechTexts[speechIndex];
-  speechEl.textContent = "";
-  speechEl.style.opacity = "1";
-
-  let i = 0;
-
-  const typing = setInterval(() => {
-
-    speechEl.textContent += text[i];
-    i++;
-
-    // grow slightly as it types (projection effect)
-    speechEl.style.transform =
-      `rotate(-18deg) scale(${0.85 + (i / text.length) * 0.3})`;
-
-    if (i >= text.length) {
-      clearInterval(typing);
-
-      setTimeout(() => {
-        speechEl.style.opacity = "0";
-
-        setTimeout(() => {
-          speechIndex = (speechIndex + 1) % speechTexts.length;
-          typeSpeech();
-        }, 400);
-
-      }, 1800);
-    }
-
-  }, 60);
-
-}
-
-typeSpeech();
+}, letterDuration);
 
 });
 </script>
