@@ -861,6 +861,10 @@ html {
   text-align:center;
 }
 
+.time-wrapper:first-child{
+  flex:1.2;
+}
+
 .time-box{
   background:#ffffff;
   border-radius:22px;
@@ -873,37 +877,6 @@ html {
   font-size:14px;
   letter-spacing:2px;
   color:#64748b;
-}
-
-/* ===============================
-   MOBILE: FORCE 4 IN ONE ROW
-================================ */
-
-@media (max-width: 900px){
-
-  .countdown-display{
-    flex-wrap:nowrap;           /* no wrapping */
-    justify-content:space-between;
-    gap:12px;                   /* slightly smaller gap */
-  }
-
-  .time-wrapper{
-    flex:1;                     /* equal width */
-  }
-
-  .time-box{
-    padding:18px 6px;           /* smaller padding */
-  }
-
-  .time-value{
-    font-size:36px;             /* slightly smaller number */
-    height:48px;
-  }
-
-  .time-digit{
-    height:48px;
-  }
-
 }
 
 /* TIME BOX */
@@ -1124,6 +1097,71 @@ html {
 .mock-format-card.active{
   opacity:1;
   transform:translateX(0);
+}
+
+/* =================================
+   CLEAN MOBILE DROPDOWN FIX
+================================= */
+@media (max-width: 900px){
+
+  /* Keep countdown compact */
+  .countdown-display{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+  }
+
+  .time-wrapper{
+    flex:1;
+  }
+
+  .time-wrapper:first-child{
+    flex:1.1;
+  }
+
+  .time-box{
+    padding:18px 6px;
+  }
+
+  .time-value{
+    font-size:32px;
+    height:44px;
+  }
+
+  .time-digit{
+    height:44px;
+  }
+
+  /* 🔥 CRITICAL FIX — STOP DROPDOWN FROM EXPANDING PAGE */
+  .date-dropdown{
+    width:100%;
+    max-width:100%;
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+
+  /* Calendar must fit screen */
+  .date-dropdown.calendar{
+    grid-template-columns: repeat(7, minmax(0,1fr));
+  }
+
+  /* Prevent grid from stretching layout */
+  .date-option{
+    min-width:0;
+  }
+
+  /* Keep footer in one row */
+  .countdown-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+  }
+
+  #examDateText{
+    font-size:13px;
+  }
+
 }
 
 </style>
@@ -1851,22 +1889,32 @@ function positionDropdown(row, dropdown){
   dropdown.style.width = rowRect.width + "px";
   dropdown.style.left = (rowRect.left - containerRect.left) + "px";
 
-  // Append first so we can measure height
+  // Append first to measure height
   dropdown.style.visibility = "hidden";
   dropdown.style.top = "0px";
   container.appendChild(dropdown);
 
   const dropdownHeight = dropdown.offsetHeight;
-
   const skill = row.dataset.skill;
 
-  // 🔥 YOUR CUSTOM BEHAVIOR
-  if(skill === "speaking"){
-    // Open upward
+  const isMobile = window.innerWidth <= 900;
+
+  let openUp = false;
+
+  if(isMobile){
+    // 🔥 MOBILE → EVERYTHING OPENS UP
+    openUp = true;
+  } else {
+    // DESKTOP → ORIGINAL LOGIC (unchanged)
+    if(skill === "speaking"){
+      openUp = true;
+    }
+  }
+
+  if(openUp){
     dropdown.style.top =
       (rowRect.top - containerRect.top - dropdownHeight - 8) + "px";
   } else {
-    // Listening, Reading, Writing → open downward
     dropdown.style.top =
       (rowRect.bottom - containerRect.top + 8) + "px";
   }
@@ -2016,7 +2064,8 @@ function animateNumber(element, newValue){
   track.offsetHeight;
 
   // Slide up exactly one digit height
-  track.style.transform = "translateY(-64px)";
+  const digitHeight = currentDigit.offsetHeight;
+track.style.transform = `translateY(-${digitHeight}px)`;
 
   setTimeout(() => {
 
