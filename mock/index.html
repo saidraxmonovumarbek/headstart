@@ -1111,13 +1111,15 @@ html {
     gap:8px;
   }
 
-  .time-wrapper{
-    flex:1;
-  }
+/* Proper desktop-proportional scaling */
+.time-wrapper{
+  flex:1;
+  min-width:0;
+}
 
-  .time-wrapper:first-child{
-    flex:1.1;
-  }
+.time-wrapper:first-child{
+  flex:1.3;   /* stronger ratio so DAYS is clearly wider */
+}
 
   .time-box{
     padding:18px 6px;
