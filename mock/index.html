@@ -1164,6 +1164,41 @@ html {
     font-size:13px;
   }
 
+  /* ===============================
+   MOBILE COUNTDOWN LABEL FIX
+================================= */
+
+/* Hide full words */
+.time-label{
+  font-size:0;
+}
+
+/* Inject single-letter labels */
+.time-wrapper:nth-child(1) .time-label::after{
+  content:"D";
+}
+
+.time-wrapper:nth-child(2) .time-label::after{
+  content:"H";
+}
+
+.time-wrapper:nth-child(3) .time-label::after{
+  content:"M";
+}
+
+.time-wrapper:nth-child(4) .time-label::after{
+  content:"S";
+}
+
+/* Style the single letters */
+.time-label::after{
+  font-size:13px;
+  letter-spacing:1px;
+  color:#64748b;
+  display:block;
+  margin-top:6px;
+}
+
 }
 
 </style>
