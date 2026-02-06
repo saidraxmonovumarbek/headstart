@@ -2377,7 +2377,7 @@ body.loaded #loader {
 
     <div class="dropdown-menu">
       <a href="#events" data-i18n="nav_events" onclick="smoothScroll('#events'); return false;">Events</a>
-      <a href="#mock" data-i18n="nav_mock" onclick="smoothScroll('#mock'); return false;">Mock Tests</a>
+      <a href="/mock/" data-i18n="nav_mock">Mock Tests</a>
       <a href="#printing" data-i18n="nav_printing" onclick="smoothScroll('#printing'); return false;">Printing</a>
     </div>
   </div>
@@ -2387,7 +2387,7 @@ body.loaded #loader {
 
   <!-- Mobile-only links -->
   <a href="#events" class="mobile-only" data-i18n="nav_events" onclick="smoothScroll('#events'); return false;">Events</a>
-  <a href="#mock" class="mobile-only" data-i18n="nav_mock" onclick="smoothScroll('#mock'); return false;">Mock Tests</a>
+  <a href="/mock/" class="mobile-only" data-i18n="nav_mock">Mock Tests</a>
   <a href="#printing" class="mobile-only" data-i18n="nav_printing" onclick="smoothScroll('#printing'); return false;">Printing</a>
 
   <a href="#faq" data-i18n="nav_faq" onclick="smoothScroll('#faq'); return false;">FAQ</a>
@@ -2978,39 +2978,6 @@ body.loaded #loader {
   <div class="container">
     <h2 data-i18n="nav_events">Events</h2>
 <p data-i18n="results_soon">Soon</p>
-  </div>
-</section>
-
-<section id="mock" class="mock-hero">
-  <div class="container">
-
-    <!-- GLOBAL TITLE -->
-    <h2 data-i18n="nav_mock">Mock Tests</h2>
-
-    <div class="mock-grid">
-
-      <!-- LEFT SIDE -->
-      <div class="mock-left">
-
-        <h1 class="mock-title">
-          Take Your IELTS Mock Test With Confidence
-        </h1>
-
-        <p class="mock-description">
-          Experience realistic IELTS mock examinations designed to replicate the official test environment. Receive detailed performance analysis and targeted feedback to help you identify weaknesses, improve time management, and approach your real exam fully prepared.
-        </p>
-
-        <a href="/mock/" class="btn btn-primary">
-          Register for Mock Exam →
-        </a>
-
-      </div>
-
-      <!-- RIGHT SIDE -->
-      <div class="mock-right"></div>
-
-    </div>
-
   </div>
 </section>
 
@@ -4380,61 +4347,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-  const mockSection = document.querySelector("#mock");
-  if (!mockSection) return;
-
-  const title = mockSection.querySelector(".mock-title");
-  const desc = mockSection.querySelector(".mock-description");
-  const btn = mockSection.querySelector(".btn-primary");
-
-  let hasAnimated = false;
-
-  const observer = new IntersectionObserver((entries) => {
-
-    if (entries[0].isIntersecting && !hasAnimated) {
-
-      hasAnimated = true;
-
-      // 1️⃣ Big title
-      title.classList.add("animate");
-
-      setTimeout(() => {
-
-        // 2️⃣ Small description
-        desc.classList.add("animate");
-
-        setTimeout(() => {
-
-          // 3️⃣ Button
-          btn.classList.add("animate");
-
-          // 4️⃣ Trend dance AFTER everything finished
-          setTimeout(() => {
-            btn.classList.add("dance");
-
-            // remove dance class after it finishes
-            setTimeout(() => {
-              btn.classList.remove("dance");
-            }, 800);
-
-          }, 900);
-
-        }, 900);
-
-      }, 900);
-
-    }
-
-  }, { threshold: 0.4 });
-
-  observer.observe(mockSection);
-
-});
 </script>
 
 <script>
