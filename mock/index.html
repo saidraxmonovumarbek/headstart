@@ -1199,6 +1199,41 @@ html {
   margin-top:6px;
 }
 
+/* ===============================
+   MOBILE CALENDAR FIX (CLEAN COPY OF DESKTOP, SCALED)
+================================= */
+
+.date-dropdown.calendar{
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  padding: 20px;
+  width: 100%;
+  overflow: visible;
+}
+
+/* Make day buttons perfectly centered */
+.date-option{
+  padding: 0;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border-radius: 14px;
+}
+
+/* Week labels alignment */
+.date-week{
+  font-size: 12px;
+  text-align: center;
+  padding-bottom: 6px;
+}
+
+/* Back button spacing */
+.date-back{
+  margin-bottom: 15px;
+}
+
 }
 
 </style>
