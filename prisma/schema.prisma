@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String?
+  image         String?
+  email         String         @unique
+  password      String
+  role          String         @default("student")
+  isSuperAdmin  Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+
+  groups        Group[]        @relation("StudentGroups")
+  teaching      Group[]        @relation("TeacherGroups")
+
+  notifications Notification[]
+}
+
+model Group {
+  id        String   @id @default(cuid())
+  name      String
+
+  teacher   User?    @relation("TeacherGroups", fields: [teacherId], references: [id])
+  teacherId String?
+
+  students  User[]   @relation("StudentGroups")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  userEmail String
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+}
