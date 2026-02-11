@@ -1,0 +1,2327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mock Exams – HeadStart</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --accent: #22c55e;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: var(--font-main);
+  background:#ffffff;
+  color:var(--text);
+  line-height:1.6;
+}
+
+/* ================= MOCK NAVBAR (CLONE OF MAIN) ================= */
+
+.mock-nav {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 60%;
+max-width: 780px;   /* 60% of 1300px */
+
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: 50px;
+
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 18px 40px;
+    height: 70px;
+}
+
+/* LOGO */
+
+.mock-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.mock-logo img {
+  height: 37px;
+  width: auto;
+}
+
+/* ================= LANGUAGE SYSTEM (HOVER VERSION) ================= */
+
+.mock-language {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.mock-language-current {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.mock-flag {
+  width: 22px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.mock-arrow {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+/* Dropdown */
+.mock-language-dropdown {
+  position: absolute;
+  top: 130%;
+  right: 0;
+
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 0;
+  min-width: 130px;
+
+  display: flex;
+  flex-direction: column;
+
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: all 0.25s ease;
+}
+
+/* OPEN STATE (JS CONTROLLED) */
+.mock-language.open .mock-language-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.mock-language.open .mock-arrow {
+  transform: rotate(180deg);
+}
+
+.mock-language-option {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.mock-language-option:hover {
+  background: #f1f5f9;
+}
+
+.container {
+  max-width:1200px;
+  margin:0 auto;
+  padding:140px 24px 160px;
+}
+
+.mock-back {
+  display:inline-block;
+  margin-bottom:50px;
+  font-size:14px;
+  color:var(--text-muted);
+  text-decoration:none;
+  font-weight:500;
+  transition:0.3s ease;
+}
+
+.mock-back:hover {
+  color:var(--accent);
+  transform:translateX(-4px);
+}
+
+.mock-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.mock-title {
+  font-size:64px;
+  font-weight:800;
+  line-height:1.15;
+  margin-bottom:32px;
+  overflow:hidden;
+}
+
+.mock-title .line {
+  display:block;
+}
+
+.mock-title .word {
+  display:inline-block;
+  margin-right:12px;
+  overflow:hidden;
+}
+
+.mock-title .word span {
+  display:inline-block;
+  transform:translateY(120%);
+  animation:letterUp 0.6s forwards;
+}
+
+@keyframes letterUp {
+  to { transform:translateY(0); }
+}
+
+.mock-description {
+  font-size:18px;
+  color:var(--text-muted);
+  margin-bottom:40px;
+
+  opacity:0;
+  transform:translateY(30px);
+  transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mock-description.active {
+  opacity:1;
+  transform:translateY(0);
+}
+
+.mock-buttons {
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+
+  opacity:0;
+  transform:translateY(40px);
+  transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mock-buttons.active {
+  opacity:1;
+  transform:translateY(0);
+}
+
+.btn-primary {
+  padding:16px 36px;
+  background:var(--accent);
+  color:#fff;
+  text-decoration:none;
+  border-radius:14px;
+  font-weight:600;
+  transition:0.3s ease;
+  border:2px solid var(--accent);
+}
+
+.btn-primary:hover {
+  background:#fff;
+  color:var(--accent);
+}
+
+.btn-outline {
+  padding:16px 36px;
+  border:2px solid var(--accent);
+  color:var(--accent);
+  border-radius:14px;
+  font-weight:600;
+  text-decoration:none;
+  transition:0.3s ease;
+}
+
+.btn-outline:hover {
+  background:var(--accent);
+  color:#fff;
+}
+
+.mock-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ================= MOCK RIGHT IMAGE ================= */
+
+.mock-image-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.mock-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+
+  opacity: 0;
+  transform: translateX(80px);
+  transition: all 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mock-image.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.mock-hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+
+  .mock-grid {
+    grid-template-columns:1fr;
+  }
+
+  .mock-title {
+    font-size:40px;
+  }
+
+    .mock-nav {
+    width: calc(100% - 60px);   /* same mobile width as main nav */
+    max-width: none;
+  }
+
+  /* 🔥 Smaller buttons on mobile only */
+  .btn-primary,
+  .btn-outline {
+    padding:12px 20px;     /* reduced from 16px 36px */
+    font-size:14px;        /* slightly smaller text */
+    border-radius:10px;    /* slightly tighter */
+  }
+
+  .mock-buttons {
+    gap:14px;              /* slightly less spacing */
+  }
+
+  .mock-image {
+  max-width: 80%;
+  margin-top: 40px;
+
+  margin-left: -30px;
+}
+
+/* ===== MOVE IMAGE LEFT ON MOBILE ONLY ===== */
+.mock-image-wrapper {
+  transform: translateX(-60px);
+}
+
+}
+
+/* ===============================
+   SAFE 6-7 TREND DANCE (SEPARATE PAGE)
+================================ */
+
+@keyframes trendDance {
+  0%   { transform: translateY(0) scale(1); }
+  25%  { transform: translateY(-6px) scale(1.04); }
+  50%  { transform: translateY(0) scale(1); }
+  75%  { transform: translateY(-4px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.btn-primary.dance,
+.btn-outline.dance {
+  animation: trendDance 0.7s ease forwards;
+}
+
+/* Hover always dances */
+.btn-primary:hover,
+.btn-outline:hover {
+  animation: trendDance 0.8s ease;
+}
+
+/* ===============================
+   PREMIUM SCROLL PROGRESS BAR
+================================ */
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  z-index: 5000;
+  transition: width 0.15s ease-out;
+}
+
+/* ================= MOCK FORMAT SECTION ================= */
+
+.mock-format-section {
+  background: #f3faf6; /* very light green tint */
+  padding: 140px 0;
+}
+
+.mock-format-title {
+  text-align: center;
+  font-size: 48px;
+  font-weight: 800;
+  margin-bottom: 80px;
+}
+
+/* GRID */
+
+.mock-format-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+}
+
+/* CARD */
+
+.mock-format-card {
+  background: #ffffff;
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid #e6f4ec;
+  transition: all 0.35s ease;
+}
+
+.mock-format-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 30px 60px rgba(34,197,94,0.15);
+}
+
+/* TOP PART */
+
+.mock-format-top {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+  padding: 26px 40px;
+  border-bottom: 1px solid #eef5f1;
+}
+
+.mock-format-left h3 {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 12px;
+}
+
+.mock-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.mock-format-right img {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* BOTTOM PART */
+
+.mock-format-bottom {
+  padding: 28px 40px;
+}
+
+.mock-format-bottom p {
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+
+  .mock-format-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mock-format-title {
+    font-size: 32px;
+  }
+
+  .mock-format-top {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .mock-format-right {
+    margin-top: 30px;
+  }
+
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ================= BAND CALCULATOR SECTION ================= */
+
+.band-section {
+  padding: 140px 0;
+  background: #ffffff;
+}
+
+.band-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+}
+
+/* ===============================
+   THIRD PAGE ENTRY ANIMATION
+================================ */
+
+.band-left,
+.band-right {
+  opacity: 0;
+  transition: all 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.band-left {
+  transform: translateX(-80px);
+}
+
+.band-right {
+  transform: translateX(80px);
+}
+
+.band-left.active,
+.band-right.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* LEFT */
+
+.band-result-card {
+  background: #f3faf6;
+  border-radius: 28px;
+  padding: 40px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.band-result-label {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.band-result-score {
+  font-size: 72px;
+  font-weight: 800;
+  color: var(--accent);
+  transition: all 0.3s ease;
+}
+
+.band-card {
+  background: #ffffff;
+  border-radius: 28px;
+  border: 1px solid #e6f4ec;
+  overflow: hidden;
+}
+
+.band-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 24px 30px;
+  cursor: pointer;
+  font-weight: 600;
+  border-bottom: 1px solid #eef5f1;
+  transition: background 0.2s ease;
+}
+
+.band-row:last-child {
+  border-bottom: none;
+}
+
+.band-row:hover {
+  background: #f8fffb;
+}
+
+.band-value {
+  color: var(--accent);
+}
+
+/* DROPDOWN PANEL */
+
+.band-dropdown {
+  position: absolute;
+  background: #f3faf6;
+  border-radius: 20px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  z-index: 2000;
+}
+
+.band-option {
+  padding: 12px;
+  border-radius: 12px;
+  background: #e6f9ef;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.band-option:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.band-calculator {
+  position: relative;
+}
+
+@media (max-width: 900px) {
+  .band-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================
+   8.0 – 8.5 PREMIUM GOLD SYSTEM
+========================================= */
+
+/* Gold Background Card */
+.gold-card{
+  background: linear-gradient(
+    135deg,
+    rgba(255,250,210,0.8),
+    rgba(255,230,120,0.5)
+  );
+  box-shadow: 0 0 35px rgba(250,204,21,0.35);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+/* Gold Number */
+.gold-score{
+  background: linear-gradient(
+    90deg,
+    #fff8c9 0%,
+    #facc15 25%,
+    #f59e0b 50%,
+    #facc15 75%,
+    #fff8c9 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+  background-size: 300% auto;
+  animation: goldShine 3.5s linear infinite;
+  text-shadow:
+    0 0 10px rgba(250,204,21,0.6),
+    0 0 20px rgba(245,158,11,0.4);
+}
+
+/* Gold shimmer animation */
+@keyframes goldShine {
+  0% { background-position: 0% center; }
+  100% { background-position: 300% center; }
+}
+
+/* Shooting Star */
+.gold-card::after{
+  content: "";
+  position: absolute;
+  top: 35%;
+  left: -120px;
+  width: 140px;
+  height: 2px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #ffffff,
+    #facc15,
+    transparent
+  );
+
+  transform: rotate(-18deg);
+  opacity: 0;
+  animation: shootingStar 5s ease-in-out infinite;
+}
+
+/* Shooting star movement */
+@keyframes shootingStar {
+  0% {
+    left: -120px;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  45% {
+    left: 120%;
+    opacity: 1;
+  }
+  60% {
+    opacity: 0;
+  }
+  100% {
+    left: 120%;
+    opacity: 0;
+  }
+}
+
+/* ===============================
+   💎 DIAMOND MODE (9.0)
+================================ */
+
+/* Blue diamond card background */
+.diamond-mode {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(255,255,255,0.3) 0%, transparent 40%),
+    linear-gradient(135deg, #0f172a, #1e3a8a, #2563eb, #60a5fa);
+  background-size: 200% 200%;
+  animation: diamondBG 6s ease-in-out infinite;
+  box-shadow: 0 0 60px rgba(59,130,246,0.7);
+  border: 2px solid rgba(255,255,255,0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Diamond background animation */
+@keyframes diamondBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+/* Diamond number styling */
+.diamond-score {
+  font-size: 80px; /* 10% bigger than 72px */
+  font-weight: 900;
+  background: linear-gradient(
+    120deg,
+    #ffffff 0%,
+    #93c5fd 25%,
+    #3b82f6 50%,
+    #60a5fa 75%,
+    #ffffff 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: diamondShine 3s ease-in-out infinite;
+}
+
+/* Diamond number shine */
+@keyframes diamondShine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+/* Diamond stars */
+.diamond-mode::before,
+.diamond-mode::after {
+  content: "✦ ✧ ✦";
+  position: absolute;
+  font-size: 18px;
+  color: #ffffff;
+  animation: diamondSparkle 2.5s ease-in-out infinite alternate;
+}
+
+.diamond-mode::before {
+  top: 18px;
+  left: 30px;
+}
+
+.diamond-mode::after {
+  bottom: 20px;
+  right: 35px;
+}
+
+@keyframes diamondSparkle {
+  from { transform: scale(0.9); opacity: 0.5; }
+  to { transform: scale(1.15); opacity: 1; }
+}
+
+/* Make label white in diamond mode */
+.diamond-mode .band-result-label {
+  color: #ffffff;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* ===============================
+   EXAM COUNTDOWN SYSTEM
+================================ */
+
+.countdown-card{
+  background:#ffffff;
+  border:1px solid #e6f4ec;
+  border-radius:28px;
+  padding:50px 40px 30px 40px; /* reduced bottom padding */
+}
+
+.countdown-header{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  margin-bottom:10px;
+}
+
+.countdown-icon{
+  width:55px;
+  height:55px;
+  border-radius:20px;
+  background:var(--accent);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  position:relative;
+  top:-15px;
+}
+
+.countdown-header h3{
+  font-size:28px;
+  font-weight:700;
+  color:var(--accent);
+
+  position:relative;
+  top:-15px;
+}
+
+.countdown-description{
+  color:var(--text-muted);
+  margin-bottom:40px;
+}
+
+.countdown-select{
+  background:#f3faf6;
+  border-radius:18px;
+  padding:18px 22px;
+  cursor:pointer;
+  font-weight:500;
+  border:1px solid #e6f4ec;
+  transition:0.3s ease;
+}
+
+.countdown-select:hover{
+  background:#e8f9f1;
+}
+
+/* DESKTOP */
+.countdown-display{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:24px;
+  margin-top:10px; 
+}
+
+.time-wrapper{
+  flex:1;
+  text-align:center;
+}
+
+.time-wrapper:first-child{
+  flex:1.2;
+}
+
+.time-box{
+  background:#ffffff;
+  border-radius:22px;
+  padding:32px 10px;
+  box-shadow:0 15px 30px rgba(0,0,0,0.06);
+}
+
+.time-label{
+  margin-top:14px;
+  font-size:14px;
+  letter-spacing:2px;
+  color:#64748b;
+}
+
+/* TIME BOX */
+.time-box{
+  flex:1;
+  min-width:0; /* prevents overflow */
+  background:#ffffff;
+  border-radius:22px;
+  padding:28px 10px; /* 🔥 reduced vertical + horizontal padding */
+  text-align:center;
+  box-shadow:0 15px 30px rgba(0,0,0,0.06);
+  transition:all 0.3s ease;
+}
+
+/* LABEL */
+.time-box span{
+  display:block;
+  margin-top:10px;
+  font-size:14px;
+  letter-spacing:2px;
+  color:#64748b;
+}
+
+
+/* ===============================
+   DATE DROPDOWN SYSTEM
+================================ */
+
+.date-dropdown{
+  margin-top:30px;
+  background:#f3faf6;
+  border-radius:20px;
+  padding:25px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  position:relative;
+  animation:fadeIn 0.25s ease;
+}
+
+/* When showing calendar days */
+.date-dropdown.calendar{
+  grid-template-columns:repeat(7,1fr);
+}
+
+/* Week label */
+.date-week{
+  font-size:12px;
+  text-align:center;
+  font-weight:600;
+  color:#64748b;
+  padding-bottom:8px;
+}
+
+@keyframes fadeIn{
+  from{ opacity:0; transform:translateY(10px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+.date-option{
+  background:#ffffff;
+  padding:14px;
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.2s ease;
+}
+
+.date-option:hover{
+  background:var(--accent);
+  color:#fff;
+}
+
+.date-back{
+  grid-column:1 / -1;
+  margin-bottom:10px;
+  font-size:14px;
+  cursor:pointer;
+  color:var(--text-muted);
+}
+
+/* Shake animation */
+.shake{
+  animation:shake 0.4s ease;
+}
+
+@keyframes shake{
+  0%{ transform:translateX(0); }
+  25%{ transform:translateX(-6px); }
+  50%{ transform:translateX(6px); }
+  75%{ transform:translateX(-4px); }
+  100%{ transform:translateX(0); }
+}
+
+.date-error{
+  margin-top:15px;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #dc2626;
+  background:#fee2e2;
+  color:#7f1d1d;
+  display:none;
+  font-size:14px;
+}
+
+/* COUNTDOWN FOOTER ROW */
+
+.countdown-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:30px;
+  padding-bottom:10px; /* smaller bottom spacing */
+}
+
+#examDateText{
+  font-size:16px;
+  color:var(--text-muted);
+  font-weight:500;
+}
+
+.change-date{
+  cursor:pointer;
+  color:var(--text-muted);
+  font-weight:500;
+  transition:0.2s ease;
+}
+
+.change-date:hover{
+  color:var(--accent);
+}
+
+/* REAL MECHANICAL CHAMBER SYSTEM */
+
+.time-value{
+  position:relative;
+  height:64px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+  font-weight:800;
+  color:var(--accent);
+}
+
+/* Track that slides */
+.time-track{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  transition:transform 0.5s cubic-bezier(.4,0,.2,1);
+}
+
+/* Each number row */
+.time-digit{
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Current visible number */
+.number-current{
+  transform:translateY(0);
+  opacity:1;
+}
+
+/* Old number sliding up */
+.number-exit{
+  transform:translateY(-100%);
+  opacity:0;
+}
+
+/* New number starts below */
+.number-enter{
+  transform:translateY(100%);
+  opacity:0;
+}
+
+/* New number becomes visible */
+.number-enter.active{
+  transform:translateY(0);
+  opacity:1;
+}
+
+/* ===============================
+   MOCK FORMAT SECTION ANIMATION
+================================ */
+
+.mock-format-title{
+  opacity:0;
+  transform:translateY(60px);
+  transition:all 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mock-format-title.active{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* Cards initial state */
+.mock-format-card{
+  opacity:0;
+  transition:all 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mock-format-card.left{
+  transform:translateX(-80px);
+}
+
+.mock-format-card.right{
+  transform:translateX(80px);
+}
+
+.mock-format-card.active{
+  opacity:1;
+  transform:translateX(0);
+}
+
+/* =================================
+   CLEAN MOBILE DROPDOWN FIX
+================================= */
+@media (max-width: 900px){
+
+  /* Keep countdown compact */
+  .countdown-display{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+  }
+
+/* Proper desktop-proportional scaling */
+.time-wrapper{
+  flex:1;
+  min-width:0;
+}
+
+.time-wrapper:first-child{
+  flex:1.3;   /* stronger ratio so DAYS is clearly wider */
+}
+
+  .time-box{
+    padding:18px 6px;
+  }
+
+  .time-value{
+    font-size:32px;
+    height:44px;
+  }
+
+  .time-digit{
+    height:44px;
+  }
+
+  /* 🔥 CRITICAL FIX — STOP DROPDOWN FROM EXPANDING PAGE */
+  .date-dropdown{
+    width:100%;
+    max-width:100%;
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+
+  /* Calendar must fit screen */
+  .date-dropdown.calendar{
+    grid-template-columns: repeat(7, minmax(0,1fr));
+  }
+
+  /* Prevent grid from stretching layout */
+  .date-option{
+    min-width:0;
+  }
+
+  /* Keep footer in one row */
+  .countdown-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+  }
+
+  #examDateText{
+    font-size:13px;
+  }
+
+  /* ===============================
+   MOBILE COUNTDOWN LABEL FIX
+================================= */
+
+/* Hide full words */
+.time-label{
+  font-size:0;
+}
+
+/* Inject single-letter labels */
+.time-wrapper:nth-child(1) .time-label::after{
+  content:"D";
+}
+
+.time-wrapper:nth-child(2) .time-label::after{
+  content:"H";
+}
+
+.time-wrapper:nth-child(3) .time-label::after{
+  content:"M";
+}
+
+.time-wrapper:nth-child(4) .time-label::after{
+  content:"S";
+}
+
+/* Style the single letters */
+.time-label::after{
+  font-size:13px;
+  letter-spacing:1px;
+  color:#64748b;
+  display:block;
+  margin-top:6px;
+}
+
+/* ===============================
+   MOBILE CALENDAR FIX (CLEAN COPY OF DESKTOP, SCALED)
+================================= */
+
+.date-dropdown.calendar{
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  padding: 20px;
+  width: 100%;
+  overflow: visible;
+}
+
+/* Make day buttons perfectly centered */
+.date-option{
+  padding: 0;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border-radius: 14px;
+}
+
+/* Week labels alignment */
+.date-week{
+  font-size: 12px;
+  text-align: center;
+  padding-bottom: 6px;
+}
+
+/* Back button spacing */
+.date-back{
+  margin-bottom: 15px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+<header class="mock-nav">
+
+  <!-- LEFT -->
+  <a href="../index.html" class="mock-logo">
+    <img src="../assets/headstart.png" alt="HeadStart Logo">
+    <span>HeadStart</span>
+  </a>
+
+  <!-- RIGHT -->
+  <div class="mock-language" id="mockLanguage">
+
+    <div class="mock-language-current">
+      <img src="https://flagcdn.com/w40/gb.png" class="mock-flag" id="mockCurrentFlag">
+      <span id="mockCurrentText">ENG</span>
+      <span class="mock-arrow">⌄</span>
+    </div>
+
+    <div class="mock-language-dropdown">
+      <div class="mock-language-option" data-lang="en">
+        <img src="https://flagcdn.com/w40/gb.png" class="mock-flag">
+        ENG
+      </div>
+
+      <div class="mock-language-option" data-lang="uz">
+        <img src="https://flagcdn.com/w40/uz.png" class="mock-flag">
+        UZB
+      </div>
+    </div>
+
+  </div>
+
+</header>
+
+  <section class="mock-hero">
+    <div class="container mock-grid">
+
+      <!-- LEFT SIDE -->
+      <div class="mock-left">
+        <a href="../index.html" class="mock-back">
+  ← Back to Homepage
+</a>
+
+        <h1 class="mock-title" id="animatedTitle">
+  Join Our Official IELTS Mock Examinations
+</h1>
+
+<p class="mock-description">
+  Experience a fully simulated computer-based IELTS environment designed to mirror the official test. Receive structured performance analysis, personalized feedback, and sharpen your strategy with confidence.
+</p>
+
+<div class="mock-buttons">
+  <a href="#mock-format" class="btn-primary">
+    Register →
+  </a>
+</div>
+
+      </div>
+
+      <!-- RIGHT SIDE IMAGE -->
+<div class="mock-right">
+  <div class="mock-image-wrapper">
+    <img src="../assets/mega.png" alt="Mock Exam Illustration" class="mock-image">
+  </div>
+</div>
+
+    </div>
+  </section>
+
+  <!-- ================= MOCK FORMAT CHOICE SECTION ================= -->
+
+<section id="mock-format" class="mock-format-section">
+
+  <div class="container">
+
+    <h2 class="mock-format-title">
+      Choose Your Mock Exam
+    </h2>
+
+    <div class="mock-format-grid">
+
+      <!-- IELTS CARD -->
+      <div class="mock-format-card left">
+
+        <!-- TOP -->
+        <div class="mock-format-top">
+          <div class="mock-format-left">
+            <span class="mock-label">IELTS MOCK</span>
+            <h3>
+              Take the most authentic offline IELTS CD exam
+            </h3>
+          </div>
+
+          <div class="mock-format-right">
+            <img src="../assets/cd.png" alt="IELTS CD Exam">
+          </div>
+        </div>
+
+        <!-- BOTTOM -->
+        <div class="mock-format-bottom">
+          <p>
+            Simulate the official computer-delivered IELTS test environment with authentic timing, interface structure, and exam pressure. Designed to closely replicate real test conditions.
+          </p>
+
+          <a href="javascript:void(0)" class="btn-primary">
+  Register for IELTS Mock Exam →
+</a>
+        </div>
+
+      </div>
+
+      <!-- CEFR CARD -->
+      <div class="mock-format-card right">
+
+        <!-- TOP -->
+        <div class="mock-format-top">
+          <div class="mock-format-left">
+            <span class="mock-label">CEFR MOCK</span>
+            <h3>
+              Test your English with CEFR assessment
+            </h3>
+          </div>
+
+          <div class="mock-format-right">
+            <img src="../assets/paper.png" alt="CEFR Mock Exam">
+          </div>
+        </div>
+
+        <!-- BOTTOM -->
+        <div class="mock-format-bottom">
+          <p>
+            Assess your English proficiency based on CEFR standards. Receive structured feedback and understand your level from A1 to C1 with clarity.
+          </p>
+
+          <a href="javascript:void(0)" class="btn-primary">
+  Register for CEFR Mock Exam →
+</a>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ================= BAND CALCULATOR SECTION ================= -->
+
+<section class="band-section">
+
+  <div class="container band-grid">
+
+    <!-- LEFT SIDE -->
+    <div class="band-left band-calculator">
+
+      <!-- TOP RESULT -->
+      <div class="band-result-card">
+        <div class="band-result-label">Your Overall Band</div>
+        <div class="band-result-score" id="overallScore">—</div>
+      </div>
+
+      <!-- SKILL CARD -->
+      <div class="band-card">
+
+        <div class="band-row" data-skill="listening">
+          <span>Listening</span>
+          <span class="band-value" id="listeningValue">—</span>
+        </div>
+
+        <div class="band-row" data-skill="reading">
+          <span>Reading</span>
+          <span class="band-value" id="readingValue">—</span>
+        </div>
+
+        <div class="band-row" data-skill="writing">
+          <span>Writing</span>
+          <span class="band-value" id="writingValue">—</span>
+        </div>
+
+        <div class="band-row" data-skill="speaking">
+          <span>Speaking</span>
+          <span class="band-value" id="speakingValue">—</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE (Exam Countdown) -->
+<div class="band-right">
+
+  <div class="countdown-card" id="countdownCard">
+
+    <div class="countdown-header">
+      <div class="countdown-icon">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="3"></rect>
+    <line x1="16" y1="2" x2="16" y2="6"></line>
+    <line x1="8" y1="2" x2="8" y2="6"></line>
+    <line x1="3" y1="10" x2="21" y2="10"></line>
+  </svg>
+</div>
+      <h3>Exam Countdown</h3>
+    </div>
+
+    <!-- INITIAL STATE -->
+    <div class="countdown-body" id="countdownInitial">
+      <p class="countdown-description">
+        Set your official exam date to activate a personalized countdown timer.
+      </p>
+
+      <div class="countdown-select" id="openDateSelector">
+        Choose your exam date
+      </div>
+    </div>
+
+    <!-- ACTIVE COUNTDOWN -->
+    <div class="countdown-display" id="countdownDisplay" style="display:none;">
+
+  <div class="time-wrapper">
+    <div class="time-box">
+      <div class="time-value" id="days"></div>
+    </div>
+    <div class="time-label">DAYS</div>
+  </div>
+
+  <div class="time-wrapper">
+    <div class="time-box">
+      <div class="time-value" id="hours"></div>
+    </div>
+    <div class="time-label">HOURS</div>
+  </div>
+
+  <div class="time-wrapper">
+    <div class="time-box">
+      <div class="time-value" id="minutes"></div>
+    </div>
+    <div class="time-label">MINUTES</div>
+  </div>
+
+  <div class="time-wrapper">
+    <div class="time-box">
+      <div class="time-value" id="seconds"></div>
+    </div>
+    <div class="time-label">SECONDS</div>
+  </div>
+
+</div>
+
+<div class="countdown-footer" id="countdownFooter" style="display:none;">
+  <div class="exam-date-text" id="examDateText">
+    Your Exam Date: —
+  </div>
+  <div class="change-date" id="changeDate">
+    Change Date
+  </div>
+</div>
+
+    <!-- DATE DROPDOWN SYSTEM -->
+    <div class="date-dropdown" id="dateDropdown" style="display:none;"></div>
+
+    <!-- ERROR POPUP -->
+    <div class="date-error" id="dateError">
+      Please select a future exam date.
+    </div>
+
+  </div>
+
+</div>
+
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const title = document.getElementById("animatedTitle");
+  const description = document.querySelector(".mock-description");
+  const buttonsWrapper = document.querySelector(".mock-buttons");
+  const buttons = document.querySelectorAll(".btn-primary, .btn-outline");
+
+  /* ================= TITLE LETTER ANIMATION ================= */
+
+  const text = title.textContent.trim();
+  const words = text.split(" ");
+
+  title.innerHTML = `
+    <span class="line">
+      ${words.map((word, wIndex) => `
+        <span class="word">
+          ${word.split("").map((letter, lIndex) =>
+            `<span style="animation-delay:${(wIndex * 0.15) + (lIndex * 0.04)}s">${letter}</span>`
+          ).join("")}
+        </span>
+      `).join("")}
+    </span>
+  `;
+
+  /* ================= DANCE SEQUENCE ================= */
+
+// Calculate title animation duration
+const totalLetters = title.querySelectorAll("span span").length;
+const letterDuration = totalLetters * 40 + 600;
+
+// After title finishes
+setTimeout(() => {
+
+  // Animate description + mega.png together
+  document.querySelector(".mock-description").classList.add("active");
+  document.querySelector(".mock-image").classList.add("active");
+
+  // After description + image finish
+  setTimeout(() => {
+
+    document.querySelector(".mock-buttons").classList.add("active");
+
+    // Trigger button dance
+    setTimeout(() => {
+      buttons.forEach(btn => {
+        btn.classList.add("dance");
+        setTimeout(() => btn.classList.remove("dance"), 800);
+      });
+    }, 300);
+
+  }, 900);
+
+}, letterDuration);
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const switcher = document.getElementById("mockLanguage");
+  const current = switcher.querySelector(".mock-language-current");
+  const options = document.querySelectorAll(".mock-language-option");
+  const currentText = document.getElementById("mockCurrentText");
+  const currentFlag = document.getElementById("mockCurrentFlag");
+
+  /* OPEN / CLOSE */
+
+  current.addEventListener("click", (e) => {
+    e.stopPropagation();
+    switcher.classList.toggle("open");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!switcher.contains(e.target)) {
+      switcher.classList.remove("open");
+    }
+  });
+
+  /* LANGUAGE CHANGE */
+
+  options.forEach(option => {
+    option.addEventListener("click", (e) => {
+
+      e.stopPropagation();
+
+      const lang = option.dataset.lang;
+
+      if (lang === "en") {
+        currentText.textContent = "ENG";
+        currentFlag.src = "https://flagcdn.com/w40/gb.png";
+      } else {
+        currentText.textContent = "UZB";
+        currentFlag.src = "https://flagcdn.com/w40/uz.png";
+      }
+
+      switcher.classList.remove("open");
+
+    });
+  });
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const formatSection = document.querySelector(".mock-format-section");
+  const formatTitle = document.querySelector(".mock-format-title");
+  const formatCards = document.querySelectorAll(".mock-format-card");
+
+  const observer = new IntersectionObserver((entries) => {
+
+    entries.forEach(entry => {
+
+      if(entry.isIntersecting){
+
+        // Title animates first
+        formatTitle.classList.add("active");
+
+        // After title animation ends → cards animate
+        setTimeout(() => {
+
+          formatCards.forEach(card => {
+            card.classList.add("active");
+          });
+
+        }, 900); // must match title transition
+
+        observer.unobserve(entry.target);
+      }
+
+    });
+
+  }, { threshold: 0.3 });
+
+  observer.observe(formatSection);
+
+});
+</script>
+
+<script>
+document.addEventListener("scroll", () => {
+  const progress = document.getElementById("scrollProgress");
+  const scrollTop = window.scrollY;
+  const height = document.documentElement.scrollHeight - window.innerHeight;
+  const percent = (scrollTop / height) * 100;
+  progress.style.width = percent + "%";
+});
+</script>
+
+<script>
+
+const listeningTable = [
+  {range:"4-5", band:2.5},{range:"6-7", band:3.0},
+  {range:"8-10", band:3.5},{range:"11-12", band:4.0},
+  {range:"13-15", band:4.5},{range:"16-17", band:5.0},
+  {range:"18-22", band:5.5},{range:"23-25", band:6.0},
+  {range:"26-29", band:6.5},{range:"30-31", band:7.0},
+  {range:"32-34", band:7.5},{range:"35-36", band:8.0},
+  {range:"37-38", band:8.5},{range:"39-40", band:9.0}
+];
+
+const readingTable = [
+  {range:"4-5", band:2.5},{range:"6-7", band:3.0},
+  {range:"8-9", band:3.5},{range:"10-12", band:4.0},
+  {range:"13-14", band:4.5},{range:"15-18", band:5.0},
+  {range:"19-22", band:5.5},{range:"23-26", band:6.0},
+  {range:"27-29", band:6.5},{range:"30-32", band:7.0},
+  {range:"33-34", band:7.5},{range:"35-36", band:8.0},
+  {range:"37-38", band:8.5},{range:"39-40", band:9.0}
+];
+
+let scores = {
+  listening:null,
+  reading:null,
+  writing:null,
+  speaking:null,
+  task1:null,
+  task2:null
+};
+
+const rows = document.querySelectorAll(".band-row");
+const overallDisplay = document.getElementById("overallScore");
+
+rows.forEach(row=>{
+  row.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    openDropdown(row);
+  });
+});
+
+document.addEventListener("click",(e)=>{
+
+  const dropdown = document.querySelector(".band-dropdown");
+  const calculator = document.querySelector(".band-calculator");
+
+  if(!dropdown) return;
+
+  // If click is inside calculator area → ignore
+  if(calculator.contains(e.target)) return;
+
+  // Otherwise close
+  closeDropdown();
+});
+
+function openDropdown(row){
+
+  closeDropdown();
+
+  const skill = row.dataset.skill;
+  const dropdown = document.createElement("div");
+  dropdown.className = "band-dropdown";
+
+  if(skill==="listening" || skill==="reading"){
+    const table = skill==="listening" ? listeningTable : readingTable;
+
+    table.forEach(item=>{
+      const option = document.createElement("div");
+      option.className="band-option";
+      option.innerText=`${item.range}  :  ${item.band}`;
+      option.onclick=()=>{
+        scores[skill]=item.band;
+        document.getElementById(skill+"Value").innerText=item.band;
+        saveData();
+        calculateOverall();
+        closeDropdown();
+      };
+      dropdown.appendChild(option);
+    });
+  }
+
+  if(skill==="speaking"){
+  for(let i=2.5;i<=9;i+=0.5){
+      const option=document.createElement("div");
+      option.className="band-option";
+      option.innerText=i.toFixed(1);
+      option.onclick=()=>{
+        scores.speaking=i;
+        document.getElementById("speakingValue").innerText=i;
+        saveData();
+        calculateOverall();
+        closeDropdown();
+      };
+      dropdown.appendChild(option);
+    }
+  }
+
+  if(skill==="writing"){
+
+  dropdown.innerHTML = `
+    <div class="band-option" id="task1Btn">
+      Task 1 ${scores.task1 !== null ? " : " + scores.task1.toFixed(1) : ""}
+    </div>
+    <div class="band-option" id="task2Btn">
+      Task 2 ${scores.task2 !== null ? " : " + scores.task2.toFixed(1) : ""}
+    </div>
+  `;
+
+  setTimeout(()=>{
+
+    document.getElementById("task1Btn").onclick = (e)=>{
+      e.stopPropagation();
+      openTaskDropdown("task1", row);
+    };
+
+    document.getElementById("task2Btn").onclick = (e)=>{
+      e.stopPropagation();
+      openTaskDropdown("task2", row);
+    };
+
+  },0);
+
+}
+
+  positionDropdown(row,dropdown);
+  document.querySelector(".band-calculator").appendChild(dropdown);
+}
+
+function openTaskDropdown(task, row){
+
+  const old = document.querySelector(".band-dropdown");
+  if(old) old.remove();
+
+  const dropdown = document.createElement("div");
+  dropdown.className = "band-dropdown";
+
+  for(let i = 2.5; i <= 9; i += 0.5){
+
+    const option = document.createElement("div");
+    option.className = "band-option";
+    option.innerText = i.toFixed(1);
+
+    option.onclick = (e) => {
+
+      e.stopPropagation();
+
+      scores[task] = i;
+
+      calculateWriting();
+      saveData();
+      calculateOverall();
+
+      // If both tasks selected → close everything
+      if(scores.task1 !== null && scores.task2 !== null){
+        closeDropdown();
+        return;
+      }
+
+      // Otherwise go back to Task selector
+      showWritingSelector(row);
+    };
+
+    dropdown.appendChild(option);
+  }
+
+  positionDropdown(row, dropdown);
+  document.querySelector(".band-calculator").appendChild(dropdown);
+}
+
+function showWritingSelector(row){
+
+  const old = document.querySelector(".band-dropdown");
+  if(old) old.remove();
+
+  const dropdown = document.createElement("div");
+  dropdown.className = "band-dropdown";
+
+  const task1 = document.createElement("div");
+  task1.className = "band-option";
+  task1.innerText = "Task 1";
+  task1.onclick = (e)=>{
+    e.stopPropagation();
+    openTaskDropdown("task1", row);
+  };
+
+  const task2 = document.createElement("div");
+  task2.className = "band-option";
+  task2.innerText = "Task 2";
+  task2.onclick = (e)=>{
+    e.stopPropagation();
+    openTaskDropdown("task2", row);
+  };
+
+  dropdown.appendChild(task1);
+  dropdown.appendChild(task2);
+
+  positionDropdown(row, dropdown);
+  document.querySelector(".band-calculator").appendChild(dropdown);
+}
+
+function calculateWriting(){
+  if(scores.task1 !== null && scores.task2 !== null){
+
+    let raw = (scores.task1 + (scores.task2 * 2)) / 3;
+
+    // Official IELTS rounding
+    let decimal = raw % 1;
+    let rounded;
+
+    if(decimal < 0.25) rounded = Math.floor(raw);
+    else if(decimal < 0.75) rounded = Math.floor(raw) + 0.5;
+    else rounded = Math.ceil(raw);
+
+    scores.writing = rounded;
+
+    document.getElementById("writingValue").innerText = rounded.toFixed(1);
+  }
+}
+
+function calculateOverall(){
+  const vals=[scores.listening,scores.reading,scores.writing,scores.speaking];
+  if(vals.every(v=>v!==null)){
+    let avg=(vals[0]+vals[1]+vals[2]+vals[3])/4;
+
+    // Official IELTS rounding
+    let decimal=avg%1;
+    let rounded;
+
+    if(decimal<0.25) rounded=Math.floor(avg);
+    else if(decimal<0.75) rounded=Math.floor(avg)+0.5;
+    else rounded=Math.ceil(avg);
+
+    overallDisplay.innerText=rounded.toFixed(1);
+    colorScore(rounded);
+  }
+}
+
+function colorScore(score){
+
+  const card = document.querySelector(".band-result-card");
+
+  // Reset everything properly
+  overallDisplay.className = "band-result-score";
+  overallDisplay.style.color = "";
+  card.classList.remove("diamond-mode", "gold-card");
+
+  // 🔴 2.5 – 3.5 (dark red)
+  if(score <= 3.5){
+    overallDisplay.style.color = "#7f1d1d";
+  }
+
+  // 🔴 4.0 – 4.5
+  else if(score <= 4.5){
+    overallDisplay.style.color = "#dc2626";
+  }
+
+  // 🟠 5.0 – 5.5
+  else if(score <= 5.5){
+    overallDisplay.style.color = "#f97316";
+  }
+
+  // 🟡 6.0 – 6.5
+  else if(score <= 6.5){
+    overallDisplay.style.color = "#eab308";
+  }
+
+  // 🟢 7.0 – 7.5
+  else if(score <= 7.5){
+    overallDisplay.style.color = "#16a34a";
+  }
+
+  // 🏆 8.0 – 8.5 (premium gold mode)
+else if(score <= 8.5){
+  overallDisplay.classList.add("gold-score");
+  document.querySelector(".band-result-card").classList.add("gold-card");
+}
+
+  // 💎 9.0
+  else if(score === 9.0){
+    overallDisplay.classList.add("diamond-score");
+    card.classList.add("diamond-mode");
+  }
+}
+
+function positionDropdown(row, dropdown){
+
+  const container = document.querySelector(".band-calculator");
+  const containerRect = container.getBoundingClientRect();
+  const rowRect = row.getBoundingClientRect();
+
+  dropdown.style.position = "absolute";
+  dropdown.style.width = rowRect.width + "px";
+  dropdown.style.left = (rowRect.left - containerRect.left) + "px";
+
+  // Append first to measure height
+  dropdown.style.visibility = "hidden";
+  dropdown.style.top = "0px";
+  container.appendChild(dropdown);
+
+  const dropdownHeight = dropdown.offsetHeight;
+  const skill = row.dataset.skill;
+
+  const isMobile = window.innerWidth <= 900;
+
+  let openUp = false;
+
+  if(isMobile){
+    // 🔥 MOBILE → EVERYTHING OPENS UP
+    openUp = true;
+  } else {
+    // DESKTOP → ORIGINAL LOGIC (unchanged)
+    if(skill === "speaking"){
+      openUp = true;
+    }
+  }
+
+  if(openUp){
+    dropdown.style.top =
+      (rowRect.top - containerRect.top - dropdownHeight - 8) + "px";
+  } else {
+    dropdown.style.top =
+      (rowRect.bottom - containerRect.top + 8) + "px";
+  }
+
+  dropdown.style.visibility = "visible";
+}
+
+function closeDropdown(){
+  const existing=document.querySelector(".band-dropdown");
+  if(existing) existing.remove();
+}
+
+function saveData(){
+  localStorage.setItem("ieltsCalculator",JSON.stringify(scores));
+}
+
+function loadData(){
+  const saved=localStorage.getItem("ieltsCalculator");
+  if(saved){
+    scores=JSON.parse(saved);
+    ["listening","reading","writing","speaking"].forEach(skill=>{
+      if(scores[skill]){
+        document.getElementById(skill+"Value").innerText=scores[skill];
+      }
+    });
+    calculateOverall();
+  }
+}
+
+loadData();
+
+</script>
+
+<script>
+
+let examDate = null;
+let countdownInterval = null;
+let selectedYear = null;
+let selectedMonth = null;
+
+const openSelector = document.getElementById("openDateSelector");
+const changeDateBtn = document.getElementById("changeDate");
+const dropdown = document.getElementById("dateDropdown");
+const errorBox = document.getElementById("dateError");
+
+const initialBlock = document.getElementById("countdownInitial");
+const displayBlock = document.getElementById("countdownDisplay");
+
+const daysEl = document.getElementById("days");
+const hoursEl = document.getElementById("hours");
+const minutesEl = document.getElementById("minutes");
+const secondsEl = document.getElementById("seconds");
+
+const countdownFooter = document.getElementById("countdownFooter");
+const examDateText = document.getElementById("examDateText");
+
+function saveExamDate(date){
+  localStorage.setItem("examDate", date);
+}
+
+function loadExamDate(){
+  const saved = localStorage.getItem("examDate");
+  if(saved){
+    examDate = new Date(saved);
+    updateExamDateText();
+    startCountdown();
+  }
+}
+
+function resetCountdown(){
+  clearInterval(countdownInterval);
+  localStorage.removeItem("examDate");
+  examDate = null;
+
+  displayBlock.style.display = "none";
+  initialBlock.style.display = "block";
+  countdownFooter.style.display = "none";
+}
+
+function startCountdown(){
+  initialBlock.style.display = "none";
+  displayBlock.style.display = "flex";
+  countdownFooter.style.display = "flex";
+updateExamDateText();
+  updateCountdown();
+  countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+function updateCountdown(){
+  const now = new Date();
+  const diff = examDate - now;
+
+  if(diff <= 0){
+    resetCountdown();
+    return;
+  }
+
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff / (1000*60*60)) % 24);
+  const minutes = Math.floor((diff / (1000*60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  animateNumber(daysEl, days);
+  animateNumber(hoursEl, hours);
+  animateNumber(minutesEl, minutes);
+  animateNumber(secondsEl, seconds);
+}
+
+let isAnimating = {};
+
+function animateNumber(element, newValue){
+
+  const formatted = String(newValue).padStart(2,"0");
+
+  if(isAnimating[element.id]) return;
+
+  let track = element.querySelector(".time-track");
+
+  // First render
+  if(!track){
+    track = document.createElement("div");
+    track.className = "time-track";
+
+    const digit = document.createElement("div");
+    digit.className = "time-digit";
+    digit.innerText = formatted;
+
+    track.appendChild(digit);
+    element.appendChild(track);
+    return;
+  }
+
+  const currentDigit = track.firstElementChild;
+
+  if(currentDigit.innerText === formatted) return;
+
+  isAnimating[element.id] = true;
+
+  const newDigit = document.createElement("div");
+  newDigit.className = "time-digit";
+  newDigit.innerText = formatted;
+
+  // Add new digit below
+  track.appendChild(newDigit);
+
+  // Force reflow (important)
+  track.offsetHeight;
+
+  // Slide up exactly one digit height
+  const digitHeight = currentDigit.offsetHeight;
+track.style.transform = `translateY(-${digitHeight}px)`;
+
+  setTimeout(() => {
+
+    // Clean reset
+    track.style.transition = "none";
+    track.style.transform = "translateY(0)";
+
+    // Remove ALL children
+    track.innerHTML = "";
+
+    // Keep only the new digit
+    const finalDigit = document.createElement("div");
+    finalDigit.className = "time-digit";
+    finalDigit.innerText = formatted;
+
+    track.appendChild(finalDigit);
+
+    // Restore transition
+    track.offsetHeight;
+    track.style.transition = "transform 0.5s cubic-bezier(.4,0,.2,1)";
+
+    isAnimating[element.id] = false;
+
+  }, 500);
+}
+
+/* ===========================
+   DROPDOWN SYSTEM
+=========================== */
+
+openSelector.addEventListener("click", showYears);
+changeDateBtn.addEventListener("click", ()=>{
+  resetCountdown();
+  showYears();
+});
+
+function showYears(){
+  dropdown.style.display = "grid";
+  dropdown.classList.remove("calendar"); // 🔥 IMPORTANT FIX
+  dropdown.innerHTML = "";
+
+  [2026, 2027].forEach(year=>{
+    const div = document.createElement("div");
+    div.className = "date-option";
+    div.innerText = year;
+    div.onclick = ()=>{
+      selectedYear = year;
+      showMonths();
+    };
+    dropdown.appendChild(div);
+  });
+}
+
+function showMonths(){
+  dropdown.classList.remove("calendar"); // 🔥 IMPORTANT FIX
+  dropdown.innerHTML = "";
+
+  addBack(showYears);
+
+  const months = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
+
+  months.forEach((m,i)=>{
+    const div = document.createElement("div");
+    div.className = "date-option";
+    div.innerText = m;
+    div.onclick = ()=>{
+      selectedMonth = i;
+      showDays();
+    };
+    dropdown.appendChild(div);
+  });
+}
+
+function showDays(){
+
+  dropdown.innerHTML = "";
+  dropdown.classList.add("calendar");
+
+  addBack(showMonths);
+
+  // Week Labels (Monday first)
+  const weekDays = ["M","T","W","T","F","S","S"];
+
+  weekDays.forEach(day=>{
+    const label = document.createElement("div");
+    label.className = "date-week";
+    label.innerText = day;
+    dropdown.appendChild(label);
+  });
+
+  const firstDay = new Date(selectedYear, selectedMonth, 1).getDay();
+  const adjustedStart = firstDay === 0 ? 6 : firstDay - 1; 
+  const daysInMonth = new Date(selectedYear, selectedMonth+1, 0).getDate();
+
+  // Empty slots before month starts
+  for(let i=0; i<adjustedStart; i++){
+    const empty = document.createElement("div");
+    dropdown.appendChild(empty);
+  }
+
+  for(let d=1; d<=daysInMonth; d++){
+
+    const div = document.createElement("div");
+    div.className = "date-option";
+    div.innerText = d;
+
+    div.onclick = ()=>{
+
+      const selected = new Date(selectedYear, selectedMonth, d, 0,0,0);
+
+      if(selected <= new Date()){
+        triggerError();
+        return;
+      }
+
+      examDate = selected;
+saveExamDate(selected);
+dropdown.style.display = "none";
+dropdown.classList.remove("calendar");
+updateExamDateText();
+startCountdown();
+    };
+
+    dropdown.appendChild(div);
+  }
+}
+
+function addBack(callback){
+  const back = document.createElement("div");
+  back.className = "date-back";
+  back.innerText = "← Back";
+  back.onclick = callback;
+  dropdown.appendChild(back);
+}
+
+function triggerError(){
+  errorBox.style.display = "block";
+  dropdown.classList.add("shake");
+
+  setTimeout(()=>{
+    dropdown.classList.remove("shake");
+  },400);
+
+  setTimeout(()=>{
+    errorBox.style.display = "none";
+  },2000);
+}
+
+function updateExamDateText(){
+
+  if(!examDate) return;
+
+  const options = { month: "long", day: "numeric", year: "numeric" };
+  const formatted = examDate.toLocaleDateString(undefined, options);
+
+  examDateText.innerText = `Your Exam Date: ${formatted}`;
+}
+
+loadExamDate();
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const bandLeft = document.querySelector(".band-left");
+  const bandRight = document.querySelector(".band-right");
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        bandLeft.classList.add("active");
+        bandRight.classList.add("active");
+      }
+    });
+  }, { threshold: 0.2 });
+
+  observer.observe(document.querySelector(".band-section"));
+
+});
+</script>
+
+</body>
+</html>

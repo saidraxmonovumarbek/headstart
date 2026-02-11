@@ -1,0 +1,4401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadStart English School</title>
+    <meta name="description" content="HeadStart English School – IELTS, SAT and General English preparation with proven results. Modern study zones, official mock exams, and experienced teachers in Uzbekistan.">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    
+        <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D5M8EXMVTK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-D5M8EXMVTK');
+    </script>
+    
+    <style>
+    :root {
+        --bg: #ffffff;
+        --bg-alt: #f8fafc;
+        --text: #1e293b;
+        --text-muted: #64748b;
+        --accent: #22c55e;
+        --accent-dark: #16a34a;
+        --secondary: #4ade80;
+        --green: #22c55e;
+        --border: #e2e8f0;
+        --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+    font-family: var(--font-main);
+    background: #ffffff;
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+    header {
+  position: fixed;
+  top: 20px;                 /* floating */
+  left: 50%;
+  transform: translateX(-50%);
+  height: 72px;
+  width: calc(100% - 80px);
+  max-width: 1300px;
+
+ background: rgba(255, 255, 255, 0.85);
+
+  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: 50px;
+
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+
+  z-index: 1000;
+
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  padding: 0 40px;
+}
+
+ .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;   /* 🔥 remove underline */
+}
+
+.logo:hover {
+  text-decoration: none;
+}
+
+.logo-img {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.logo-text {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+
+@media (max-width: 1024px) {
+
+  .logo {
+    position: relative;
+    left: -17px;   /* 🔥 adjust this number */
+  }
+
+}
+
+nav {
+  display: flex;
+  gap: 32px;
+  justify-content: center;   /* 🔥 center horizontally */
+}
+
+    nav a {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 14px;
+        transition: var(--transition);
+        position: relative;
+        white-space: nowrap;
+    }
+
+    nav a:hover {
+        color: var(--text);
+    }
+
+  nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  transform: translateX(-50%);
+  transition: width 0.4s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+    main {
+    padding-top: 92px;
+}
+
+    section {
+  padding: 120px 48px;
+  border-bottom: 1px solid var(--border);
+  background: #ffffff;
+}
+
+#hero {
+  border-bottom: none;
+}
+
+    h2 {
+        font-size: 42px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        margin-bottom: 24px;
+        position: relative;
+        display: inline-block;
+    }
+
+    h2::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 48px;
+        height: 3px;
+        background: var(--accent);
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .btn {
+        padding: 16px 32px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+        transition: var(--transition);
+        border: none;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-primary {
+    background: var(--accent);
+    color: white;
+    border: 2px solid var(--accent);
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: white;
+    color: var(--accent);
+    transform: translateY(-2px);
+}
+
+   .btn-secondary {
+    background: white;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+}
+
+.btn-secondary:hover {
+    background: var(--accent);
+    color: white;
+}
+
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        z-index: 1100;
+    }
+
+    .hamburger span {
+        width: 28px;
+        height: 3px;
+        background: var(--text);
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+
+ /* UNIVERSAL HAMBURGER ANIMATION (DESKTOP + MOBILE) */
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+@media (max-width: 1024px) {
+
+    /* SHOW HAMBURGER */
+    .hamburger {
+        display: flex;
+        margin-left: auto;
+    }
+
+    .hamburger {
+    position: relative;
+    right: -15px;   /* 🔥 adjust this */
+  }
+
+    /* HIDE NAV COMPLETELY BY DEFAULT */
+    nav#main-nav {
+        display: none;              /* 🔥 CRITICAL FIX */
+        position: fixed;
+        top: 72px;                  /* below header */
+        left: 0;
+        right: 0;
+        background: rgba(255,255,255,0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        align-items: center;
+        padding: 32px 24px;
+        gap: 14px;
+        z-index: 2000;
+    }
+
+    /* SHOW NAV ONLY WHEN OPEN */
+    nav#main-nav.nav-open {
+        display: flex;              /* 🔥 CRITICAL FIX */
+    }
+
+  nav#main-nav a {
+    font-size: 15px;
+    padding: 6px 0;
+}
+
+}
+
+/* ===============================
+   NAV DROPDOWN (DESKTOP)
+================================ */
+
+.nav-item {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 0;
+  min-width: 180px;
+
+  display: flex;                 /* 🔥 Always defined */
+  flex-direction: column;
+
+  box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+  z-index: 2000;
+
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.nav-item.open .dropdown-menu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.dropdown-menu a {
+  padding: 10px 18px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.dropdown-menu a:hover {
+  background: var(--bg-alt);
+  color: var(--accent);
+}
+
+/* Show dropdown */
+.nav-item.open .dropdown-menu {
+  display: flex;
+}
+
+/* Arrow animation */
+.dropdown-arrow {
+  font-size: 12px;
+  margin-left: 4px;
+  transition: transform 0.3s ease;
+}
+
+.nav-item.open .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+/* Hide dropdown system completely on mobile */
+@media (max-width: 1024px) {
+
+  .dropdown-menu {
+    display: none !important;
+  }
+
+  .dropdown-arrow {
+    display: none;
+  }
+
+}
+
+#hero {
+  margin-top: -92px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  padding: 0 48px;
+  position: relative;   /* 🔥 ADD THIS */
+}
+
+.hero-wrapper {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: 60px;
+}
+
+/* LEFT */
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* RIGHT */
+.hero-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-image {
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  object-fit: contain;
+}
+
+.hero-right {
+  position: relative; /* 🔥 required for overlay positioning */
+}
+
+.main-image {
+  position: relative;
+  z-index: 1;
+}
+
+.icon-overlay {
+  position: absolute;
+  bottom: 70px;
+  left: 70px;
+  width: 100px;
+  height: auto;
+  z-index: 3;
+  pointer-events: none;
+
+  /* 🔥 animation starting state */
+  opacity: 0;
+  transform: translateX(80px);
+  transition: all 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+
+.icon-overlay.animate {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Fix Atmosphere vertical alignment (desktop only) */
+@media (min-width: 1025px) {
+
+  nav {
+    align-items: center; /* ensures perfect vertical alignment */
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-item > a {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+}
+
+nav a.active-nav {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+nav a.active-nav::after {
+  width: 100%;
+}
+
+/* ===============================
+   LANGUAGE SWITCH
+================================ */
+
+.language-switch {
+  position: relative;
+  cursor: pointer;
+}
+
+.language-current {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.lang-flag {
+  width: 22px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.lang-arrow {
+  transition: transform 0.3s ease;
+  font-size: 12px;
+}
+
+.language-switch.open .lang-arrow {
+  transform: rotate(180deg);
+}
+
+.language-dropdown {
+  position: absolute;
+  top: 100%;
+  margin-top: 8px;
+  right: 0;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 0;
+  min-width: 120px;
+
+  display: flex;
+  flex-direction: column;
+
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: all 0.25s ease;
+}
+
+.language-switch.open .language-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.lang-option {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.lang-option:hover {
+  background: var(--bg-alt);
+}
+
+/* DESKTOP POSITION */
+@media (min-width: 1025px) {
+  .language-switch {
+    margin-left: 20px;
+  }
+}
+
+/* MOBILE POSITION */
+@media (max-width: 1024px) {
+
+  .language-switch {
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+}
+
+/* ✅ MOBILE FONT FIX (homepage hero only) */
+@media (max-width: 1024px) {
+
+  #hero {
+    min-height: 100vh;
+    padding: 140px 24px 60px;
+  }
+
+  .hero-wrapper {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - 200px);
+    align-items: center;
+  }
+
+  .hero-right {
+    margin-top: 120px; /* pushes image below fold */
+    transform: translateY(-110px);
+  }
+
+  .hero-image {
+    max-width: 340px;
+  }
+}
+
+
+
+/* ================================
+   LOCATIONS – DESKTOP 2x2 STRUCTURE
+================================ */
+
+/* Location Info Card */
+.location-box {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 24px;     /* 🔥 smoother corners */
+  padding: 40px;
+  line-height: 1.8;
+  transition: all 0.3s ease;
+}
+
+/* Slight premium hover effect (desktop only) */
+@media (min-width: 1025px) {
+  .location-box:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  }
+}
+
+.locations-wrapper {
+  margin-top: 64px;
+}
+
+/* DESKTOP */
+@media (min-width: 1025px) {
+
+  .locations-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 420px;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .map-box {
+    height: 420px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 1024px) {
+
+  .locations-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  /* Reorder elements for correct mobile flow */
+  .locations-wrapper .location-box:nth-child(1) { order: 1; }
+  .locations-wrapper .map-box:nth-child(3) { order: 2; }
+
+  .locations-wrapper .location-box:nth-child(2) { order: 3; }
+  .locations-wrapper .map-box:nth-child(4) { order: 4; }
+
+  .map-box {
+    height: 320px;
+  }
+}
+
+/* Typography */
+
+.hero-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.hero-subtitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500;
+  font-size: 22px;
+  margin-top: 24px;
+  color: var(--text-muted);
+}
+
+/* Desktop only adjustment */
+@media (min-width: 1025px) {
+  .hero-subtitle {
+    margin-left: 35px;   /* adjust this number */
+  }
+}
+
+.hero-buttons {
+  margin-top: 48px;
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 5;
+}
+
+/* ================= HERO ANIMATION ================= */
+
+.hero-subtitle,
+.hero-buttons {
+  opacity: 0;
+  transform: translateX(-80px);   /* from left */
+}
+
+.hero-subtitle.animate,
+.hero-buttons.animate {
+  animation: heroRise 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* HERO IMAGE ANIMATION */
+
+.hero-image {
+  opacity: 0;
+  transform: translateX(80px);   /* start from right */
+  transition: all 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+
+.hero-image.animate {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ===============================
+   HERO LETTER REVEAL ANIMATION
+================================ */
+
+.hero-animated span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(40px) rotateX(-90deg);
+  transform-origin: bottom;
+  transition: 
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-animated.animate span {
+  opacity: 1;
+  transform: translateY(0) rotateX(0);
+}
+
+/* ===============================
+   HERO WORD STRUCTURE (CLEAN SPACING)
+================================ */
+
+.hero-animated .line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px; /* 🔥 equal spacing between ALL words */
+}
+
+.hero-animated .word {
+  display: inline-flex;
+  white-space: nowrap;
+}
+
+/* =========================
+   MOBILE & TABLET BREAK
+========================= */
+
+@media (max-width: 1024px) {
+
+  .hero-title {
+    font-size: 44px;
+  }
+
+  .hero-animated .line {
+    gap: 14px; /* slightly tighter spacing */
+  }
+
+  /* Break line BEFORE YOUR but keep YOUR + FUTURE together */
+.hero-animated .word:nth-child(2)::after {
+  content: "";
+  flex-basis: 100%;
+}
+
+}
+
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===============================
+   COURSES SPLIT LAYOUT
+================================ */
+
+.courses-section {
+  min-height: 100vh;
+}
+
+.courses-wrapper {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: calc(100vh - 72px);
+}
+
+/* LEFT SIDE */
+.courses-sidebar {
+  border-right: 1px solid var(--border);
+  padding: 60px 32px;
+  background: #ffffff;
+}
+
+.courses-sidebar h3 {
+  margin-bottom: 32px;
+  font-size: 20px;
+}
+
+.course-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 14px 0;
+  font-size: 15px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;          /* 🔥 required */
+  white-space: nowrap;
+}
+
+.course-btn:hover {
+  color: var(--accent);
+}
+
+.course-btn.active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ===============================
+   COURSE NAV HOVER ANIMATION (DESKTOP ONLY)
+================================ */
+
+@media (min-width: 901px) {
+
+  .course-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 6px;             /* slight spacing from text */
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  .course-btn:hover::after {
+    width: 100%;
+  }
+
+}
+
+/* RIGHT SIDE */
+.courses-content {
+  padding: 80px;
+  background: #ffffff;
+  position: relative;
+}
+
+.course-placeholder {
+  color: var(--text-muted);
+  font-size: 18px;
+}
+
+/* Course content animation */
+.course-details {
+  animation: fadeInCourse 0.3s ease forwards;
+}
+
+@keyframes fadeInCourse {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+
+  .courses-wrapper {
+    display: block;           /* 🔥 important */
+    min-height: auto;
+  }
+
+  .courses-section {
+    min-height: auto;
+    padding: 60px 24px;
+  }
+
+  .courses-sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px 20px 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .courses-sidebar h3 {
+    margin-bottom: 8px;
+  }
+
+  .course-btn {
+    display: none;
+  }
+
+  .courses-content {
+    padding: 20px 20px;   /* slightly tighter */
+  }
+
+}
+
+/* ===============================
+   GLOBAL CINEMATIC SCROLL SYSTEM
+================================ */
+
+.cinematic {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1),
+              transform 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+
+.cinematic.reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children */
+.cinematic > * {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.7s cubic-bezier(0.22,1,0.36,1);
+}
+
+.cinematic.reveal > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===============================
+   MAGNETIC BUTTON SYSTEM
+================================ */
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-4px);
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center,
+              rgba(255,255,255,0.25) 0%,
+              transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn:hover::after {
+  opacity: 1;
+}
+
+/* ===============================
+   MOBILE COURSE DROPDOWN
+================================ */
+
+.course-dropdown {
+  display: none;
+  margin-bottom: 20px;
+}
+
+.course-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text);
+  transition: var(--transition);
+}
+
+.course-dropdown-header:hover {
+  border-color: var(--accent);
+}
+
+.dropdown-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-arrow {
+  transition: transform 0.3s ease;
+}
+
+.course-dropdown.active .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.course-dropdown-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  background: #ffffff;
+}
+
+.course-dropdown.active .course-dropdown-menu {
+  max-height: 300px;
+}
+
+.course-dropdown-menu div {
+  padding: 12px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.course-dropdown-menu div:hover {
+  background: var(--bg-alt);
+  color: var(--accent);
+}
+
+/* SHOW ONLY ON MOBILE */
+@media (max-width: 900px) {
+  .course-dropdown {
+    display: block;
+  }
+}
+
+#testimonials {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+/* ===============================
+   FAQ SECTION
+================================ */
+
+.faq-section {
+  padding: 100px 48px;
+  border-bottom: none;
+}
+
+.faq-container {
+  max-width: 800px;   /* keeps it centered & ~60% feel */
+  margin: 0 auto;
+  text-align: center;
+}
+
+.faq-item {
+  margin-top: 24px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.faq-question {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 20px 0;
+  font-size: 17px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
+  transition: var(--transition);
+  position: relative;
+}
+
+.faq-question:hover {
+  color: var(--accent);
+}
+
+/* Plus icon effect */
+.faq-question::after {
+  content: "+";
+  position: absolute;
+  right: 0;
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.faq-item.active .faq-question::after {
+  transform: rotate(45deg);
+}
+
+/* Answer */
+.faq-answer {
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: height 0.4s ease, opacity 0.3s ease;
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  padding-right: 24px;
+}
+
+/* Hide mobile-only links on desktop */
+.mobile-only {
+  display: none;
+}
+
+/* Show mobile-only links only on mobile */
+@media (max-width: 1024px) {
+  .mobile-only {
+    display: block;
+  }
+}
+
+.location-box,
+.courses-content {
+  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1),
+              box-shadow 0.4s ease;
+}
+
+.location-box:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+}
+
+#hero::before {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%);
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: blur(80px);
+  animation: heroFloat 12s ease-in-out infinite alternate;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes heroFloat {
+  from { transform: translateX(-50%) translateY(-20px); }
+  to   { transform: translateX(-50%) translateY(20px); }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+.testimonial {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.testimonial.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.testimonial-wrapper {
+  position: relative;
+  margin-top: 32px;
+  min-height: 90px;
+}
+
+#testimonials {
+  padding: 60px 48px 40px 48px;
+  border-bottom: 1px solid var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+button {
+  font-family: var(--font-main);
+}
+
+/* ===============================
+   CLEAN TEACHERS SLIDER
+================================ */
+
+.teachers-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px 48px 120px; /* 🔥 reduced top padding */
+
+  overflow: hidden;
+  text-align: center;
+}
+
+.teachers-title {
+  transform: translateY(35px); /* 🔥 moves title down slightly */
+}
+
+.teacher-slider {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  overflow: hidden;   /* 🔥 important */
+  transform: translateY(-50px); /* 🔥 move everything up */
+}
+
+.teacher-track {
+  display: flex;
+  transition: transform 0.8s cubic-bezier(0.22,1,0.36,1);
+}
+
+.teacher-slide {
+  min-width: 100%;
+  display: grid;
+  grid-template-columns: 420px auto;
+  gap: 60px;
+  justify-content: center; /* 🔥 TRUE CENTERING */
+  align-items: center;
+}
+
+.teacher-left {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background: white;
+  border: 4px solid var(--accent);
+  border-radius: 28px;
+  overflow: hidden; /* 🔥 critical */
+}
+
+.teacher-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* 🔥 keeps 4:5 clean */
+  display: block;
+}
+
+/* RIGHT SIDE */
+.teacher-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* TOP 40% */
+.teacher-top {
+  margin-bottom: 40px;
+}
+
+/* BOTTOM 60% */
+.teacher-bottom {
+  flex: 0 0 60%;
+}
+
+/* STATS */
+.teacher-stats {
+  display: grid;
+  grid-template-columns: auto auto; /* 🔥 NO STRETCH */
+  gap: 18px 40px;
+  justify-content: start; /* keeps them compact */
+}
+
+.teacher-stat .stat-big {
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.teacher-stat .stat-small {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* BIO */
+.teacher-bio {
+  font-size: 16px;
+  color: var(--text-muted);
+  max-width: 500px;
+  margin-top: 10px;
+}
+
+/* ARROWS */
+.teacher-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(34,197,94,0.25);
+  z-index: 10;
+}
+
+.teacher-arrow:hover {
+  transform: translateY(-50%) scale(1.08);
+  background: var(--accent-dark);
+}
+
+.teacher-arrow.left {
+  left: 10px;
+}
+
+.teacher-arrow.right {
+  right: 10px;
+}
+
+/* ===============================
+   TEACHER FILTER (LIQUID)
+================================ */
+
+.teacher-filter-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 60px;
+}
+
+.teacher-filter {
+  position: relative;
+  display: inline-flex;
+  padding: 6px;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+}
+
+.filter-btn {
+  position: relative;
+  z-index: 4;          /* ABOVE slider */
+  pointer-events: auto;   /* 🔥 restore clicking */
+  padding: 10px 28px;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 40px;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-btn.active {
+  color: white;
+}
+
+.filter-slider {
+  position: absolute;
+  pointer-events: auto;
+  cursor: grab;
+  top: 6px;
+  left: 6px;
+  height: calc(100% - 12px);
+  width: 0;
+  border-radius: 50px;
+  background: var(--accent);
+
+  will-change: left, width;
+transform: translateZ(0);
+
+  transition:
+  left 0.45s cubic-bezier(0.22,1,0.36,1),
+  width 0.45s cubic-bezier(0.22,1,0.36,1),
+  background 0.25s ease,
+  box-shadow 0.25s ease,
+  transform 0.25s ease;
+
+  z-index: 3; /* above buttons */
+}
+
+html, body {
+  overflow-x: hidden;
+}
+
+.filter-slider {
+  user-select: none;
+  touch-action: none;
+  -webkit-user-drag: none;
+}
+
+.filter-slider.dragging {
+  background: rgba(34, 197, 94, 0.35);  /* light glass green */
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(34,197,94,0.25);
+  transform: scale(1.05);
+}
+
+/* MOBILE */
+@media (max-width: 1024px) {
+
+  .teacher-slide {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .teacher-left {
+    aspect-ratio: 4 / 5;
+  }
+
+.teacher-arrow {
+  width: 36px;
+  height: 36px;
+  top: 80%;
+  transform: translateY(-50%);
+  bottom: auto;
+}
+
+.teacher-arrow {
+    display: none;
+  }
+
+.teachers-title {
+    font-size: 36px;
+  }
+
+  .teachers-header {
+    margin-bottom: 50px;
+  }
+
+.teacher-arrow.left  { left: 10px; }
+.teacher-arrow.right { right: 10px; }
+
+  /* CENTER STATS ONLY ON MOBILE */
+.teacher-stats {
+  justify-content: center;     /* center grid itself */
+  column-gap: 24px;            /* tighter horizontal spacing */
+  row-gap: 20px;               /* tighter vertical spacing */
+}
+
+.teacher-stat {
+  text-align: center;
+}
+
+.teacher-right {
+  align-items: center;         /* center right column content */
+}
+
+.teacher-bio {
+  text-align: center;
+}
+}
+
+/* ===============================
+   TEACHERS SECTION TITLE
+================================ */
+
+.teachers-header {
+  margin-bottom: 72px;   /* reduced by 10% */
+}
+
+.teachers-title {
+  font-size: 56px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  position: relative;
+  display: inline-block;
+}
+
+.teachers-title::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* ===============================
+   TEACHER NAME SYSTEM
+================================ */
+
+.teacher-name {
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Desktop version */
+.desktop-name {
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+/* Mobile version */
+.mobile-name {
+  display: none;
+  text-align: center;
+  font-size: 22px;
+  margin-top: 20px;
+}
+
+/* MOBILE BEHAVIOR */
+@media (max-width: 1024px) {
+
+  .desktop-name {
+    display: none;
+  }
+
+  .mobile-name {
+    display: block;
+  }
+
+}
+
+@media (max-width: 1024px) {
+
+  .teacher-swipe-hint {
+    display: block;
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    text-align: center;
+    opacity: 0.8;
+  }
+
+}
+
+.teacher-swipe-hint {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+
+  .teacher-swipe-hint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 24px;
+  }
+
+  .hint-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+
+  .hint-icons {
+    display: flex;
+    gap: 28px;
+    justify-content: center;
+  }
+
+  .hint-icons svg {
+    width: 28px;              /* 🔥 bigger */
+    height: 28px;
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    fill: none;
+    opacity: 0.9;
+    cursor: pointer;          /* 🔥 clickable */
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .hint-icons svg:active {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+
+}
+
+/* =========================================
+   WHY SECTION – WHITE VERSION
+========================================= */
+
+.why-section {
+  padding: 140px 48px;
+  border-bottom: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--text);
+}
+
+.why-header {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.why-header h2 {
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: white;
+}
+
+.why-header p {
+  margin-top: 16px;
+  font-size: 18px;
+  opacity: 0.65;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Side columns */
+.why-col {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+/* Cards */
+
+.why-card {
+  background: #f0fdf4; /* very light green */
+  border-radius: 28px;
+  padding: 42px 38px;
+  transition: all 0.35s ease;
+  border: 1px solid #dcfce7;
+}
+
+.why-card:hover {
+  transform: translateY(-8px);
+  background: #dcfce7;
+  box-shadow: 0 20px 50px rgba(34,197,94,0.12);
+}
+
+.why-card h3 {
+  font-size: 24px;
+  margin-top: 20px;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.why-card p {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Icon circle */
+.why-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+/* Fix SVG icons inside why section */
+.why-icon svg {
+  width: 32px;
+  height: 32px;
+  stroke: currentColor;     /* 🔥 inherit icon color */
+  stroke-width: 2.2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Icon colors */
+.icon-orange { background: #fde68a; color: #92400e; }
+.icon-green  { background: #bbf7d0; color: #166534; }
+.icon-red    { background: #fecaca; color: #7f1d1d; }
+.icon-gray   { background: #e5e7eb; color: #374151; }
+
+/* Center Card */
+
+.why-center {
+  background: #ecfdf5;
+  border-radius: 32px;
+  padding: 60px 42px;
+  text-align: center;
+  transition: all 0.35s ease;
+  border: 1px solid #bbf7d0;
+}
+
+.why-center:hover {
+  transform: translateY(-8px);
+  background: #d1fae5;
+  box-shadow: 0 25px 60px rgba(34,197,94,0.15);
+}
+
+.why-center h3 {
+  font-size: 26px;
+  margin-bottom: 14px;
+  color: var(--text);
+}
+
+.why-center p {
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+/* Fix Why section title */
+
+.why-section h2 {
+  color: var(--text);
+  display: inline-block;
+}
+
+.why-section h2::after {
+  background: var(--accent); /* green underline */
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .why-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .why-center {
+    order: -1;
+  }
+
+  .why-header h2 {
+    font-size: 40px;
+  }
+}
+
+.why-center img {
+  width: 100%;
+  max-width: 320px;   /* slightly reduce size */
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  margin: 0 auto 24px;
+}
+
+/* Force equal height cards in Why section */
+
+.why-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 36px;
+  align-items: stretch; /* already important */
+}
+
+/* Make every card fill full height */
+.why-card,
+.why-center {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* vertical centering */
+}
+
+/* ===============================
+   WHY SECTION – MOBILE FIX
+================================ */
+
+@media (max-width: 1100px) {
+
+  .why-section {
+    padding: 100px 24px;
+  }
+
+  .why-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .why-col {
+    gap: 28px;
+  }
+
+  .why-card,
+  .why-center {
+    min-height: auto;     /* remove forced height */
+    padding: 36px 28px;
+    text-align: center;
+  }
+
+  .why-center img {
+    max-width: 240px;     /* prevent oversized image */
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .why-card h3,
+  .why-center h3 {
+    font-size: 22px;
+  }
+
+  .why-card p,
+  .why-center p {
+    font-size: 15px;
+  }
+
+}
+
+/* =========================================
+   WHY SECTION CINEMATIC ANIMATION
+========================================= */
+
+/* Initial hidden state */
+.why-animate,
+.why-left,
+.why-right,
+.why-center-animate {
+  opacity: 0;
+}
+
+/* Titles from bottom */
+.why-animate {
+  transform: translateY(50px);
+}
+
+/* Left cards */
+.why-left {
+  transform: translateX(-80px);
+}
+
+/* Right cards */
+.why-right {
+  transform: translateX(80px);
+}
+
+/* Center card */
+.why-center-animate {
+  transform: translateY(80px);
+}
+
+/* ===============================
+   WHY HEADER SEQUENCE
+================================ */
+
+.why-title {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+
+.why-subtitle {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
+}
+
+.why-section.header-animate .why-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.why-section.header-animate .why-subtitle {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.3s;
+}
+
+.why-section.cards-animate .why-left,
+.why-section.cards-animate .why-right,
+.why-section.cards-animate .why-center-animate {
+  opacity: 1;
+  transform: translate(0,0);
+  transition: all 1.5s cubic-bezier(0.22,1,0.36,1);
+}
+
+/* Stagger timing */
+
+.why-section.animate .why-title {
+  transition-delay: 0s;
+}
+
+.why-section.animate .why-subtitle {
+  transition-delay: 0.2s;
+}
+
+.why-section.animate .why-left {
+  transition-delay: 0.6s;
+}
+
+.why-section.animate .why-right {
+  transition-delay: 0.6s;
+}
+
+.why-section.animate .why-center-animate {
+  transition-delay: 0.7s;
+}
+
+.coffee-icon svg {
+  width: 38px;
+  height: 38px;
+}
+
+/* ===============================
+   WHY MOBILE SCROLL REVEAL
+================================ */
+
+@media (max-width: 1024px) {
+
+  .why-card,
+  .why-center {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .why-card.reveal,
+  .why-center.reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+/* ===============================
+   ATMOSPHERE SPLIT LAYOUT
+================================ */
+
+.atmosphere-section {
+  padding: 120px 48px;
+  border-bottom: none;
+}
+
+.atmosphere-wrapper {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 60px;
+  margin-top: 80px;
+  align-items: start;   /* ✅ stop stretching */
+}
+
+/* ================= TABLE ================= */
+
+.atmosphere-table {
+  border-radius: 28px;
+  overflow: hidden;
+  border: 3px solid var(--accent);
+}
+
+.atmo-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  padding: 20px 28px;
+  align-items: center;
+  font-size: 15px;
+}
+
+.atmo-row:not(.atmo-header) {
+  border-top: 1px solid var(--border);
+}
+
+/* Header */
+.atmo-header {
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+}
+
+/* Left label column */
+.atmo-label {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Other centers */
+.atmo-bad {
+  color: #6b7280;
+}
+
+/* HeadStart column */
+.atmo-good {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* ================= RIGHT SIDE (Single Image) ================= */
+
+.atmosphere-image {
+  display: flex;
+  align-items: stretch;
+}
+
+.atmo-image-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;   /* ✅ force proper height */
+  border-radius: 28px;
+  border: 4px solid var(--accent);
+  background: #ffffff;
+}
+
+.atmosphere-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.atmo-caption {
+  margin-top: 16px;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 1024px) {
+
+  .atmosphere-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .atmosphere-table {
+    font-size: 13px;
+  }
+
+  .atmosphere-image {
+  justify-content: center;
+}
+
+.atmo-image-placeholder {
+  width: 100%;
+  max-width: 420px;
+}
+
+  .atmo-row {
+    grid-template-columns: 1.1fr 0.9fr 1fr; /* controlled proportions */
+    padding: 14px 16px;
+    column-gap: 10px;
+  }
+
+  .atmo-label {
+    font-size: 13px;
+  }
+
+  .atmo-bad,
+  .atmo-good {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .atmo-good,
+.atmo-bad {
+  word-break: break-word;
+}
+
+ .atmo-good {
+    white-space: normal;   /* allow wrapping again */
+  }
+
+  .atmo-inline {
+  display: inline;
+}
+
+.atmo-check {
+  display: inline;
+}
+
+}
+
+.atmo-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.atmo-check {
+  font-weight: 700;
+}
+
+.atmo-slider {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 28px;
+  border: 4px solid var(--accent);
+  overflow: hidden;
+  position: relative;
+  background: #ffffff;
+}
+
+.atmo-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.atmo-slide.active {
+  opacity: 1;
+}
+
+.atmo-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ================= MOCK HERO ================= */
+
+.mock-hero {
+  padding: 120px 0;
+  position: relative;
+}
+
+/* Restore borders for mock/events hero */
+.mock-hero {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.mock-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.mock-title {
+  font-size: 56px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.mock-description {
+  font-size: 18px;
+  line-height: 1.8;
+  margin-bottom: 32px;
+  color: #667085;
+}
+
+.mock-right {
+  min-height: 400px;
+}
+
+/* MOBILE */
+@media (max-width: 1024px) {
+  .mock-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mock-title {
+    font-size: 36px;
+  }
+
+  .mock-right {
+    display: none;
+  }
+
+    .mock-hero {
+    padding: 100px 24px;   /* gives side breathing room */
+  }
+
+  .mock-left {
+    text-align: center;    /* center content */
+  }
+
+  .mock-description {
+    font-size: 16px;
+  }
+}
+
+/* ===============================
+   MOCK HERO ANIMATION SYSTEM (FIXED)
+================================ */
+
+.mock-title,
+.mock-description,
+.mock-hero .btn-primary {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1),
+              transform 0.8s cubic-bezier(0.22,1,0.36,1);
+}
+
+.mock-title.animate,
+.mock-description.animate,
+.mock-hero .btn-primary.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===============================
+   SAFE 6-7 TREND DANCE
+================================ */
+
+@keyframes trendDance {
+  0%   { transform: translateY(0) scale(1); }
+  25%  { transform: translateY(-6px) scale(1.04); }
+  50%  { transform: translateY(0) scale(1); }
+  75%  { transform: translateY(-4px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.mock-hero .btn-primary.dance {
+  animation: trendDance 0.7s ease forwards;
+}
+
+/* Always dance on hover */
+.mock-hero .btn-primary:hover {
+  animation: trendDance 0.8s ease;
+}
+
+.mock-hero .btn-primary {
+  will-change: transform;
+}
+
+/* ================= GLOBAL BORDERS ================= */
+
+#events,
+#atmosphere {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+/* ===============================
+   PREMIUM SCROLL PROGRESS BAR
+================================ */
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  z-index: 5000;
+  transition: width 0.15s ease-out;
+}
+
+/* ===============================
+   FLOATING MOBILE CTA
+================================ */
+
+.floating-cta {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--accent);
+  color: white;
+  padding: 14px 22px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 20px 40px rgba(34,197,94,0.25);
+  z-index: 4000;
+  display: none;
+  transition: transform 0.3s ease;
+}
+
+.floating-cta:hover {
+  transform: translateY(-4px);
+}
+
+@media (max-width: 1024px) {
+  .floating-cta {
+    display: block;
+  }
+}
+
+/* ===============================
+   SECTION GLOW TRANSITION
+================================ */
+
+section {
+  position: relative;
+}
+
+section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center,
+              rgba(34,197,94,0.05),
+              transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+section.reveal::before {
+  opacity: 1;
+}
+
+/* ===============================
+   MICRO 3D CARD EFFECT
+================================ */
+
+.why-card,
+.location-box,
+.teacher-left {
+  transition: transform 0.4s ease;
+  transform-style: preserve-3d;
+}
+
+.why-card:hover,
+.location-box:hover,
+.teacher-left:hover {
+  transform: perspective(1000px) rotateX(4deg) rotateY(-4deg);
+}
+
+/* ===============================
+   LUXURY LOADER
+================================ */
+
+#loader {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.loader-logo {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  animation: pulseLogo 1.4s ease-in-out infinite;
+}
+
+@keyframes pulseLogo {
+  0% { opacity: 0.4; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.4; transform: scale(0.95); }
+}
+
+body.loaded #loader {
+  opacity: 0;
+  visibility: hidden;
+}
+
+</style>
+</head>
+<body>
+  <div id="loader">
+  <div class="loader-logo">HeadStart</div>
+</div>
+  <div class="scroll-progress" id="scrollProgress"></div>
+    <header>
+        <a href="#hero" class="logo" onclick="smoothScroll('#hero'); return false;">
+  <img src="assets/headstart.png" alt="HeadStart Logo" class="logo-img">
+  <span class="logo-text">HeadStart</span>
+</a>
+    <nav id="main-nav">
+  <a href="#hero" data-i18n="nav_home" onclick="smoothScroll('#hero'); return false;">Home</a>
+  <a href="#about" data-i18n="nav_why" onclick="smoothScroll('#about'); return false;">Why Us?</a>
+  <a href="#courses" data-i18n="nav_courses" onclick="smoothScroll('#courses'); return false;">Courses</a>
+  <a href="#results" data-i18n="nav_results" onclick="smoothScroll('#results'); return false;">Results</a>
+  <a href="#teachers" data-i18n="nav_teachers" onclick="smoothScroll('#teachers'); return false;">Teachers</a>
+
+  <!-- ✅ Approach stays AFTER Teachers -->
+  <a href="#approach" data-i18n="nav_approach" onclick="smoothScroll('#approach'); return false;">Approach</a>
+
+  <!-- Atmosphere Dropdown -->
+  <div class="nav-item dropdown" id="atmosphereDropdown">
+    <a href="#atmosphere"
+       id="atmosphereLink"
+       onclick="smoothScroll('#atmosphere'); return false;">
+      <span data-i18n="nav_atmosphere">Atmosphere</span>
+      <span class="dropdown-arrow">⌄</span>
+    </a>
+
+    <div class="dropdown-menu">
+      <a href="#events" data-i18n="nav_events" onclick="smoothScroll('#events'); return false;">Events</a>
+      <a href="/mock/" data-i18n="nav_mock">Mock Tests</a>
+      <a href="#printing" data-i18n="nav_printing" onclick="smoothScroll('#printing'); return false;">Printing</a>
+    </div>
+  </div>
+
+  <!-- ✅ Locations AFTER Atmosphere -->
+  <a href="#locations" data-i18n="nav_locations" onclick="smoothScroll('#locations'); return false;">Locations</a>
+
+  <!-- Mobile-only links -->
+  <a href="#events" class="mobile-only" data-i18n="nav_events" onclick="smoothScroll('#events'); return false;">Events</a>
+  <a href="/mock/" class="mobile-only" data-i18n="nav_mock">Mock Tests</a>
+  <a href="#printing" class="mobile-only" data-i18n="nav_printing" onclick="smoothScroll('#printing'); return false;">Printing</a>
+
+  <a href="#faq" data-i18n="nav_faq" onclick="smoothScroll('#faq'); return false;">FAQ</a>
+  <a href="#contact" data-i18n="nav_connect" onclick="smoothScroll('#contact'); return false;" style="color:#22c55e;font-weight:700;">Connect</a>
+</nav>
+
+<div class="language-switch" id="languageSwitch">
+
+  <div class="language-current" id="languageCurrent">
+    <img src="https://flagcdn.com/w40/gb.png" class="lang-flag" id="currentFlag">
+    <span id="currentLangText">ENG</span>
+    <span class="lang-arrow" id="langArrow">⌄</span>
+  </div>
+
+  <div class="language-dropdown" id="languageDropdown">
+    <div class="lang-option" data-lang="en">
+      <img src="https://flagcdn.com/w40/gb.png" class="lang-flag">
+      ENG
+    </div>
+
+    <div class="lang-option" data-lang="uz">
+      <img src="https://flagcdn.com/w40/uz.png" class="lang-flag">
+      UZB
+    </div>
+  </div>
+
+</div>
+        <div class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+    <main>
+
+<section id="hero" class="hero-section">
+
+  <div class="hero-wrapper">
+
+    <!-- LEFT SIDE -->
+    <div class="hero-left">
+
+      <h1 class="hero-title hero-animated">
+        <span class="line">
+          <span class="word">
+            <span>H</span><span>E</span><span>A</span><span>D</span><span>S</span><span>T</span><span>A</span><span>R</span><span>T</span>
+          </span>
+
+          <span class="word">
+            <span>F</span><span>O</span><span>R</span>
+          </span>
+
+          <span class="word">
+            <span>Y</span><span>O</span><span>U</span><span>R</span>
+          </span>
+
+          <span class="word">
+            <span>F</span><span>U</span><span>T</span><span>U</span><span>R</span><span>E</span>
+          </span>
+        </span>
+      </h1>
+
+      <p class="hero-subtitle" data-i18n="hero_subtitle">
+  A modern learning environment — everything at HeadStart English School.
+</p>
+
+      <div class="hero-buttons">
+        <a href="#courses" class="btn btn-primary" data-i18n="btn_explore">
+  Explore Courses →
+</a>
+
+       <a href="#results" class="btn btn-secondary" data-i18n="btn_results" onclick="smoothScroll('#results'); return false;">
+  See Our Results →
+</a>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="hero-right">
+
+  <img src="assets/curved.png" 
+       alt="HeadStart Teacher" 
+       class="hero-image main-image">
+
+  <img src="assets/icon1.png" 
+     alt="Icon Decoration" 
+     class="icon-overlay">
+
+</div>
+
+  </div>
+
+</section>
+
+<section id="about" class="why-section">
+  <div class="container">
+
+   <div class="why-header">
+  <h2 class="why-animate why-title" data-i18n="why_title">Why Choose HeadStart?</h2>
+  <p class="why-animate why-subtitle" data-i18n="why_subtitle">
+    We combine strong teaching, structured programs, and a motivating
+    environment to help students achieve real academic results.
+  </p>
+</div>
+
+    <div class="why-grid">
+
+      <!-- LEFT COLUMN -->
+      <div class="why-col">
+
+        <div class="why-card why-left">
+        <div class="why-icon icon-orange">
+  <svg viewBox="0 0 64 48" fill="none">
+    <!-- Left page -->
+    <path d="M6 8
+             Q20 0 32 8
+             V40
+             Q20 32 6 40
+             Z" />
+             
+    <!-- Right page -->
+    <path d="M58 8
+             Q44 0 32 8
+             V40
+             Q44 32 58 40
+             Z" />
+             
+    <!-- Bottom curve -->
+    <path d="M6 40
+             Q32 48 58 40" />
+  </svg>
+</div>
+          <h3 data-i18n="why_1">Free Second Teacher</h3>
+          <p data-i18n="why_desc_1"></p>
+        </div>
+
+        <div class="why-card why-left">
+        <div class="why-icon icon-green">
+  <svg viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"
+            stroke="currentColor"
+            stroke-width="2"
+            fill="none"/>
+    <path d="M7.5 12.5L11 16L17 9"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          fill="none"/>
+  </svg>
+</div>
+          <h3 data-i18n="why_2">Official Mock Exams</h3>
+          <p data-i18n="why_desc_2"></p>
+        </div>
+
+      </div>
+
+      <!-- CENTER -->
+      <div class="why-center why-center-animate">
+        <img src="assets/experienced.png" alt="Experienced Teachers">
+        <h3 data-i18n="why_3">Experienced Teachers</h3>
+        <p data-i18n="why_desc_3"></p>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="why-col">
+
+        <div class="why-card why-right">
+        <div class="why-icon icon-red">
+  <svg viewBox="0 0 64 64">
+    
+    <!-- Cup body -->
+    <path d="M20 10h24v8c0 10-6 16-12 18-6-2-12-8-12-18v-8z"/>
+
+    <!-- Left handle -->
+    <path d="M20 14h-6c0 8 4 14 10 14"/>
+
+    <!-- Right handle -->
+    <path d="M44 14h6c0 8-4 14-10 14"/>
+
+    <!-- Stem -->
+    <path d="M32 36v8"/>
+
+    <!-- Base top -->
+    <rect x="22" y="44" width="20" height="8"/>
+
+    <!-- Base bottom -->
+    <rect x="18" y="52" width="28" height="6"/>
+
+  </svg>
+</div>
+          <h3 data-i18n="why_4">Free Events & Community</h3>
+          <p data-i18n="why_desc_4"></p>
+        </div>
+
+        <div class="why-card why-right">
+       <div class="why-icon icon-gray coffee-icon">
+  <svg viewBox="0 0 24 24">
+    
+    <!-- cup body -->
+    <path d="M5 11h11v4a4 4 0 01-4 4H9a4 4 0 01-4-4v-4z"
+          stroke="currentColor"
+          stroke-width="1.3"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <!-- handle -->
+    <path d="M16 12h2a2.5 2.5 0 010 4h-2"
+          stroke="currentColor"
+          stroke-width="1.3"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <!-- steam 1 -->
+    <path d="M8 6c0-1 1-1.6 1-2.6"
+          stroke="currentColor"
+          stroke-width="1.3"
+          fill="none"
+          stroke-linecap="round"/>
+
+    <!-- steam 2 -->
+    <path d="M11 5.5c0-1 1-1.6 1-2.6"
+          stroke="currentColor"
+          stroke-width="1.3"
+          fill="none"
+          stroke-linecap="round"/>
+
+    <!-- steam 3 -->
+    <path d="M14 6c0-1 1-1.6 1-2.6"
+          stroke="currentColor"
+          stroke-width="1.3"
+          fill="none"
+          stroke-linecap="round"/>
+
+  </svg>
+</div>
+   
+          <h3 data-i18n="why_5">Modern Study Zones</h3>
+          <p data-i18n="why_desc_5"></p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+ 
+<section id="courses" class="courses-section">
+  <div class="courses-wrapper">
+
+    <!-- LEFT SIDE -->
+    <div class="courses-sidebar">
+      <h3 data-i18n="course_sidebar_title">Our Courses</h3>
+
+      <!-- MOBILE COURSE DROPDOWN -->
+<div class="course-dropdown">
+  <div class="course-dropdown-header" id="courseDropdownToggle">
+    <span class="dropdown-left">
+      🔍 <span id="selectedCourseText"></span>
+    </span>
+    <span class="dropdown-arrow">⌄</span>
+  </div>
+
+  <div class="course-dropdown-menu" id="courseDropdownMenu">
+   <div data-course="general" data-i18n="course_general">General English</div>
+<div data-course="preielts" data-i18n="course_preielts">Pre-IELTS</div>
+<div data-course="ielts" data-i18n="course_ielts">IELTS</div>
+<div data-course="cefr" data-i18n="course_cefr">CEFR</div>
+<div data-course="satenglish" data-i18n="course_satenglish">SAT English</div>
+<div data-course="satmath" data-i18n="course_satmath">SAT Math</div>
+  </div>
+</div>
+
+<button class="course-btn active"
+        data-course="general"
+        data-i18n="course_general">
+  General English
+</button>
+
+<button class="course-btn"
+        data-course="preielts"
+        data-i18n="course_preielts">
+  Pre-IELTS
+</button>
+
+<button class="course-btn"
+        data-course="ielts"
+        data-i18n="course_ielts">
+  IELTS
+</button>
+
+<button class="course-btn"
+        data-course="cefr"
+        data-i18n="course_cefr">
+  CEFR
+</button>
+
+<button class="course-btn"
+        data-course="satenglish"
+        data-i18n="course_satenglish">
+  SAT English
+</button>
+
+<button class="course-btn"
+        data-course="satmath"
+        data-i18n="course_satmath">
+  SAT Math
+</button>
+    </div>
+
+    <!-- RIGHT SIDE CONTENT -->
+    <div class="courses-content" id="course-content">
+    </div>
+
+  </div>
+</section>
+
+        <section id="results">
+            <div class="container">
+                <h2 data-i18n="results_title">Student Results</h2>
+                <div style="margin-top: 64px; color: var(--text-muted); font-size: 14px;"><span data-i18n="results_soon">Soon</span></div>
+            </div>
+        </section>
+
+<section id="testimonials">
+  <div class="container testimonial-container">
+    <h2 data-i18n="testimonials_title">What Our Students Say</h2>
+
+    <div class="testimonial-wrapper">
+
+      <div class="testimonial active">
+        <p data-i18n="test_1"></p>
+        <strong>— Umarbek Saidraxmonov</strong>
+      </div>
+
+      <div class="testimonial">
+        <p data-i18n="test_2"></p>
+        <strong>— Fotima and Zuhra</strong>
+      </div>
+
+      <div class="testimonial">
+        <p data-i18n="test_3"></p>
+        <strong>— Maruf</strong>
+      </div>
+
+      <div class="testimonial">
+        <p data-i18n="test_4"></p>
+        <strong>— Mirmuhsin</strong>
+      </div>
+
+      <div class="testimonial">
+        <p data-i18n="test_5"></p>
+        <strong>— Odina Mamatqulova, IELTS 8.0</strong>
+      </div>
+
+      <div class="testimonial">
+        <p data-i18n="test_6"></p>
+        <strong>— Dilso'z Abdukayumova, IELTS 7.0</strong>
+      </div>
+
+      <div class="testimonial">
+        <p data-i18n="test_7"></p>
+        <strong>— Sirojiddin Murodov</strong>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<section id="teachers" class="teachers-section">
+
+  <div class="teachers-header">
+    <h2 class="teachers-title" data-i18n="teachers_title">
+  Our Teachers
+</h2>
+  </div>
+  
+  <div class="teacher-filter-wrapper">
+  <div class="teacher-filter">
+    <button class="filter-btn active" data-filter="ielts" data-i18n="course_ielts">IELTS</button>
+<button class="filter-btn" data-filter="english" data-i18n="course_general">English</button>
+<button class="filter-btn" data-filter="sat" data-i18n="filter_sat">SAT</button>
+    <div class="filter-slider"></div>
+  </div>
+</div>
+
+  <div class="teacher-slider">
+
+    <!-- LEFT ARROW -->
+    <div class="teacher-arrow left">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <!-- RIGHT ARROW -->
+    <div class="teacher-arrow right">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M9 6L15 12L9 18" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <div class="teacher-track">
+
+    </div>
+  </div>
+
+  <div class="teacher-swipe-hint">
+  <div class="hint-text" data-i18n="swipe_hint">
+  Swipe to see more
+</div>
+ <div class="hint-icons">
+  <svg id="mobilePrev" viewBox="0 0 24 24">
+    <path d="M15 18L9 12L15 6"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"/>
+  </svg>
+
+  <svg id="mobileNext" viewBox="0 0 24 24">
+    <path d="M9 6L15 12L9 18"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"/>
+  </svg>
+</div>
+</div>
+
+</section>
+
+<section id="approach">
+  <div class="container">
+    <h2 data-i18n="nav_approach">Educational Approach</h2>
+
+    <div style="display: flex; flex-direction: column; gap: 48px; margin-top: 48px;">
+
+      <!-- STEP 1 -->
+      <div style="display: flex; gap: 32px;">
+        <div style="width: 48px; height: 48px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+          1
+        </div>
+
+        <div>
+          <strong data-i18n="approach_1_title">
+            Personalized Learning
+          </strong>
+          <br>
+          <span data-i18n="approach_1_desc">
+            Tailored curriculum based on student strengths and goals.
+          </span>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div style="display: flex; gap: 32px;">
+        <div style="width: 48px; height: 48px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+          2
+        </div>
+
+        <div>
+          <strong data-i18n="approach_2_title">
+            Project-Based Mastery
+          </strong>
+          <br>
+          <span data-i18n="approach_2_desc">
+            Real-world projects driving deep understanding.
+          </span>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div style="display: flex; gap: 32px;">
+        <div style="width: 48px; height: 48px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+          3
+        </div>
+
+        <div>
+          <strong data-i18n="approach_3_title">
+            Holistic Development
+          </strong>
+          <br>
+          <span data-i18n="approach_3_desc">
+            Academic + leadership + character education.
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="atmosphere" class="atmosphere-section">
+  <div class="container">
+
+    <h2 data-i18n="atmosphere_title">Atmosphere</h2>
+
+    <div class="atmosphere-wrapper">
+
+      <!-- LEFT SIDE (Comparison Table) -->
+      <div class="atmosphere-table">
+
+        <div class="atmo-row atmo-header">
+          <div></div>
+          <div data-i18n="atmo_other">Other Centers</div>
+          <div data-i18n="atmo_headstart">HeadStart</div>
+        </div>
+
+        <div class="atmo-row">
+          <div class="atmo-label" data-i18n="atmo_result">Average IELTS Result</div>
+          <div class="atmo-bad">6.0–6.5</div>
+          <div class="atmo-good">7.0–7.5 ✓</div>
+        </div>
+
+        <div class="atmo-row">
+          <div class="atmo-label" data-i18n="atmo_mock">Mock Exams</div>
+          <div class="atmo-bad">Occasional practice</div>
+          <div class="atmo-good">
+  <span class="atmo-inline">
+    Full real-condition exams
+    <span class="atmo-check">✓</span>
+  </span>
+</div>
+        </div>
+
+        <div class="atmo-row">
+          <div class="atmo-label" data-i18n="atmo_environment">Study Environment</div>
+          <div class="atmo-bad">Standard classroom</div>
+          <div class="atmo-good">Modern study zones ✓</div>
+        </div>
+
+        <div class="atmo-row">
+          <div class="atmo-label" data-i18n="atmo_support">Teacher Support</div>
+          <div class="atmo-bad">Single teacher</div>
+          <div class="atmo-good">Main + assistant support ✓</div>
+        </div>
+
+        <div class="atmo-row">
+          <div class="atmo-label" data-i18n="atmo_progress">Progress Tracking</div>
+          <div class="atmo-bad">General feedback</div>
+          <div class="atmo-good">Structured analysis ✓</div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDE (Portrait Layout) -->
+   <div class="atmosphere-image">
+
+  <div class="atmo-slider">
+
+    <div class="atmo-slide active">
+  <img src="assets/atmo1.jpg" alt="HeadStart atmosphere 1">
+</div>
+
+<div class="atmo-slide">
+  <img src="assets/atmo2.jpg" alt="HeadStart atmosphere 2">
+</div>
+
+<div class="atmo-slide">
+  <img src="assets/atmo3.jpg" alt="HeadStart atmosphere 3">
+</div>
+
+    <!-- FUTURE IMAGES WILL GO HERE -->
+    <!--
+    <div class="atmo-slide">
+      <img src="assets/photo1.jpg" alt="HeadStart atmosphere">
+    </div>
+    -->
+
+  </div>
+
+  <div class="atmo-caption">
+    Life at HeadStart (pictures will be added soon bro)
+  </div>
+
+</div>
+
+    </div>
+
+  </div>
+</section>
+
+        <section id="events">
+  <div class="container">
+    <h2 data-i18n="nav_events">Events</h2>
+<p data-i18n="results_soon">Soon</p>
+  </div>
+</section>
+
+<section id="printing">
+  <div class="container">
+    <h2 data-i18n="nav_printing">Book Printing</h2>
+<p data-i18n="results_soon">Soon</p>
+  </div>
+</section>
+
+<section id="locations">
+  <div class="container">
+
+    <h2 data-i18n="locations_title">Our Locations</h2>
+
+    <div class="locations-wrapper">
+
+      <!-- FIRST BRANCH INFO -->
+      <div class="location-box">
+        <h3 data-i18n="branch_prospekt">Prospekt Branch (Main)</h3>
+        <p>
+          📍 <a href="https://maps.app.goo.gl/qYUqRRJAwVKkpo2G7" target="_blank">
+            View on Google Maps
+          </a>
+        </p>
+        <p style="margin-top:16px;">
+          ☎ <a href="tel:+998951840770">+998 95 184 0770</a>
+        </p>
+      </div>
+
+      <!-- SECOND BRANCH INFO -->
+      <div class="location-box">
+        <h3 data-i18n="branch_pushkin">Pushkin Branch</h3>
+        <p>
+          📍 <a href="https://maps.app.goo.gl/kuDv9Dba38rquouVA" target="_blank">
+            View on Google Maps
+          </a>
+        </p>
+        <p style="margin-top:16px;">
+          ☎ <a href="tel:+998995279080">+998 99 527 9080</a>
+        </p>
+      </div>
+
+      <!-- FIRST MAP -->
+      <div class="map-box">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3050.2487490362496!2d67.8321306!3d40.1367425!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38b297402ce2533f%3A0xc0df93ceda7ed301!2sHeadStart%20English%20School!5e1!3m2!1sen!2s!4v1769689895048!5m2!1sen!2s"
+          width="100%"
+          height="100%"
+          style="border:0;"
+          loading="lazy">
+        </iframe>
+      </div>
+
+      <!-- SECOND MAP -->
+      <div class="map-box">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3051.5293663676457!2d67.8213217!3d40.1082049!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38b295612f18a46b%3A0x854d632cb9cb3a10!2sHeadsStart%20Pushkin%20branch!5e1!3m2!1sen!2s!4v1769689932222!5m2!1sen!2s"
+          width="100%"
+          height="100%"
+          style="border:0;"
+          loading="lazy">
+        </iframe>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<section id="faq" class="faq-section">
+  <div class="container faq-container">
+    <h2 data-i18n="faq_title">Frequently Asked Questions</h2>
+
+   <div class="faq-item">
+  <button class="faq-question" data-i18n="faq_q1">
+    How long does it take to achieve an IELTS 7.0+ score?
+  </button>
+  <div class="faq-answer" data-i18n="faq_a1">
+    It depends on your current level. On average, students require 3–6 months of focused preparation with consistent practice and mock testing.
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question" data-i18n="faq_q2">
+    How do you determine which level or group is right for me?
+  </button>
+  <div class="faq-answer" data-i18n="faq_a2">
+    Before enrollment, we conduct a short diagnostic assessment that evaluates grammar, vocabulary, reading, listening, and speaking skills. Based on your results, we recommend the most suitable level and group so you can progress efficiently without feeling overwhelmed or under-challenged.
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question" data-i18n="faq_q3">
+    If I order a printed book from your center, how much does it cost on average and how long does it take?
+  </button>
+  <div class="faq-answer" data-i18n="faq_a3">
+    On average, printing a standard study book costs around 15,000–30,000 UZS, depending on the number of pages and paper quality. Most orders are ready within 1–4 hours. For larger or customized orders, we confirm the timeline in advance to ensure everything is delivered on schedule.
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question" data-i18n="faq_q4">
+    What makes HeadStart different from other learning centers?
+  </button>
+  <div class="faq-answer" data-i18n="faq_a4">
+    At HeadStart, students receive free support from additional teachers even after lessons. We combine experienced instructors, a motivating atmosphere, and modern study spaces where students can prepare comfortably all day.
+
+    Strong teaching. Strong environment. Strong results.
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question" data-i18n="faq_q5">
+    Do you provide mock exams?
+  </button>
+  <div class="faq-answer" data-i18n="faq_a5">
+    Yes. We regularly conduct full mock examinations under real test conditions to track student progress and improve performance.
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question" data-i18n="faq_q6">
+    Can I switch groups if my schedule changes?
+  </button>
+  <div class="faq-answer" data-i18n="faq_a6">
+    We try to accommodate schedule adjustments whenever possible, depending on seat availability and course structure.
+  </div>
+</div>
+
+  </div>
+</section>
+
+        <section id="contact">
+            <div class="container">
+                <h2 data-i18n="contact_title">Contact & Enrollment</h2>
+                <form style="max-width: 640px; margin-top: 48px;">
+
+  <input type="text"
+         data-i18n-placeholder="placeholder_name"
+         placeholder="Full Name"
+         required
+         style="width:100%; background:var(--bg-alt); border:1px solid var(--border); padding:16px; border-radius:8px; margin-bottom:24px;">
+
+  <input type="email"
+         data-i18n-placeholder="placeholder_email"
+         placeholder="Parent/Guardian Email"
+         required
+         style="width:100%; background:var(--bg-alt); border:1px solid var(--border); padding:16px; border-radius:8px; margin-bottom:24px;">
+
+  <textarea
+         data-i18n-placeholder="placeholder_message"
+         placeholder="Tell us about your goals..."
+         rows="5"
+         style="width:100%; background:var(--bg-alt); border:1px solid var(--border); padding:16px; border-radius:8px; margin-bottom:24px;"></textarea>
+
+  <button type="submit"
+          class="btn btn-primary"
+          data-i18n="btn_submit"
+          style="width:100%;">
+    Submit Inquiry
+  </button>
+
+</form>
+                
+               <div style="margin-top: 48px; font-size: 14px; color: var(--text-muted);"
+     data-i18n="contact_note">
+  All inquiries receive a response within 24 hours. Tours available by appointment.
+</div>
+        </section>
+    </main>
+   <footer style="padding:48px; border-top:1px solid var(--border); font-size:13px; color:var(--text-muted); text-align:center;">
+
+  <div data-i18n="footer_text">
+    © 2026 HeadStart Education Center. All rights reserved.
+  </div>
+
+  <div style="margin-top:8px;"
+       data-i18n="footer_tagline">
+    Excellence in education. Results-driven learning.
+  </div>
+
+</footer>
+
+<a href="#contact" class="floating-cta">
+  Enroll Now →
+</a>
+
+    <script>
+let currentLang = "en";
+let currentCourse = "general";
+document.documentElement.lang = currentLang;
+</script>
+
+
+    <script>
+function smoothScroll(targetId) {
+    const target = document.querySelector(targetId);
+    if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    // Close mobile menu
+    const nav = document.getElementById('main-nav');
+    const hamburger = document.getElementById('hamburger');
+    if (nav.classList.contains('nav-open')) {
+        hamburger.classList.remove('active');
+        nav.classList.remove('nav-open');
+    }
+}
+</script>
+
+<script>
+const hamburger = document.getElementById('hamburger');
+const nav = document.getElementById('main-nav');
+
+hamburger?.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    nav.classList.toggle('nav-open');
+});
+</script>
+
+<script>
+window.addEventListener("load", () => {
+
+  const title = document.querySelector(".hero-animated");
+  const subtitle = document.querySelector(".hero-subtitle");
+  const image = document.querySelector(".hero-image");
+  const buttons = document.querySelector(".hero-buttons");
+  const icon = document.querySelector(".icon-overlay");
+
+  if (!title) return;
+
+  const letters = title.querySelectorAll(".word span");
+
+  // 🔥 Letter stagger timing
+  const stagger = 40;
+  const letterDuration = 600; // matches CSS transition
+  const baseDelay = 300;      // initial delay before starting
+
+  letters.forEach((letter, index) => {
+    letter.style.transitionDelay = `${index * stagger}ms`;
+  });
+
+  // 🎬 Start title animation
+  setTimeout(() => {
+    title.classList.add("animate");
+  }, baseDelay);
+
+  // Total title animation time
+  const totalTitleTime = letters.length * stagger + letterDuration + baseDelay;
+
+ // Subtitle + Image start together after title finishes
+setTimeout(() => {
+  subtitle?.classList.add("animate");
+  image?.classList.add("animate");
+}, totalTitleTime);
+
+// Buttons appear AFTER subtitle + image animation
+setTimeout(() => {
+  buttons?.classList.add("animate");
+}, totalTitleTime + 900);
+
+// Icon appears AFTER buttons animation
+if (window.matchMedia("(min-width: 1025px)").matches) {
+  setTimeout(() => {
+    icon?.classList.add("animate");
+  }, totalTitleTime + 1800);
+}
+
+});
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  if (!window.matchMedia("(max-width: 1024px)").matches) return;
+
+  const heroImage = document.querySelector(".main-image");
+  const icon = document.querySelector(".icon-overlay");
+
+  if (!heroImage || !icon) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      icon.classList.add("animate");
+      observer.disconnect();
+    }
+  }, { threshold: 0.9 }); // triggers when 90% visible
+
+  observer.observe(heroImage);
+
+});
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const content = document.getElementById("course-content");
+  const buttons = document.querySelectorAll(".course-btn");
+
+  const dropdown = document.querySelector(".course-dropdown");
+  const toggle = document.getElementById("courseDropdownToggle");
+  const menu = document.getElementById("courseDropdownMenu");
+  const selectedText = document.getElementById("selectedCourseText");
+
+  function getCourseData(lang) {
+
+  return {
+
+    general: `
+      <div class="course-details">
+        <h2>${window.translations[lang].course_general}</h2>
+        <p>${lang === "uz"
+          ? "Grammatika, lug‘at va erkin gapirishni rivojlantirish."
+          : "Comprehensive English development focused on grammar, vocabulary, fluency and confidence."}
+        </p>
+      </div>
+    `,
+
+    preielts: `
+      <div class="course-details">
+        <h2>${window.translations[lang].course_preielts}</h2>
+        <p>${lang === "uz"
+          ? "IELTS tayyorgarligiga asos yaratish."
+          : "Foundation program preparing students for full IELTS training."}
+        </p>
+      </div>
+    `,
+
+    ielts: `
+      <div class="course-details">
+        <h2>${window.translations[lang].course_ielts}</h2>
+        <p>${lang === "uz"
+          ? "7.0–8.5 bandga mo‘ljallangan professional IELTS tayyorgarlik."
+          : "Advanced IELTS preparation targeting Band 7.0–8.5."}
+        </p>
+      </div>
+    `,
+
+    cefr: `
+      <div class="course-details">
+        <h2>${window.translations[lang].course_cefr}</h2>
+        <p>${lang === "uz"
+          ? "A1 dan C1 gacha Yevropa standartlari asosida."
+          : "European level-based training from A1 to C1."}
+        </p>
+      </div>
+    `,
+
+    satenglish: `
+      <div class="course-details">
+        <h2>${window.translations[lang].course_satenglish}</h2>
+        <p>${lang === "uz"
+          ? "SAT Reading va Writing mukammal tayyorgarlik."
+          : "Reading and Writing mastery for high SAT scores."}
+        </p>
+      </div>
+    `,
+
+    satmath: `
+      <div class="course-details">
+        <h2>${window.translations[lang].course_satmath}</h2>
+        <p>${lang === "uz"
+          ? "SAT Math uchun ilg‘or algebra va strategiyalar."
+          : "Advanced algebra and problem-solving for competitive SAT scores."}
+        </p>
+      </div>
+    `
+  };
+}
+
+window.getCourseData = getCourseData;
+
+  // Set default course on first load
+  
+setTimeout(() => {
+  currentCourse = "general";
+  const data = getCourseData(currentLang);
+  content.innerHTML = data[currentCourse];
+
+  const selectedText = document.getElementById("selectedCourseText");
+  if (selectedText) {
+    selectedText.textContent =
+      window.translations[currentLang].course_general;
+  }
+
+}, 0);
+
+
+  /* ================= DESKTOP BUTTONS ================= */
+
+  /* ================= DESKTOP COURSE BUTTONS ================= */
+
+buttons.forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    document.querySelector(".course-btn.active")
+      ?.classList.remove("active");
+
+    btn.classList.add("active");
+
+    currentCourse = btn.dataset.course;
+
+    const data = getCourseData(currentLang);
+    content.innerHTML = data[currentCourse];
+
+  });
+});
+
+  /* ================= MOBILE DROPDOWN ================= */
+
+  toggle?.addEventListener("click", () => {
+    dropdown.classList.toggle("active");
+  });
+
+  menu?.querySelectorAll("div").forEach(item => {
+  item.addEventListener("click", () => {
+
+    const selected = item.getAttribute("data-course");
+    dropdown.classList.remove("active");
+
+    currentCourse = selected;
+    selectedText.textContent = item.textContent;
+
+const data = getCourseData(currentLang);
+content.innerHTML = data[currentCourse];
+
+  });
+});
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const faqItems = document.querySelectorAll(".faq-item");
+
+  faqItems.forEach(item => {
+    const question = item.querySelector(".faq-question");
+    const answer = item.querySelector(".faq-answer");
+
+    question.addEventListener("click", () => {
+
+      const isOpen = item.classList.contains("active");
+
+      // Close all others
+      faqItems.forEach(i => {
+        const a = i.querySelector(".faq-answer");
+        i.classList.remove("active");
+        a.style.height = "0px";
+        a.style.opacity = "0";
+      });
+
+      // Open clicked one if it was closed
+      if (!isOpen) {
+        item.classList.add("active");
+        answer.style.height = answer.scrollHeight + "px";
+        answer.style.opacity = "1";
+      }
+
+    });
+  });
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const dropdown = document.getElementById("atmosphereDropdown");
+
+  if (!dropdown) return;
+
+  // DESKTOP ONLY
+  if (window.matchMedia("(min-width: 1025px)").matches) {
+
+    dropdown.addEventListener("mouseenter", () => {
+      dropdown.classList.add("open");
+    });
+
+    dropdown.addEventListener("mouseleave", () => {
+      dropdown.classList.remove("open");
+    });
+
+  }
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const sections = document.querySelectorAll("section");
+
+  // Add cinematic class to all sections EXCEPT hero
+  sections.forEach(section => {
+    if (section.id !== "hero") {
+      section.classList.add("cinematic");
+    }
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("reveal");
+      }
+    });
+  }, { threshold: 0.2 });
+
+  // Observe all sections except hero
+  sections.forEach(section => {
+    if (section.id !== "hero") {
+      observer.observe(section);
+    }
+  });
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const slides = document.querySelectorAll(".testimonial");
+  let index = 0;
+
+  setInterval(() => {
+    slides[index].classList.remove("active");
+    index = (index + 1) % slides.length;
+    slides[index].classList.add("active");
+  }, 4000);
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const slides = document.querySelectorAll(".atmo-slide");
+  let index = 0;
+
+  if (slides.length <= 1) return;
+
+  setInterval(() => {
+    slides[index].classList.remove("active");
+    index = (index + 1) % slides.length;
+    slides[index].classList.add("active");
+  }, 3000); // 3 seconds
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const whySection = document.querySelector(".why-section");
+  const whyGrid = document.querySelector(".why-grid");
+
+  if (!whySection || !whyGrid) return;
+
+  /* HEADER ANIMATION */
+  const headerObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      whySection.classList.add("header-animate");
+      headerObserver.disconnect();
+    }
+  }, { threshold: 0.2 });
+
+  headerObserver.observe(whySection);
+
+  /* CARDS ANIMATION */
+
+const isDesktop = window.matchMedia("(min-width: 1025px)").matches;
+
+if (isDesktop) {
+
+  // Desktop = group cinematic animation
+  const cardsObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      whySection.classList.add("cards-animate");
+      cardsObserver.disconnect();
+    }
+  }, { threshold: 0.5 });
+
+  cardsObserver.observe(whyGrid);
+
+} else {
+
+  // 🔥 MOBILE = individual scroll reveal
+
+  const mobileCards = document.querySelectorAll(
+    ".why-card, .why-center"
+  );
+
+  mobileCards.forEach(card => {
+
+    // reset desktop transforms
+    card.classList.remove("why-left", "why-right", "why-center-animate");
+
+    card.style.opacity = "0";
+    card.style.transform = "translateY(60px)";
+    card.style.transition = "all 0.7s cubic-bezier(0.22,1,0.36,1)";
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        card.style.opacity = "1";
+        card.style.transform = "translateY(0)";
+        observer.disconnect();
+      }
+    }, { threshold: 0.35 });
+
+    observer.observe(card);
+
+  });
+
+}
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const track = document.querySelector(".teacher-track");
+  const prev = document.querySelector(".teacher-arrow.left");
+  const next = document.querySelector(".teacher-arrow.right");
+  const mobilePrev = document.getElementById("mobilePrev");
+const mobileNext = document.getElementById("mobileNext");
+  const buttons = document.querySelectorAll(".filter-btn");
+  const slider = document.querySelector(".filter-slider");
+  const filterContainer = document.querySelector(".teacher-filter");
+
+filterContainer.addEventListener("mousedown", startDrag);
+filterContainer.addEventListener("touchstart", startDrag);
+
+  let index = 0;
+  let currentGroup = "ielts";
+
+  /* ===============================
+     TEACHER DATABASE
+  =============================== */
+
+  const teachers = {
+    ielts: [
+      {
+        name: "Dilmurod Isakulov",
+        image: "assets/dilmurod.png",
+        stats: [
+  ["8.5","IELTS"],
+  ["CEFR C1","stat_certificate"],
+  ["10+","stat_years"],
+  ["2000+","stat_students"]
+],
+bio: "bio_ielts_specialist"
+      },
+      {
+        name: "Otabek Ravshankulov",
+        image: "",
+        stats: [
+          ["8.5","IELTS"],
+          ["CEFR C1","stat_certificate"],
+          ["6+","stat_years"],
+          ["1500+","stat_students"]
+        ],
+        bio: "bio_advanced_ielts"
+      },
+      {
+        name: "Bunyod Inomov",
+        image: "",
+        stats: [
+          ["8.0","IELTS"],
+          ["CEFR C1","stat_certificate"],
+          ["7+","stat_years"],
+          ["800+","stat_students"]
+        ],
+        bio: "bio_structured_method"
+      }
+    ],
+
+    english: [
+      {
+        name: "Kamron Inatillayev",
+        image: "",
+        stats: [
+          ["8.0","IELTS"],
+          ["CEFR C1","stat_certificate"],
+          ["3+","stat_years"],
+          ["300+","stat_students"]
+        ],
+        bio: "bio_english_foundation"
+      },
+      {
+        name: "Madina Ravshanova",
+        image: "",
+        stats: [
+          ["8.0","IELTS"],
+          ["CEFR C1","stat_certificate"],
+          ["3+","stat_years"],
+          ["250+","stat_students"]
+        ],
+        bio: "bio_modern_english"
+      }
+    ],
+
+    sat: [
+      {
+        name: "Umar i guess",
+        image: "",
+        stats: [
+          ["1520","SAT"],
+          ["790","Math"],
+          ["730","Evidence-Based Reading"],
+          ["5+","stat_years"]
+        ],
+        bio: "bio_sat_specialist"
+      }
+    ]
+  };
+
+  /* ===============================
+     BUILD TEACHERS
+  =============================== */
+
+  function buildTeachers(group) {
+
+    track.innerHTML = "";
+    index = 0;
+
+    teachers[group].forEach(t => {
+
+      const slide = document.createElement("div");
+      slide.className = "teacher-slide";
+
+      slide.innerHTML = `
+        <div class="teacher-left">
+          ${t.image ? `<img src="${t.image}" class="teacher-img">` : ``}
+        </div>
+
+        <div class="teacher-name mobile-name">${t.name}</div>
+
+        <div class="teacher-right">
+
+          <div class="teacher-name desktop-name">${t.name}</div>
+
+          <div class="teacher-top">
+            <div class="teacher-stats">
+              ${t.stats.map(stat => `
+                <div class="teacher-stat">
+                  <div class="stat-big">${stat[0]}</div>
+                  <div class="stat-small">
+  ${window.translations?.[currentLang]?.[stat[1]] || stat[1]}
+</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+
+          <div class="teacher-bottom">
+            <div class="teacher-bio">
+  ${window.translations?.[currentLang]?.[t.bio] || t.bio}
+</div>
+          </div>
+
+        </div>
+      `;
+
+      track.appendChild(slide);
+
+    });
+
+    updateSlider();
+  }
+
+  window.buildTeachers = buildTeachers;
+
+  /* ===============================
+     SLIDER CONTROL
+  =============================== */
+
+  function updateSlider() {
+    track.style.transform = `translateX(-${index * 100}%)`;
+  }
+
+  next?.addEventListener("click", () => {
+    index = (index + 1) % teachers[currentGroup].length;
+    updateSlider();
+  });
+
+  prev?.addEventListener("click", () => {
+    index = (index - 1 + teachers[currentGroup].length) %
+            teachers[currentGroup].length;
+    updateSlider();
+  });
+
+  mobileNext?.addEventListener("click", () => {
+  index = (index + 1) % teachers[currentGroup].length;
+  updateSlider();
+});
+
+mobilePrev?.addEventListener("click", () => {
+  index = (index - 1 + teachers[currentGroup].length) %
+          teachers[currentGroup].length;
+  updateSlider();
+});
+
+  /* ===============================
+     LIQUID FILTER SYSTEM
+  =============================== */
+
+function moveSlider(btn) {
+
+  const baseWidth = btn.offsetWidth * 0.85; // keep 15% shorter
+  slider.style.width = baseWidth + "px";
+
+  let baseLeft = btn.offsetLeft + 
+                 (btn.offsetWidth - baseWidth) / 2;
+
+  /* ===============================
+     MANUAL MICRO OFFSETS
+     (change these numbers yourself)
+  =============================== */
+
+  const offsets = {
+    ielts:  -0.5,   // negative = move LEFT
+    english: 0.4,   // positive = move RIGHT
+    sat:    0.4    // negative = move LEFT
+  };
+
+  baseLeft += offsets[btn.dataset.filter] || 0;
+
+  slider.style.left = baseLeft + "px";
+}
+
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+
+      document.querySelector(".filter-btn.active")
+        ?.classList.remove("active");
+
+      btn.classList.add("active");
+
+      currentGroup = btn.dataset.filter;
+
+      track.style.opacity = "0";
+      track.style.transform = "translateY(10px)";
+
+      setTimeout(() => {
+        buildTeachers(currentGroup);
+        track.style.opacity = "1";
+        track.style.transform = "translateY(0)";
+      }, 350);
+
+      moveSlider(btn);
+    });
+  });
+
+  window.addEventListener("load", () => {
+    moveSlider(document.querySelector(".filter-btn.active"));
+
+    buildTeachers(currentGroup);
+
+  });
+
+  /* ===============================
+   APPLE DRAG UPGRADE
+=============================== */
+
+let isDragging = false;
+let hasMoved = false;
+let startX = 0;
+let currentLeft = 0;
+
+slider.addEventListener("touchstart", startDrag, { passive: true });
+slider.addEventListener("mousedown", startDrag);
+
+function startDrag(e) {
+
+  isDragging = true;
+  hasMoved = false;
+
+  // remove active state while dragging
+document.querySelector(".filter-btn.active")
+  ?.classList.remove("active");
+
+  slider.classList.add("dragging");
+  slider.style.transition = "none";
+
+  startX = e.touches ? e.touches[0].clientX : e.clientX;
+  currentLeft = parseFloat(slider.style.left) || 0;
+
+  document.addEventListener("mousemove", onDrag);
+  document.addEventListener("touchmove", onDrag, { passive: false });
+  document.addEventListener("mouseup", endDrag);
+  document.addEventListener("touchend", endDrag);
+}
+
+function onDrag(e) {
+
+  if (!isDragging) return;
+
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const delta = clientX - startX;
+
+  if (Math.abs(delta) > 5) {
+    hasMoved = true;
+    if (e.cancelable) e.preventDefault();
+  }
+
+  let newLeft = currentLeft + delta;
+
+  const parent = slider.parentElement;
+  const max = parent.offsetWidth - slider.offsetWidth - 6;
+
+  newLeft = Math.max(6, Math.min(newLeft, max));
+
+  slider.style.left = newLeft + "px";
+}
+
+function endDrag() {
+
+  if (!isDragging) return;
+
+  isDragging = false;
+  slider.classList.remove("dragging");
+
+  slider.style.transition =
+    "left 0.45s cubic-bezier(0.22,1,0.36,1), width 0.45s cubic-bezier(0.22,1,0.36,1)";
+
+  if (hasMoved) {
+    snapToClosest();
+  }
+
+  document.removeEventListener("mousemove", onDrag);
+  document.removeEventListener("touchmove", onDrag);
+  document.removeEventListener("mouseup", endDrag);
+  document.removeEventListener("touchend", endDrag);
+}
+
+function snapToClosest() {
+
+  const buttons = document.querySelectorAll(".filter-btn");
+  const sliderCenter =
+    slider.offsetLeft + slider.offsetWidth / 2;
+
+  let closest = null;
+  let minDistance = Infinity;
+
+  buttons.forEach(btn => {
+
+    const btnCenter =
+      btn.offsetLeft + btn.offsetWidth / 2;
+
+    const distance = Math.abs(btnCenter - sliderCenter);
+
+    if (distance < minDistance) {
+      minDistance = distance;
+      closest = btn;
+    }
+
+  });
+
+  if (closest) {
+    closest.click(); // uses your existing system
+  }
+}
+
+});
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  window.translations = {
+
+  en: {
+
+    /* NAV */
+    nav_home: "Home",
+    nav_why: "Why Us?",
+    nav_courses: "Courses",
+    nav_results: "Results",
+    nav_teachers: "Teachers",
+    nav_locations: "Locations",
+    nav_approach: "Approach",
+    nav_faq: "FAQ",
+    nav_connect: "Connect",
+    nav_events: "Events",
+nav_mock: "Mock Tests",
+nav_printing: "Printing",
+nav_atmosphere: "Atmosphere",
+results_soon: "Soon",
+
+    /* HERO */
+    hero_big_title: "HEADSTART FOR YOUR FUTURE",
+    hero_subtitle: "A modern learning environment — everything at HeadStart English School.",
+    btn_explore: "Explore Courses →",
+    btn_results: "See Our Results →",
+
+    why_1: "Free Second Teacher",
+why_2: "Official Mock Exams",
+why_3: "Experienced Teachers",
+why_4: "Free Events & Community",
+why_5: "Modern Study Zones",
+
+why_title: "Why Choose HeadStart?",
+why_subtitle: "We combine strong teaching, structured programs, and a motivating environment to help students achieve real academic results.",
+
+why_desc_1: "If you need additional explanation, assistant teachers are always available to support you beyond regular lessons.",
+why_desc_2: "We conduct full mock exams under real test conditions to track progress and maximize performance.",
+why_desc_3: "Our instructors have strong academic backgrounds and proven IELTS results up to 8.0–8.5, ensuring high-quality preparation.",
+why_desc_4: "Educational events, activities, and student gatherings that create a motivating and supportive atmosphere.",
+why_desc_5: "Comfortable co-working areas where students can study independently before or after classes.",
+
+    /* COURSES */
+    course_sidebar_title: "Our Courses",
+    course_general: "General English",
+    course_preielts: "Pre-IELTS",
+    course_ielts: "IELTS",
+    course_cefr: "CEFR",
+    course_satenglish: "SAT English",
+    course_satmath: "SAT Math",
+
+    /* RESULTS */
+    results_title: "Student Results",
+
+    /* TESTIMONIALS */
+    testimonials_title: "What Our Students Say",
+
+    test_1: "“HeadStart helped me reach IELTS 7.5.”",
+test_2: "“HeadStart has become our second home.”",
+test_3: "“Best preparation system in the city.”",
+test_4: "“The atmosphere at HeadStart keeps me focused and motivated. I enjoy studying here every day.”",
+test_5: "“HeadStart is not just a learning center — it’s a reliable path toward achieving bigger goals.”",
+test_6: "“What I appreciate most about our teacher is that they work individually with each student and make every lesson engaging and enjoyable.”",
+test_7: "“HeadStart helped me improve from 6.5 to 7.5 in just three months.”",
+
+    /* TEACHERS */
+    
+    teachers_title: "Our Teachers",
+    swipe_hint: "Swipe to see more",
+    stat_certificate: "Certificate",
+    stat_years: "Years Experience",
+    stat_students: "Students",
+
+    bio_ielts_specialist: "IELTS specialist with elite band 8.5 results.",
+    bio_advanced_ielts: "Advanced IELTS instructor.",
+    bio_structured_method: "Structured IELTS methodology expert.",
+    bio_english_foundation: "English foundation specialist.",
+    bio_modern_english: "Modern communicative English teacher.",
+    bio_sat_specialist: "SAT preparation specialist.",
+    
+
+    /* LOCATIONS */
+    locations_title: "Our Locations",
+
+    /* ATMOSPHERE */
+    atmosphere_title: "Atmosphere",
+
+    approach_1_title: "Personalized Learning",
+approach_1_desc: "Tailored curriculum based on student strengths and goals.",
+
+approach_2_title: "Project-Based Mastery",
+approach_2_desc: "Real-world projects driving deep understanding.",
+
+approach_3_title: "Holistic Development",
+approach_3_desc: "Academic + leadership + character education.",
+
+    /* FAQ */
+    faq_title: "Frequently Asked Questions",
+
+    faq_q1: "How long does it take to achieve an IELTS 7.0+ score?",
+    faq_a1: "On average, students need 3–6 months of structured preparation depending on their starting level.",
+
+    faq_q2: "How do you determine the right level?",
+    faq_a2: "We conduct a diagnostic test and recommend the most suitable group.",
+
+    faq_q3: "Do students receive individual feedback during the course?",
+    faq_a3: "Yes. Teachers regularly provide personalized feedback on speaking, writing, and mock exam performance. This helps students clearly understand their weaknesses and improve faster.",
+
+    faq_q4: "What makes HeadStart different?",
+    faq_a4: "Strong teaching. Strong environment. Strong results.",
+
+    faq_q5: "Do you provide mock exams?",
+faq_a5: "Yes. We regularly conduct full mock examinations under real test conditions to track student progress and improve performance.",
+
+faq_q6: "Can I switch groups if my schedule changes?",
+faq_a6: "We try to accommodate schedule adjustments whenever possible, depending on seat availability and course structure.",
+
+    /* CONTACT */
+    contact_title: "Contact & Enrollment",
+    placeholder_name: "Full Name",
+    placeholder_email: "Parent/Guardian Email",
+    placeholder_message: "Tell us about your goals...",
+    btn_submit: "Submit Inquiry",
+    contact_note: "All inquiries receive a response within 24 hours. Tours available by appointment.",
+
+    /* FOOTER */
+    footer_tagline: "Excellence in education. Results-driven learning.",
+    footer_text: "© 2026 HeadStart Education Center. All rights reserved."
+  },
+
+  uz: {
+
+    /* NAV */
+    nav_home: "Bosh sahifa",
+    nav_why: "Nega Biz?",
+    nav_courses: "Kurslar",
+    nav_results: "Natijalar",
+    nav_teachers: "O'qituvchilar",
+    nav_locations: "Manzil",
+    nav_approach: "Yondashuv",
+    nav_faq: "FAQ",
+    nav_connect: "Bog'lanish",
+    nav_events: "Tadbirlar",
+nav_mock: "Mock imtihonlar",
+nav_printing: "Chop etish",
+results_soon: "Tez orada",
+nav_atmosphere: "Muhit",
+
+    /* HERO */
+    hero_big_title: "HEADSTART SIZNING KELAJAGINGIZ UCHUN",
+    hero_subtitle: "Zamonaviy o‘quv muhiti — HeadStart English School’da hammasi mavjud.",
+    btn_explore: "Kurslarni ko‘rish →",
+    btn_results: "Natijalarni ko‘rish →",
+
+    why_1: "Bepul Ikkinchi O‘qituvchi",
+why_2: "Rasmiy Mock Imtihonlar",
+why_3: "Tajribali O‘qituvchilar",
+why_4: "Bepul Tadbirlar va Hamjamiyat",
+why_5: "Zamonaviy O‘quv Zonalar",
+
+why_title: "Nega HeadStartni Tanlash Kerak?",
+why_subtitle: "Biz kuchli ta’lim, tizimli dasturlar va rag‘batlantiruvchi muhit orqali talabalarga haqiqiy akademik natijalarga erishishda yordam beramiz.",
+
+why_desc_1: "Agar sizga qo‘shimcha tushuntirish kerak bo‘lsa, yordamchi o‘qituvchilar doimiy darslardan tashqarida ham sizni qo‘llab-quvvatlash uchun mavjud.",
+why_desc_2: "Biz real imtihon sharoitida to‘liq mock imtihonlar o‘tkazamiz, natijalarni kuzatish va maksimal samaradorlikka erishish uchun.",
+why_desc_3: "O‘qituvchilarimiz kuchli akademik bilimga ega va 8.0–8.5 gacha tasdiqlangan IELTS natijalariga ega bo‘lib, yuqori sifatli tayyorgarlikni ta’minlaydi.",
+why_desc_4: "Rag‘batlantiruvchi va qo‘llab-quvvatlovchi muhit yaratadigan ta’limiy tadbirlar, faoliyatlar va talabalar uchrashuvlari.",
+why_desc_5: "Talabalar darsdan oldin yoki keyin mustaqil o‘qishlari mumkin bo‘lgan qulay co-working hududlari.",
+
+    /* COURSES */
+    course_sidebar_title: "Kurslarimiz",
+    course_general: "Umumiy Ingliz Tili",
+    course_preielts: "Pre-IELTS",
+    course_ielts: "IELTS",
+    course_cefr: "CEFR",
+    course_satenglish: "SAT Ingliz tili",
+    course_satmath: "SAT Matematika",
+
+    /* RESULTS */
+    results_title: "Talabalar Natijalari",
+
+    /* TESTIMONIALS */
+    testimonials_title: "Talabalarimiz fikrlari",
+
+    test_1: "“HeadStart menga IELTS 7.5 natijasiga erishishga yordam berdi.”",
+test_2: "“HeadStart bizning ikkinchi uyimizga aylandi.”",
+test_3: "“Shahardagi eng yaxshi tayyorgarlik tizimi.”",
+test_4: "“HeadStart’dagi muhit meni diqqatimni jamlashga va motivatsiyamni saqlashga yordam beradi. Men bu yerda har kuni o‘qishni yoqtiraman.”",
+test_5: "“HeadStart shunchaki o‘quv markazi emas — bu katta maqsadlarga erishish yo‘lidagi ishonchli yo‘ldir.”",
+test_6: "“Men o‘qituvchimiz haqida eng qadrlaydigan jihatim shuki, ular har bir talaba bilan alohida ishlaydi va har bir darsni qiziqarli hamda maroqli qiladi.”",
+test_7: "“HeadStart menga atigi uch oy ichida 6.5 dan 7.5 ga ko‘tarilishimga yordam berdi.”",
+
+    /* TEACHERS */
+    teachers_title: "O‘qituvchilar",
+    swipe_hint: "Ko‘proq ko‘rish uchun suring",
+    stat_certificate: "Sertifikat",
+stat_years: "Yillik Tajriba",
+stat_students: "Talabalar",
+
+bio_ielts_specialist: "8.5 band natijaga ega IELTS mutaxassisi.",
+bio_advanced_ielts: "Tajribali IELTS o‘qituvchisi.",
+bio_structured_method: "Tizimli IELTS metodikasi bo‘yicha mutaxassis.",
+bio_english_foundation: "Ingliz tili asoslari bo‘yicha mutaxassis.",
+bio_modern_english: "Zamonaviy kommunikativ ingliz tili o‘qituvchisi.",
+bio_sat_specialist: "SAT tayyorgarlik bo‘yicha mutaxassis.",
+
+    /* LOCATIONS */
+    locations_title: "Manzillarimiz",
+
+    /* ATMOSPHERE */
+    atmosphere_title: "Muhit",
+
+    approach_1_title: "Shaxsiylashtirilgan Ta'lim",
+approach_1_desc: "Talabaning kuchli tomonlari va maqsadlariga moslashtirilgan o‘quv dasturi.",
+
+approach_2_title: "Amaliy Loyihalar Asosida O‘zlashtirish",
+approach_2_desc: "Chuqur tushunishni rivojlantiruvchi real hayotiy loyihalar.",
+
+approach_3_title: "Kompleks Rivojlanish",
+approach_3_desc: "Akademik bilim + yetakchilik + shaxsiy fazilatlarni rivojlantirish.",
+
+    /* FAQ */
+    faq_title: "Ko‘p Beriladigan Savollar",
+
+    faq_q1: "IELTS 7.0+ ga erishish uchun qancha vaqt kerak?",
+    faq_a1: "O‘rtacha 3–6 oy muntazam tayyorgarlik talab etiladi.",
+
+    faq_q2: "Qaysi guruh menga mosligini qanday aniqlaysiz?",
+    faq_a2: "Diagnostik test o‘tkaziladi va mos guruh tavsiya qilinadi.",
+
+    faq_q3: "Kurs davomida talabalar individual fikr-mulohaza oladilarmi?",
+    faq_a3: "Ha. O‘qituvchilar speaking, writing va mock imtihon natijalari bo‘yicha muntazam individual fikr bildiradilar. Bu talabalarga kamchiliklarini aniq tushunib, tezroq rivojlanishga yordam beradi.",
+
+    faq_q4: "HeadStart nimasi bilan farq qiladi?",
+    faq_a4: "Kuchli ta’lim. Kuchli muhit. Kuchli natija.",
+
+    faq_q5: "Mock imtihonlar o‘tkazasizlarmi?",
+faq_a5: "Ha. Biz muntazam ravishda real sharoitda to‘liq mock imtihonlar o‘tkazamiz.",
+
+faq_q6: "Jadvalim o‘zgarsa, guruhni almashtira olamanmi?",
+faq_a6: "Imkon qadar jadval o‘zgarishlariga moslashishga harakat qilamiz, mavjud o‘rinlarga qarab.",
+
+    /* CONTACT */
+    contact_title: "Bog‘lanish va Ro‘yxatdan O‘tish",
+    placeholder_name: "To‘liq ism",
+    placeholder_email: "Email",
+    placeholder_message: "Maqsadingiz haqida yozing...",
+    btn_submit: "Yuborish",
+    contact_note: "Barcha murojaatlarga 24 soat ichida javob beriladi. Markaz bo‘ylab ekskursiyalar oldindan kelishilgan holda amalga oshiriladi.",
+
+    /* FOOTER */
+    footer_tagline: "Ta’limda mukammallik. Natijaga yo‘naltirilgan o‘qish.",
+    footer_text: "© 2026 HeadStart Ta'lim Markazi. Barcha huquqlar himoyalangan."
+  }
+
+};
+
+  function applyLanguage(lang) {
+
+  // Save current language globally
+  currentLang = lang;
+
+  // Update HTML lang attribute (SEO + accessibility)
+  document.documentElement.lang = lang;
+
+  /* ================= TEXT CONTENT ================= */
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+
+    if (
+      window.translations &&
+      window.translations[lang] &&
+      window.translations[lang][key]
+    ) {
+      el.textContent = window.translations[lang][key];
+    }
+  });
+
+  /* ================= PLACEHOLDERS ================= */
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    const key = el.getAttribute("data-i18n-placeholder");
+
+    if (
+      window.translations &&
+      window.translations[lang] &&
+      window.translations[lang][key]
+    ) {
+      el.placeholder = window.translations[lang][key];
+    }
+  });
+
+  /* ================= HERO TITLE ================= */
+  updateHeroTitle(lang);
+
+  /* 🔥 REBUILD TEACHERS AFTER LANGUAGE CHANGE */
+const activeBtn = document.querySelector(".filter-btn.active");
+if (activeBtn) {
+  const group = activeBtn.dataset.filter;
+  if (typeof buildTeachers === "function") {
+    buildTeachers(group);
+  }
+}
+
+}
+
+
+/* ================= HERO TITLE FUNCTION ================= */
+function updateHeroTitle(lang) {
+
+  const title = document.querySelector(".hero-animated");
+  if (!title) return;
+
+  if (
+    !window.translations ||
+    !window.translations[lang] ||
+    !window.translations[lang].hero_big_title
+  ) return;
+
+  const text = window.translations[lang].hero_big_title;
+  const words = text.split(" ");
+
+  title.innerHTML = `
+    <span class="line">
+      ${words.map(word => `
+        <span class="word">
+          ${word.split("").map(letter => `<span>${letter}</span>`).join("")}
+        </span>
+      `).join("")}
+    </span>
+  `;
+}
+
+
+/* ================= INITIALIZE ================= */
+window.applyLanguage = applyLanguage;
+applyLanguage(currentLang);
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const switcher = document.getElementById("languageSwitch");
+  const current = document.getElementById("languageCurrent");
+  const options = document.querySelectorAll(".lang-option");
+  const currentText = document.getElementById("currentLangText");
+  const currentFlag = document.getElementById("currentFlag");
+
+  /* OPEN / CLOSE */
+
+  current.addEventListener("click", (e) => {
+    e.stopPropagation();
+    switcher.classList.toggle("open");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!switcher.contains(e.target)) {
+      switcher.classList.remove("open");
+    }
+  });
+
+  /* LANGUAGE SELECT */
+
+  function updateLanguageUI(lang) {
+    if (lang === "en") {
+      currentText.textContent = "ENG";
+      currentFlag.src = "https://flagcdn.com/w40/gb.png";
+    } else {
+      currentText.textContent = "UZB";
+      currentFlag.src = "https://flagcdn.com/w40/uz.png";
+    }
+  }
+
+  options.forEach(option => {
+    option.addEventListener("click", (e) => {
+
+      e.stopPropagation();
+
+      const lang = option.dataset.lang;
+
+      if (window.applyLanguage) {
+        window.applyLanguage(lang);
+      }
+
+      updateLanguageUI(lang);
+
+      switcher.classList.remove("open");
+
+    });
+  });
+
+  updateLanguageUI(currentLang);
+
+});
+
+</script>
+
+<script>
+document.addEventListener("scroll", () => {
+  const progress = document.getElementById("scrollProgress");
+  const scrollTop = window.scrollY;
+  const height = document.documentElement.scrollHeight - window.innerHeight;
+  const percent = (scrollTop / height) * 100;
+  progress.style.width = percent + "%";
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const sections = document.querySelectorAll("section[id]");
+  const navLinks = document.querySelectorAll("nav a[href^='#']");
+
+  function activateNav() {
+
+    let scrollPos = window.scrollY + 150;
+
+    sections.forEach(section => {
+      const top = section.offsetTop;
+      const bottom = top + section.offsetHeight;
+
+      if (scrollPos >= top && scrollPos <= bottom) {
+
+        navLinks.forEach(link => link.classList.remove("active-nav"));
+
+        const active = document.querySelector(
+          `nav a[href="#${section.id}"]`
+        );
+
+        if (active) active.classList.add("active-nav");
+      }
+    });
+  }
+
+  window.addEventListener("scroll", activateNav);
+
+});
+</script>
+
+<script>
+window.addEventListener("load", () => {
+  document.body.classList.add("loaded");
+});
+</script>
+
+</body>
+</html>
