@@ -21,6 +21,7 @@ model User {
   teaching      Group[]        @relation("TeacherGroups")
 
   notifications Notification[]
+  events        Event[]        @relation("UserEvents")  // ✅ ADDED
 }
 
 model Group {
@@ -31,6 +32,8 @@ model Group {
   teacherId String?
 
   students  User[]   @relation("StudentGroups")
+
+  events    Event[]  // ✅ ADDED
 }
 
 model AuditLog {
@@ -48,4 +51,24 @@ model Notification {
 
   user      User     @relation(fields: [userId], references: [id])
   userId    String
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  type        String   // CLASS | GLOBAL | PERSONAL | TODO
+
+  startTime   DateTime
+  endTime     DateTime
+
+  createdAt   DateTime @default(now())
+
+  isGlobal    Boolean  @default(false)
+
+  creator     User     @relation("UserEvents", fields: [creatorId], references: [id])
+  creatorId   String
+
+  group       Group?   @relation(fields: [groupId], references: [id])
+  groupId     String?
 }
