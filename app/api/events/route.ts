@@ -17,11 +17,9 @@ export async function GET() {
   let events;
 
   if (role === "admin") {
-    events = await prisma.event.findMany({
-      orderBy: { startTime: "asc" },
-      include: { group: true },
-    });
-  } else {
+    // Admin sees:
+    // 1) Global events
+    // 2) Events they personally created
     events = await prisma.event.findMany({
       where: {
         OR: [
@@ -34,9 +32,46 @@ export async function GET() {
     });
   }
 
+  else if (role === "teacher") {
+    // Teacher sees:
+    // 1) Their own created events
+    // 2) Global events
+    events = await prisma.event.findMany({
+      where: {
+        OR: [
+          { creatorId: userId },
+          { isGlobal: true },
+        ],
+      },
+      orderBy: { startTime: "asc" },
+      include: { group: true },
+    });
+  }
+
+  else {
+    // Student sees:
+    // 1) Global events
+    // 2) Class events where student belongs to group
+    events = await prisma.event.findMany({
+      where: {
+        OR: [
+          { isGlobal: true },
+          {
+            group: {
+              students: {
+                some: { id: userId },
+              },
+            },
+          },
+        ],
+      },
+      orderBy: { startTime: "asc" },
+      include: { group: true },
+    });
+  }
+
   return NextResponse.json(events);
 }
-
 
 // CREATE EVENT
 export async function POST(req: Request) {
@@ -46,26 +81,27 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const body = await req.json();
+  const { title, type, startTime, endTime } = body;
+
   const userId = (session.user as any).id;
   const role = (session.user as any).role;
 
-  const body = await req.json();
-  const { title, description, type, startTime, endTime, groupId } = body;
+  const isGlobal = type === "GLOBAL";
 
+  // Only admin can create global events
   if (type === "GLOBAL" && role !== "admin") {
-    return NextResponse.json({ error: "Only admin can create global events" }, { status: 403 });
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const event = await prisma.event.create({
     data: {
       title,
-      description,
       type,
       startTime: new Date(startTime),
       endTime: new Date(endTime),
-      isGlobal: type === "GLOBAL",
       creatorId: userId,
-      groupId: groupId || null,
+      isGlobal,
     },
   });
 

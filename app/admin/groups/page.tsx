@@ -1,133 +1,195 @@
-import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
+"use client";
 
-export default async function GroupsPage() {
+import { useEffect, useState } from "react";
 
-  const groups = await prisma.group.findMany({
-    include: {
-      teacher: true,
-      students: true,
-    },
-  });
+export default function GroupsPage() {
+  const [groups, setGroups] = useState<any[]>([]);
+  const [teachers, setTeachers] = useState<any[]>([]);
 
-  const teachers = await prisma.user.findMany({
-    where: { role: "teacher" },
-  });
+  const [form, setForm] = useState({
+  name: "",
+  monthlyPrice: "",
+  dayType: "ODD",
+  customDays: [] as string[],
+  startTime: "14:00",
+  endTime: "16:00",
+  teacher1Id: "",
+  teacher2Id: "",
+});
 
-  async function createGroup(formData: FormData) {
-    "use server";
+  useEffect(() => {
+    fetchGroups();
+    fetchTeachers();
+  }, []);
 
-    const name = formData.get("name") as string;
-
-    await prisma.group.create({
-      data: { name },
-    });
-
-    redirect("/admin/groups");
+  async function fetchGroups() {
+    const res = await fetch("/api/groups");
+    const data = await res.json();
+    setGroups(data);
   }
 
-  async function assignTeacher(formData: FormData) {
-    "use server";
+  async function fetchTeachers() {
+    const res = await fetch("/api/users?role=teacher");
+    const data = await res.json();
+    setTeachers(data);
+  }
 
-    const groupId = formData.get("groupId") as string;
-    const teacherId = formData.get("teacherId") as string;
-
-    await prisma.group.update({
-      where: { id: groupId },
-      data: {
-        teacher: {
-          connect: { id: teacherId },
-        },
-      },
+  async function createGroup() {
+    await fetch("/api/groups", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+  ...form,
+  customDays:
+    form.dayType === "CUSTOM"
+      ? form.customDays
+      : null,
+}),
     });
 
-    redirect("/admin/groups");
+    fetchGroups();
+  }
+
+  async function deleteGroup(id: string) {
+    await fetch(`/api/groups/${id}`, {
+      method: "DELETE",
+    });
+
+    fetchGroups();
   }
 
   return (
     <div className="space-y-10">
+      <h1 className="text-3xl font-bold">Groups</h1>
 
-      <h1 className="text-3xl font-bold">
-        Groups Management
-      </h1>
+      <div className="bg-white p-6 rounded-xl shadow space-y-4">
 
-      {/* Create Group */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border">
+        <input
+          placeholder="Group Name"
+          className="border p-2 w-full"
+          onChange={(e) =>
+            setForm({ ...form, name: e.target.value })
+          }
+        />
 
-        <h2 className="text-xl font-semibold mb-4">
-          Create Group
-        </h2>
+        <input
+          placeholder="Monthly Price"
+          type="number"
+          className="border p-2 w-full"
+          onChange={(e) =>
+            setForm({ ...form, monthlyPrice: e.target.value })
+          }
+        />
 
-        <form action={createGroup} className="flex gap-4">
+        <select
+  className="border p-2 w-full"
+  onChange={(e) =>
+    setForm({ ...form, dayType: e.target.value })
+  }
+>
+  <option value="ODD">Odd Days (Mon/Wed/Fri)</option>
+  <option value="EVEN">Even Days (Tue/Thu/Sat)</option>
+  <option value="INTENSIVE">Intensive (Mon–Sat)</option>
+  <option value="CUSTOM">Custom</option>
+</select>
 
+{form.dayType === "CUSTOM" && (
+  <div className="flex flex-wrap gap-2 mt-3">
+    {["MON","TUE","WED","THU","FRI","SAT"].map((day) => (
+      <button
+        key={day}
+        type="button"
+        onClick={() =>
+          setForm({
+            ...form,
+            customDays: form.customDays.includes(day)
+              ? form.customDays.filter((d) => d !== day)
+              : [...form.customDays, day],
+          })
+        }
+        className={`px-3 py-1 rounded border ${
+          form.customDays.includes(day)
+            ? "bg-green-600 text-white"
+            : "bg-white"
+        }`}
+      >
+        {day}
+      </button>
+    ))}
+  </div>
+)}
+
+        <div className="flex gap-4">
           <input
-            name="name"
-            placeholder="Group name..."
-            required
-            className="border rounded-xl px-4 py-2"
-          />
+  type="time"
+  className="border p-2 w-full"
+  onChange={(e) =>
+    setForm({ ...form, startTime: e.target.value })
+  }
+/>
 
-          <button className="bg-indigo-600 text-white px-6 py-2 rounded-xl">
-            Create
-          </button>
+<input
+  type="time"
+  className="border p-2 w-full"
+  onChange={(e) =>
+    setForm({ ...form, endTime: e.target.value })
+  }
+/>
+        </div>
 
-        </form>
+        <select
+          className="border p-2 w-full"
+          onChange={(e) =>
+            setForm({ ...form, teacher1Id: e.target.value })
+          }
+        >
+          <option value="">Select Teacher 1</option>
+          {teachers.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.email}
+            </option>
+          ))}
+        </select>
 
+        <select
+          className="border p-2 w-full"
+          onChange={(e) =>
+            setForm({ ...form, teacher2Id: e.target.value })
+          }
+        >
+          <option value="">Select Teacher 2 (Optional)</option>
+          {teachers.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.email}
+            </option>
+          ))}
+        </select>
+
+        <button
+          onClick={createGroup}
+          className="bg-green-600 text-white px-6 py-2 rounded"
+        >
+          Create Group
+        </button>
       </div>
 
-      {/* Groups List */}
-      <div className="space-y-6">
-
+      <div className="space-y-4">
         {groups.map((group) => (
-          <div
-            key={group.id}
-            className="bg-white p-6 rounded-xl shadow-sm border space-y-4"
-          >
+          <div key={group.id} className="border p-4 rounded">
+            <h3 className="font-bold">{group.name}</h3>
+            <p>Price: {group.monthlyPrice}</p>
+            <p>Day Type: {group.dayType}</p>
+            <p>Time: {group.startTime} - {group.endTime}</p>
 
-            <h3 className="text-xl font-semibold">
-              {group.name}
-            </h3>
-
-            <p>
-              <strong>Teacher:</strong>{" "}
-              {group.teacher?.email || "Not assigned"}
-            </p>
-
-            <form action={assignTeacher} className="flex gap-4">
-
-              <input type="hidden" name="groupId" value={group.id} />
-
-              <select
-                name="teacherId"
-                className="border rounded-xl px-4 py-2"
-              >
-                {teachers.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.email}
-                  </option>
-                ))}
-              </select>
-
-              <button className="bg-blue-600 text-white px-6 py-2 rounded-xl">
-                Assign Teacher
-              </button>
-
-            </form>
-
-            <div>
-              <strong>Students:</strong>
-              <ul className="list-disc ml-6 mt-2">
-                {group.students.map((s) => (
-                  <li key={s.id}>{s.email}</li>
-                ))}
-              </ul>
-            </div>
-
+            <button
+              onClick={() => deleteGroup(group.id)}
+              className="text-red-600 mt-2"
+            >
+              Delete Group
+            </button>
           </div>
         ))}
-
       </div>
-
     </div>
   );
 }

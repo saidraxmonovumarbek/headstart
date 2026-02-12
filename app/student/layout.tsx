@@ -61,7 +61,7 @@ export default function StudentLayout({
 ];
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex h-screen overflow-hidden bg-white">
       {/* Sidebar */}
       <aside
         className={`border-r bg-white flex flex-col transition-[width] duration-300 ease-in-out ${
@@ -237,7 +237,7 @@ export default function StudentLayout({
         </div>
       </aside>
 
-      <main className="flex-1 p-10 bg-white">{children}</main>
+      <main className="flex-1 overflow-y-auto p-10 bg-white">{children}</main>
     </div>
   );
 }
