@@ -106,8 +106,9 @@ useEffect(() => {
       <aside
   className={`
     fixed lg:static top-0 left-0 h-full bg-white flex flex-col z-50
-    transition-transform duration-300 ease-in-out
+    transition-all duration-300 ease-in-out
     w-[75%]
+    lg:border-r lg:border-gray-200
     ${collapsed ? "lg:w-20" : "lg:w-72"}
     ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
   `}
