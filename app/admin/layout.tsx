@@ -91,12 +91,12 @@ useEffect(() => {
 {/* MOBILE HEADER */}
 <div className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-white border-b flex items-center px-4 z-40">
   <button
-    onClick={() => setMobileOpen((prev) => !prev)}
-    className="p-2 mr-3"
-  >
-    <div className="w-5 h-[2px] bg-black mb-1"></div>
-    <div className="w-5 h-[2px] bg-black"></div>
-  </button>
+  onClick={() => setMobileOpen((prev) => !prev)}
+  className="p-2 mr-3 flex flex-col justify-center"
+>
+  <span className="block w-6 h-[2px] bg-gray-800 mb-1 rounded" />
+<span className="block w-4 h-[2px] bg-gray-800 rounded" />
+</button>
 
   <span className="text-green-600 font-semibold text-lg">
     Headstart
