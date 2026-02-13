@@ -57,6 +57,7 @@ export default function TeacherLayout({
     { name: "Attendance", icon: FileText, href: "/teacher/attendance" },
     { name: "Calendar", icon: CalendarDays, href: "/teacher/calendar" },
     { name: "Notes", icon: Notebook, href: "/teacher/notes" },
+    { name: "Vocabulary", icon: Notebook, href: "/teacher/vocabulary" },
     { name: "Mock Exams", icon: FileText, href: "/teacher/mock-exam" },
     { name: "My Progress", icon: BarChart3, href: "/teacher/progress" },
   ];

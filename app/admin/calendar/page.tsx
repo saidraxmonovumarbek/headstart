@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { useSession } from "next-auth/react";
 import { 
   MoreVertical, 
   ChevronLeft, 
@@ -29,6 +30,8 @@ export default function AdminCalendar() {
   const [editingEvent, setEditingEvent] = useState<any>(null);
   const [warning, setWarning] = useState<string | null>(null);
   const [shake, setShake] = useState(false);
+  const { data: session } = useSession();
+  const role = (session?.user as any)?.role;
 
   useEffect(() => {
   fetchEvents();
@@ -205,7 +208,12 @@ for (let i = 1; i <= currentMonth.daysInMonth(); i++) {
                 {/* EVENTS SIDE */}
                 <div className="flex-1 space-y-4">
 
-                  {getEventsForDate(day).map((event) => (
+                  {getEventsForDate(day).map((event) => {
+  const canEdit =
+    role === "admin" ||
+    (!event.isGlobal && event.creatorId === (session?.user as any)?.id);
+
+  return (
   <div
     key={event.id}
     className={`group relative flex flex-col md:flex-row md:items-start rounded-2xl px-6 py-5 transition shadow-sm ${getEventColors(event.type)}`}
@@ -236,8 +244,9 @@ for (let i = 1; i <= currentMonth.daysInMonth(); i++) {
 </div>
 
                       {/* HOVER ACTION */}
-                      <button
-                        onClick={() => {
+{canEdit && (
+  <button
+    onClick={() => {
   const now = dayjs().tz("Asia/Tashkent");
   const eventDate = dayjs(event.startTime).tz("Asia/Tashkent");
 
@@ -253,9 +262,11 @@ for (let i = 1; i <= currentMonth.daysInMonth(); i++) {
                         className="absolute right-4 opacity-60 md:opacity-0 md:group-hover:opacity-100 transition p-2 rounded-lg hover:bg-white"
                       >
                         <MoreVertical size={16} />
-                      </button>
-                    </div>
-                  ))}
+                        </button>
+)}
+                                        </div>
+  );
+})}
 
                 </div>
               </div>
@@ -334,6 +345,7 @@ for (let i = 1; i <= currentMonth.daysInMonth(); i++) {
       {/* ADD / EDIT MODAL */}
       {(showForm || editingEvent) && (
         <AddEventModal
+  role={role}
           date={editingEvent ? dayjs(editingEvent.startTime) : selectedDate}
           existingEvent={editingEvent}
           onClose={() => {
@@ -348,7 +360,13 @@ for (let i = 1; i <= currentMonth.daysInMonth(); i++) {
   );
 }
 
-function AddEventModal({ date, existingEvent, onClose, refresh }: any) {
+function AddEventModal({
+  date,
+  existingEvent,
+  onClose,
+  refresh,
+  role,
+}: any) {
   const [title, setTitle] = useState(existingEvent?.title || "");
   const [type, setType] = useState(existingEvent?.type || "PERSONAL");
   const [start, setStart] = useState(
@@ -370,8 +388,13 @@ function AddEventModal({ date, existingEvent, onClose, refresh }: any) {
   body: JSON.stringify({
           title,
           type,
-          startTime: date.format("YYYY-MM-DD") + "T" + start,
-          endTime: date.format("YYYY-MM-DD") + "T" + end,
+          startTime: dayjs
+  .tz(date.format("YYYY-MM-DD") + " " + start, "Asia/Tashkent")
+  .toISOString(),
+
+endTime: dayjs
+  .tz(date.format("YYYY-MM-DD") + " " + end, "Asia/Tashkent")
+  .toISOString(),
         }),
       });
     } else {
@@ -381,8 +404,13 @@ function AddEventModal({ date, existingEvent, onClose, refresh }: any) {
   body: JSON.stringify({
           title,
           type,
-          startTime: date.format("YYYY-MM-DD") + "T" + start,
-          endTime: date.format("YYYY-MM-DD") + "T" + end,
+          startTime: dayjs
+  .tz(date.format("YYYY-MM-DD") + " " + start, "Asia/Tashkent")
+  .toISOString(),
+
+endTime: dayjs
+  .tz(date.format("YYYY-MM-DD") + " " + end, "Asia/Tashkent")
+  .toISOString(),
         }),
       });
     }
@@ -421,7 +449,9 @@ function AddEventModal({ date, existingEvent, onClose, refresh }: any) {
           value={type}
           onChange={(e) => setType(e.target.value)}
         >
-          <option value="GLOBAL">Global Event</option>
+          {role === "admin" && (
+  <option value="GLOBAL">Global Event</option>
+)}
           <option value="CLASS">Lesson</option>
           <option value="PERSONAL">Personal</option>
           <option value="TODO">To-Do</option>

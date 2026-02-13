@@ -54,6 +54,7 @@ export default function StudentLayout({
   { name: "Home", icon: Home, href: "/student" },
   { name: "Classes", icon: BookOpen, href: "/student/classes" },
   { name: "Notes", icon: FileText, href: "/student/notes" },
+  { name: "Vocabulary", icon: BookOpen, href: "/student/vocabulary" },
   { name: "Study Plan", icon: CalendarDays, href: "/student/study-plan" },
   { name: "Calendar", icon: Calendar, href: "/student/calendar" },
   { name: "Mock Exams", icon: FileText, href: "/student/mock-exam" },

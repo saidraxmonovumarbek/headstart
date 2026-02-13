@@ -49,26 +49,28 @@ export async function GET() {
   }
 
   else {
-    // Student sees:
-    // 1) Global events
-    // 2) Class events where student belongs to group
-    events = await prisma.event.findMany({
-      where: {
-        OR: [
-          { isGlobal: true },
-          {
-            group: {
-              students: {
-                some: { id: userId },
-              },
+  // Student sees:
+  // 1) Global events
+  // 2) Their own created events
+  // 3) Class events where they belong
+  events = await prisma.event.findMany({
+    where: {
+      OR: [
+        { isGlobal: true },
+        { creatorId: userId }, // 🔥 THIS FIXES STUDENT CREATION BUG
+        {
+          group: {
+            students: {
+              some: { id: userId },
             },
           },
-        ],
-      },
-      orderBy: { startTime: "asc" },
-      include: { group: true },
-    });
-  }
+        },
+      ],
+    },
+    orderBy: { startTime: "asc" },
+    include: { group: true },
+  });
+}
 
   return NextResponse.json(events);
 }

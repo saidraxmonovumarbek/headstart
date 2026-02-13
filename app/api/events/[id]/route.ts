@@ -26,8 +26,22 @@ const existing = await prisma.event.findUnique({
   where: { id },
 });
 
+
 if (!existing) {
   return NextResponse.json({ error: "Not found" }, { status: 404 });
+}
+
+const userId = (session.user as any).id;
+const role = (session.user as any).role;
+
+// Only admin can modify global events
+if (existing.isGlobal && role !== "admin") {
+  return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+}
+
+// Non-admin users can only modify their own events
+if (!existing.isGlobal && existing.creatorId !== userId) {
+  return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 }
 
 const now = new Date();
@@ -80,28 +94,41 @@ export async function DELETE(
     }
 
     const existing = await prisma.event.findUnique({
-      where: { id },
-    });
+  where: { id },
+});
 
-    if (!existing) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
-    }
+if (!existing) {
+  return NextResponse.json({ error: "Not found" }, { status: 404 });
+}
 
-    const now = new Date();
-    const eventDate = new Date(existing.startTime);
-    const diffMs = now.getTime() - eventDate.getTime();
-    const diffDays = diffMs / (1000 * 60 * 60 * 24);
+const userId = (session.user as any).id;
+const role = (session.user as any).role;
 
-    if (diffDays >= 2 && eventDate < now) {
-      return NextResponse.json(
-        { error: "Editing window expired" },
-        { status: 403 }
-      );
-    }
+// Only admin can delete global events
+if (existing.isGlobal && role !== "admin") {
+  return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+}
 
-    await prisma.event.delete({
-      where: { id },
-    });
+// Non-admin users can only delete their own events
+if (!existing.isGlobal && existing.creatorId !== userId) {
+  return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+}
+
+const now = new Date();
+const eventDate = new Date(existing.startTime);
+const diffMs = now.getTime() - eventDate.getTime();
+const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+if (diffDays >= 2 && eventDate < now) {
+  return NextResponse.json(
+    { error: "Editing window expired" },
+    { status: 403 }
+  );
+}
+
+await prisma.event.delete({
+  where: { id },
+});
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

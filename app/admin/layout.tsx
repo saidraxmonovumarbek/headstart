@@ -16,6 +16,8 @@ import {
   Settings,
   PanelLeft,
   DollarSign,
+  BookOpen,
+  CalendarCheck
 } from "lucide-react";
 import Link from "next/link";
 
@@ -30,8 +32,10 @@ export default function AdminLayout({
   const [confirmLogout, setConfirmLogout] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  useEffect(() => {
+  // Close account dropdown when clicking outside
+useEffect(() => {
   function handleClickOutside(event: MouseEvent) {
     if (
       openMenu &&
@@ -43,8 +47,14 @@ export default function AdminLayout({
   }
 
   document.addEventListener("mousedown", handleClickOutside);
-  return () => document.removeEventListener("mousedown", handleClickOutside);
+  return () =>
+    document.removeEventListener("mousedown", handleClickOutside);
 }, [openMenu]);
+
+// Auto close mobile sidebar on route change
+useEffect(() => {
+  setMobileOpen(false);
+}, [pathname]);
 
   if (status === "loading") return null;
 
@@ -60,21 +70,47 @@ export default function AdminLayout({
   { name: "Teachers", icon: GraduationCap, href: "/admin/teachers" },
   { name: "Students", icon: User, href: "/admin/students" },
   { name: "Groups", icon: Users, href: "/admin/groups" },
+
   { name: "Calendar", icon: CalendarDays, href: "/admin/calendar" },
+  { name: "Vocabulary", icon: BookOpen, href: "/admin/vocabulary" }, // 🔥 NEW
+
   { name: "Mock Exams", icon: FileText, href: "/admin/mock-exam" },
+  { name: "Events", icon: CalendarCheck, href: "/admin/events" }, // 🔥 NEW
+
   { name: "Registered Users", icon: Users, href: "/admin/users" },
+
   ...(session.user.isSuperAdmin
     ? [{ name: "Finance", icon: DollarSign, href: "/admin/finance" }]
     : []),
 ];
 
   return (
-    <div className="flex h-screen overflow-hidden bg-white">
+    <div className="relative flex h-screen overflow-hidden bg-white">
       {/* Sidebar */}
+
+{/* MOBILE HEADER */}
+<div className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-white border-b flex items-center px-4 z-40">
+  <button
+    onClick={() => setMobileOpen((prev) => !prev)}
+    className="p-2 mr-3"
+  >
+    <div className="w-5 h-[2px] bg-black mb-1"></div>
+    <div className="w-5 h-[2px] bg-black"></div>
+  </button>
+
+  <span className="text-green-600 font-semibold text-lg">
+    Headstart
+  </span>
+</div>
+
       <aside
-  className={`border-r bg-white flex flex-col transition-[width] duration-300 ease-in-out ${
-    collapsed ? "w-20" : "w-72"
-  }`}
+  className={`
+    fixed lg:static top-0 left-0 h-full bg-white flex flex-col z-50
+    transition-transform duration-300 ease-in-out
+    w-[75%]
+    ${collapsed ? "lg:w-20" : "lg:w-72"}
+    ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+  `}
 >
         {/* Logo + Toggle */}
         <div
@@ -93,7 +129,13 @@ export default function AdminLayout({
 
   {/* RIGHT: Toggle (always visible when open, hover-only when collapsed) */}
   <button
-    onClick={() => setCollapsed(!collapsed)}
+    onClick={() => {
+  if (window.innerWidth < 1024) {
+    setMobileOpen(false);
+  } else {
+    setCollapsed(!collapsed);
+  }
+}}
     className={`${
       collapsed
         ? "absolute opacity-0 group-hover:opacity-100"
@@ -260,8 +302,16 @@ export default function AdminLayout({
 </div>
       </aside>
 
+      {/* MOBILE OVERLAY */}
+{mobileOpen && (
+  <div
+    onClick={() => setMobileOpen(false)}
+    className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+  />
+)}
+
       {/* Content */}
-      <main className="flex-1 overflow-y-auto p-10 bg-white">
+      <main className="flex-1 overflow-y-auto bg-white pt-16 px-4 sm:px-6 lg:p-10">
         {children}
       </main>
     </div>
