@@ -26,8 +26,8 @@ dayjs.extend(timezone);
 
 export default function AdminCalendar() {
   const [events, setEvents] = useState<any[]>([]);
-  const [currentMonth, setCurrentMonth] = useState(dayjs().tz("Asia/Tashkent"));
-  const [selectedDate, setSelectedDate] = useState(dayjs().tz("Asia/Tashkent"));
+  const [currentMonth, setCurrentMonth] = useState<dayjs.Dayjs | null>(null);
+  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState<any>(null);
   const [warning, setWarning] = useState<string | null>(null);
@@ -77,10 +77,6 @@ export default function AdminCalendar() {
       .sort((a, b) => dayjs(a.startTime).diff(dayjs(b.startTime)));
   }
 
-  const daysInMonth = Array.from(
-    { length: currentMonth.daysInMonth() },
-    (_, i) => currentMonth.date(i + 1)
-  );
 
 function getEventColors(type: string) {
   switch (type) {
@@ -139,21 +135,26 @@ function getEventIcon(type: string) {
   }
 }
 
+if (!currentMonth || !selectedDate) return null;
+
 const startOfMonth = currentMonth.startOf("month");
 
-const startWeekDay = startOfMonth.day(); // 0-6 (Sun-Sat)
+const startWeekDay = startOfMonth.day();
 
 const calendarDays: (dayjs.Dayjs | null)[] = [];
 
-// Empty slots before month starts
 for (let i = 0; i < startWeekDay; i++) {
   calendarDays.push(null);
 }
 
-// Actual month days
 for (let i = 1; i <= currentMonth.daysInMonth(); i++) {
   calendarDays.push(currentMonth.date(i));
 }
+
+const daysInMonth = Array.from(
+  { length: currentMonth.daysInMonth() },
+  (_, i) => currentMonth.date(i + 1)
+);
 
   return (
   <>

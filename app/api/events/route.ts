@@ -57,7 +57,7 @@ export async function GET() {
     where: {
       OR: [
         { isGlobal: true },
-        { creatorId: userId }, // 🔥 THIS FIXES STUDENT CREATION BUG
+        { creatorId: userId },
         {
           group: {
             students: {
