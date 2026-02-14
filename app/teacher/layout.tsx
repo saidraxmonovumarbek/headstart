@@ -68,7 +68,7 @@ export default function TeacherLayout({
   ];
 
   return (
-    <div className="relative flex h-screen overflow-hidden bg-white">
+  <div className="relative flex h-screen overflow-hidden bg-white">
       {/* Sidebar */}
 
 {/* MOBILE HEADER */}
@@ -278,10 +278,9 @@ export default function TeacherLayout({
   />
 )}
 
-      {/* Content */}
       <main className="flex-1 overflow-y-auto bg-white pt-16 px-4 sm:px-6 lg:p-10">
-        {children}
-      </main>
+      {children}
+    </main>
     </div>
   );
 }
