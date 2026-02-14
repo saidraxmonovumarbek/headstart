@@ -5,6 +5,8 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { useSession } from "next-auth/react";
+import ReflectionBox from "@/app/components/calendar/ReflectionBox";
+import MonthlyGoalsBox from "@/app/components/calendar/MonthlyGoalsBox";
 import { 
   MoreVertical, 
   ChevronLeft, 
@@ -32,18 +34,9 @@ export default function AdminCalendar() {
   const [shake, setShake] = useState(false);
   const { data: session } = useSession();
   const role = (session?.user as any)?.role;
-  const REFLECTION_WORD_LIMIT = 100;
 
-  const [reflection, setReflection] = useState("");
-  const [reflectionWords, setReflectionWords] = useState(0);
-  const [reflectionLoading, setReflectionLoading] = useState(false);
-
-  const [goals, setGoals] = useState<string[]>(["", "", ""]);
-  const [goalsLoading, setGoalsLoading] = useState(false);
   const [monthDirection, setMonthDirection] = useState<"left" | "right">("right");
-  const [reflectionDate, setReflectionDate] = useState(
-  dayjs().tz("Asia/Tashkent").format("YYYY-MM-DD")
-);
+  
 
   useEffect(() => {
   fetchEvents();
@@ -61,129 +54,6 @@ export default function AdminCalendar() {
   }, 100);
 
 }, []);
-
-useEffect(() => {
-  const dateKey = selectedDate.format("YYYY-MM-DD");
-  setReflectionDate(dateKey);
-
-  async function loadReflection() {
-    try {
-      setReflectionLoading(true);
-
-      const res = await fetch(
-        `/api/reflection?date=${selectedDate.format("YYYY-MM-DD")}`
-      );
-
-      if (!res.ok) {
-        setReflection("");
-        setReflectionWords(0);
-        return;
-      }
-
-      const text = await res.text();
-
-      if (!text) {
-        setReflection("");
-        setReflectionWords(0);
-        return;
-      }
-
-      const data = JSON.parse(text);
-
-      setReflection(data?.content || "");
-      setReflectionWords(countWords(data?.content || ""));
-    } catch (err) {
-      console.error("Reflection load error:", err);
-      setReflection("");
-      setReflectionWords(0);
-    } finally {
-      setReflectionLoading(false);
-    }
-  }
-
-  loadReflection();
-}, [selectedDate]);
-
-useEffect(() => {
-  if (reflectionLoading) return;
-
-  const timeout = setTimeout(async () => {
-    try {
-      await fetch("/api/reflection", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          date: reflectionDate, // 🔥 use fixed date snapshot
-          content: reflection,
-        }),
-      });
-    } catch (err) {
-      console.error("Reflection save error:", err);
-    }
-  }, 600);
-
-  return () => clearTimeout(timeout);
-}, [reflection, reflectionDate]);
-
-useEffect(() => {
-  async function loadGoals() {
-    try {
-      setGoalsLoading(true);
-
-      const res = await fetch(
-        `/api/monthly-goals?month=${currentMonth.format("YYYY-MM")}`
-      );
-
-      if (!res.ok) {
-        setGoals(["", "", ""]);
-        return;
-      }
-
-      const text = await res.text();
-
-      if (!text) {
-        setGoals(["", "", ""]);
-        return;
-      }
-
-      const data = JSON.parse(text);
-
-      if (data?.goals?.length) {
-        setGoals(data.goals);
-      } else {
-        setGoals(["", "", ""]);
-      }
-    } catch (err) {
-      console.error("Goals load error:", err);
-      setGoals(["", "", ""]);
-    } finally {
-      setGoalsLoading(false);
-    }
-  }
-
-  loadGoals();
-}, [currentMonth]);
-
-useEffect(() => {
-  if (goalsLoading) return;
-
-  const timeout = setTimeout(async () => {
-    const cleanedGoals = goals
-      .map((g) => g.trim())
-      .filter((g) => g.length > 0);
-
-    await fetch("/api/monthly-goals", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        month: currentMonth.format("YYYY-MM"),
-        goals: cleanedGoals,
-      }),
-    });
-  }, 800);
-
-  return () => clearTimeout(timeout);
-}, [goals, currentMonth]);
 
   async function fetchEvents() {
   try {
@@ -498,24 +368,13 @@ for (let i = 1; i <= currentMonth.daysInMonth(); i++) {
       <div key={index}>
         {day ? (
           <button
-  onClick={async () => {
-    try {
-      // 🔥 FORCE SAVE CURRENT REFLECTION BEFORE SWITCHING
-      await fetch("/api/reflection", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          date: reflectionDate,
-          content: reflection,
-        }),
-      });
-    } catch (err) {
-      console.error("Force save error:", err);
-    }
+  onClick={() => {
+    // 🔥 Fire-and-forget save (NO await, NO async)
 
-    // Now switch date
+    // 🚀 Immediately switch date (no waiting)
     setSelectedDate(day);
 
+    // Smooth scroll
     setTimeout(() => {
       const el = document.getElementById(
         `day-${day.format("YYYY-MM-DD")}`
@@ -523,14 +382,14 @@ for (let i = 1; i <= currentMonth.daysInMonth(); i++) {
       el?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 50);
   }}
-            className={`w-8 h-8 rounded-full transition ${
-              day.isSame(selectedDate, "day")
-                ? "bg-white text-emerald-600 font-bold"
-                : "hover:bg-white/30"
-            }`}
-          >
-            {day.date()}
-          </button>
+  className={`w-8 h-8 rounded-full transition ${
+    day.isSame(selectedDate, "day")
+      ? "bg-white text-emerald-600 font-bold"
+      : "hover:bg-white/30"
+  }`}
+>
+  {day.date()}
+</button>
         ) : (
           <div className="w-8 h-8" />
         )}
@@ -541,84 +400,9 @@ for (let i = 1; i <= currentMonth.daysInMonth(); i++) {
   {/* SCROLLABLE LOWER SECTION */}
 <div className="flex-1 overflow-y-auto space-y-8">
 
-  {/* DAILY REFLECTION */}
-  <div>
-    <h3 className="text-sm font-semibold mb-2">
-      Reflect on {selectedDate.format("MMMM D")}
-    </h3>
+  <ReflectionBox selectedDate={selectedDate} />
 
-    <textarea
-      value={reflection}
-      onChange={(e) => {
-        const text = e.target.value;
-        const words = countWords(text);
-
-        if (words <= REFLECTION_WORD_LIMIT) {
-          setReflection(text);
-          setReflectionWords(words);
-        }
-      }}
-      className="w-full min-h-[100px] rounded-xl p-3 text-sm text-black resize-none outline-none"
-      placeholder="Briefly reflect on your day, what you learned, achieved, or improved..."
-    />
-
-    <div className="text-xs mt-1 opacity-70 text-right">
-      {reflectionWords} / {REFLECTION_WORD_LIMIT} words
-    </div>
-  </div>
-
-  {/* MONTHLY GOALS */}
-<div>
-  <h3 className="text-sm font-semibold mb-3">
-    What are your goals for {currentMonth.format("MMMM")}?
-  </h3>
-
-  <div className="space-y-2">
-    {goals.map((goal, index) => (
-      <div
-        key={index}
-        className="relative group"
-      >
-        <input
-          value={goal}
-          onChange={(e) => {
-            const updated = [...goals];
-            updated[index] = e.target.value;
-            setGoals(updated);
-          }}
-          className="w-full rounded-lg p-2 pr-8 text-sm text-black outline-none"
-          placeholder={`Goal ${index + 1}`}
-        />
-
-        {/* HOVER DELETE BUTTON */}
-        {goals.length > 1 && (
-          <button
-            onClick={() => {
-              const updated = goals.filter((_, i) => i !== index);
-              setGoals(updated);
-            }}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-red-500 opacity-0 group-hover:opacity-100 transition text-xs"
-          >
-            −
-          </button>
-        )}
-      </div>
-    ))}
-  </div>
-
-  {goals.length < 7 && (
-    <button
-      onClick={() => setGoals([...goals, ""])}
-      className="mt-2 text-xs opacity-80 hover:opacity-100 transition"
-    >
-      + Add goal
-    </button>
-  )}
-
-  <div className="text-xs mt-2 opacity-60 text-right">
-    {goals.length} / 7 goals
-  </div>
-</div>
+  <MonthlyGoalsBox currentMonth={currentMonth} />
 
 </div> {/* END SCROLLABLE LOWER SECTION */}
 </div> {/* END ANIMATION INNER */}
