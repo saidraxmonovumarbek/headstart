@@ -52,6 +52,24 @@ export default function ReflectionBox({
     return () => clearTimeout(timeout);
   }, [reflection, reflectionDate]);
 
+  useEffect(() => {
+  function handleBeforeUnload() {
+    navigator.sendBeacon(
+      "/api/reflection",
+      JSON.stringify({
+        date: reflectionDate,
+        content: reflection,
+      })
+    );
+  }
+
+  window.addEventListener("beforeunload", handleBeforeUnload);
+
+  return () => {
+    window.removeEventListener("beforeunload", handleBeforeUnload);
+  };
+}, [reflection, reflectionDate]);
+
   function countWords(text: string) {
     return text.trim().split(/\s+/).filter(Boolean).length;
   }

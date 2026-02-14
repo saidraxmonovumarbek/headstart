@@ -30,13 +30,45 @@ export async function GET(req: Request) {
 }
 
 // CREATE / UPDATE reflection
+// CREATE / UPDATE reflection
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
+
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { date, content } = await req.json();
+  let date: string | null = null;
+  let content: string | null = null;
+
+  try {
+    // Normal fetch (application/json)
+    const body = await req.json();
+    date = body?.date ?? null;
+    content = body?.content ?? "";
+  } catch {
+    try {
+      // sendBeacon fallback (raw text body)
+      const text = await req.text();
+      if (text) {
+        const parsed = JSON.parse(text);
+        date = parsed?.date ?? null;
+        content = parsed?.content ?? "";
+      }
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid request body" },
+        { status: 400 }
+      );
+    }
+  }
+
+  if (!date) {
+    return NextResponse.json(
+      { error: "Missing date" },
+      { status: 400 }
+    );
+  }
 
   const userId = (session.user as any).id;
 
@@ -48,12 +80,12 @@ export async function POST(req: Request) {
       },
     },
     update: {
-      content,
+      content: content ?? "",
     },
     create: {
       userId,
       date,
-      content,
+      content: content ?? "",
     },
   });
 
