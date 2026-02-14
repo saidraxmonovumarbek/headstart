@@ -27,6 +27,7 @@ export default function StudentLayout({
   const [confirmLogout, setConfirmLogout] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -43,6 +44,10 @@ export default function StudentLayout({
     return () =>
       document.removeEventListener("mousedown", handleClickOutside);
   }, [openMenu]);
+
+  useEffect(() => {
+  setMobileOpen(false);
+}, [pathname]);
 
   if (status === "loading") return null;
 
@@ -64,11 +69,39 @@ export default function StudentLayout({
   return (
     <div className="flex h-screen overflow-hidden bg-white">
       {/* Sidebar */}
+
+{/* MOBILE HEADER */}
+<div className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-white border-b flex items-center px-4 z-40">
+  <button
+    onClick={() => setMobileOpen((prev) => !prev)}
+    className="p-2 mr-3 flex flex-col justify-center"
+  >
+    <span className="block w-6 h-[2px] bg-gray-800 mb-1 rounded" />
+    <span className="block w-4 h-[2px] bg-gray-800 rounded" />
+  </button>
+
+  <span className="text-green-600 font-semibold text-lg">
+    Headstart
+  </span>
+</div>
+
+{mobileOpen && (
+  <div
+    className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+    onClick={() => setMobileOpen(false)}
+  />
+)}
+
       <aside
-        className={`border-r bg-white flex flex-col transition-[width] duration-300 ease-in-out ${
-          collapsed ? "w-20" : "w-72"
-        }`}
-      >
+  className={`
+    fixed lg:static top-0 left-0 h-full bg-white flex flex-col z-50
+    transition-all duration-300 ease-in-out
+    w-[75%]
+    lg:border-r lg:border-gray-200
+    ${collapsed ? "lg:w-20" : "lg:w-72"}
+    ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+  `}
+>
         {/* Logo + Toggle */}
         <div
           className={`group relative flex items-center ${
@@ -238,7 +271,10 @@ export default function StudentLayout({
         </div>
       </aside>
 
-      <main className="flex-1 overflow-y-auto p-10 bg-white">{children}</main>
+      <main className="flex-1 overflow-y-auto bg-white pt-16 px-4 sm:px-6 lg:p-10">
+  {children}
+</main>
+
     </div>
   );
 }
