@@ -7,37 +7,51 @@ export default function ReflectionBox({
 }: {
   selectedDate: any;
 }) {
-  const REFLECTION_WORD_LIMIT = 100;
+  const REFLECTION_WORD_LIMIT = 1000;
 
-  const [reflection, setReflection] = useState("");
+  const [reflection, setReflection] = useState<string | null>(null);
   const [reflectionWords, setReflectionWords] = useState(0);
+  const [isInitialized, setIsInitialized] = useState(false);
   const [reflectionDate, setReflectionDate] = useState(
     selectedDate.format("YYYY-MM-DD")
   );
 
   useEffect(() => {
     const dateKey = selectedDate.format("YYYY-MM-DD");
+
+    setIsInitialized(false);
+    setReflection(null); // 🔥 prevent flicker
     setReflectionDate(dateKey);
 
     async function loadReflection() {
-      const res = await fetch(`/api/reflection?date=${dateKey}`);
-      if (!res.ok) {
+      try {
+        const res = await fetch(`/api/reflection?date=${dateKey}`);
+
+        if (!res.ok) {
+          setReflection("");
+          setReflectionWords(0);
+          return;
+        }
+
+        const data = await res.json();
+        const content = data?.content || "";
+
+        setReflection(content);
+        setReflectionWords(countWords(content));
+      } catch {
         setReflection("");
         setReflectionWords(0);
-        return;
       }
-
-      const data = await res.json();
-      const content = data?.content || "";
-
-      setReflection(content);
-      setReflectionWords(countWords(content));
     }
 
-    loadReflection();
+    loadReflection().then(() => {
+      setIsInitialized(true);
+    });
   }, [selectedDate]);
 
   useEffect(() => {
+    if (reflection === null) return;
+
     const timeout = setTimeout(() => {
       fetch("/api/reflection", {
         method: "POST",
@@ -50,38 +64,44 @@ export default function ReflectionBox({
     }, 600);
 
     return () => clearTimeout(timeout);
-  }, [reflection, reflectionDate]);
+  }, [reflection, reflectionDate, isInitialized]);
 
   useEffect(() => {
-  function handleBeforeUnload() {
-    navigator.sendBeacon(
-      "/api/reflection",
-      JSON.stringify({
-        date: reflectionDate,
-        content: reflection,
-      })
-    );
-  }
+    function handleBeforeUnload() {
+      if (reflection === null) return;
 
-  window.addEventListener("beforeunload", handleBeforeUnload);
+      navigator.sendBeacon(
+        "/api/reflection",
+        JSON.stringify({
+          date: reflectionDate,
+          content: reflection,
+        })
+      );
+    }
 
-  return () => {
-    window.removeEventListener("beforeunload", handleBeforeUnload);
-  };
-}, [reflection, reflectionDate]);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [reflection, reflectionDate]);
 
   function countWords(text: string) {
     return text.trim().split(/\s+/).filter(Boolean).length;
   }
 
   return (
-    <div>
+  <div
+    className={`transition-opacity duration-150 ${
+      reflection === null ? "opacity-0" : "opacity-100"
+    }`}
+  >
       <h3 className="text-sm font-semibold mb-2">
         Reflect on {selectedDate.format("MMMM D")}
       </h3>
 
       <textarea
-        value={reflection}
+  value={reflection ?? ""}
         onChange={(e) => {
           const text = e.target.value;
           const words = countWords(text);
@@ -92,7 +112,7 @@ export default function ReflectionBox({
           }
         }}
         className="w-full min-h-[100px] rounded-xl p-3 text-sm text-black resize-none outline-none"
-        placeholder="Briefly reflect on your day..."
+        placeholder="Briefly reflect on your day — what you achieved, what you learned, or any thoughts you’d like to note."
       />
 
       <div className="text-xs mt-1 opacity-70 text-right">

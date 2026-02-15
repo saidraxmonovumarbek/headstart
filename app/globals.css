@@ -117,3 +117,16 @@ body {
 .animate-shake {
   animation: shake 0.4s ease-in-out;
 }
+
+@keyframes loadingBar {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-loading-bar {
+  animation: loadingBar 1.2s ease-out forwards;
+}

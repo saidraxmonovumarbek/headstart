@@ -7,49 +7,43 @@ interface Props {
 }
 
 export default function MonthlyGoalsBox({ currentMonth }: Props) {
-  const [goals, setGoals] = useState<string[]>(["", "", ""]);
-  const [loading, setLoading] = useState(false);
+  const [goals, setGoals] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const MAX_GOALS = 6;
 
   useEffect(() => {
-    async function loadGoals() {
-      try {
-        setLoading(true);
+  setLoading(true);
 
-        const res = await fetch(
-          `/api/monthly-goals?month=${currentMonth.format("YYYY-MM")}`
-        );
+  async function loadGoals() {
+    try {
+      const res = await fetch(
+        `/api/monthly-goals?month=${currentMonth.format("YYYY-MM")}`
+      );
 
-        if (!res.ok) {
-          setGoals(["", "", ""]);
-          return;
-        }
-
-        const text = await res.text();
-
-        if (!text) {
-          setGoals(["", "", ""]);
-          return;
-        }
-
-        const data = JSON.parse(text);
-
-        if (data?.goals?.length) {
-          setGoals(data.goals);
-        } else {
-          setGoals(["", "", ""]);
-        }
-      } catch {
+      if (!res.ok) {
         setGoals(["", "", ""]);
-      } finally {
-        setLoading(false);
+        return;
       }
-    }
 
-    loadGoals();
-  }, [currentMonth]);
+      const data = await res.json();
+
+      if (data?.goals?.length) {
+        setGoals(data.goals);
+      } else {
+        setGoals(["", "", ""]);
+      }
+    } catch {
+      setGoals(["", "", ""]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  loadGoals();
+}, [currentMonth]);
 
   useEffect(() => {
-    if (loading) return;
+  if (loading) return;
 
     const timeout = setTimeout(async () => {
       const cleanedGoals = goals
@@ -70,7 +64,11 @@ export default function MonthlyGoalsBox({ currentMonth }: Props) {
   }, [goals, currentMonth, loading]);
 
   return (
-    <div>
+  <div
+    className={`transition-opacity duration-150 ${
+      loading ? "opacity-0" : "opacity-100"
+    }`}
+  >
       <h3 className="text-sm font-semibold mb-3">
         What are your goals for {currentMonth.format("MMMM")}?
       </h3>
@@ -104,7 +102,7 @@ export default function MonthlyGoalsBox({ currentMonth }: Props) {
         ))}
       </div>
 
-      {goals.length < 7 && (
+      {goals.length < MAX_GOALS && (
         <button
           onClick={() => setGoals([...goals, ""])}
           className="mt-2 text-xs opacity-80 hover:opacity-100 transition"
@@ -114,7 +112,7 @@ export default function MonthlyGoalsBox({ currentMonth }: Props) {
       )}
 
       <div className="text-xs mt-2 opacity-60 text-right">
-        {goals.length} / 7 goals
+        {goals.length} / {MAX_GOALS} goals
       </div>
     </div>
   );

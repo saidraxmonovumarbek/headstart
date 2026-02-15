@@ -132,9 +132,9 @@ useEffect(() => {
   <button
     onClick={() => {
   if (window.innerWidth < 1024) {
-    setMobileOpen(false);
+    setMobileOpen((prev) => !prev);
   } else {
-    setCollapsed(!collapsed);
+    setCollapsed((prev) => !prev);
   }
 }}
     className={`${
@@ -270,7 +270,26 @@ useEffect(() => {
         <span className="text-sm font-medium">Logout</span>
       </button>
 
-      {/* Logout Confirmation Modal */}
+    </div>
+  )}
+
+</div>
+      </aside>
+
+      {/* MOBILE OVERLAY */}
+{mobileOpen && (
+  <div
+    onClick={() => setMobileOpen(false)}
+    className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+  />
+)}
+
+      {/* Content */}
+      <main className="flex-1 overflow-y-auto bg-white pt-16 px-4 sm:px-6 lg:p-10">
+        {children}
+      </main>
+
+{/* Logout Confirmation Modal */}
 {confirmLogout && (
   <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
     <div className="bg-white rounded-2xl p-6 w-[320px] shadow-xl">
@@ -297,24 +316,6 @@ useEffect(() => {
   </div>
 )}
 
-    </div>
-  )}
-
-</div>
-      </aside>
-
-      {/* MOBILE OVERLAY */}
-{mobileOpen && (
-  <div
-    onClick={() => setMobileOpen(false)}
-    className="fixed inset-0 bg-black/40 z-40 lg:hidden"
-  />
-)}
-
-      {/* Content */}
-      <main className="flex-1 overflow-y-auto bg-white pt-16 px-4 sm:px-6 lg:p-10">
-        {children}
-      </main>
     </div>
   );
 }

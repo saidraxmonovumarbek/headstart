@@ -7,6 +7,7 @@ import timezone from "dayjs/plugin/timezone";
 import { useSession } from "next-auth/react";
 import ReflectionBox from "@/app/components/calendar/ReflectionBox";
 import MonthlyGoalsBox from "@/app/components/calendar/MonthlyGoalsBox";
+import { Shield, ShieldOff } from "lucide-react";
 import { 
   MoreVertical, 
   ChevronLeft, 
@@ -16,9 +17,9 @@ import {
   BookOpen,
   User,
   CheckCircle,
-  TrendingUp,       // Habits
-  HeartPulse,   // Health
-  Layers        // Others
+  TrendingUp,
+  HeartPulse,
+  Layers
 } from "lucide-react";
 
 dayjs.extend(utc);
@@ -26,8 +27,11 @@ dayjs.extend(timezone);
 
 export default function AdminCalendar() {
   const [events, setEvents] = useState<any[]>([]);
-  const [currentMonth, setCurrentMonth] = useState<dayjs.Dayjs | null>(null);
-  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const today = dayjs().tz("Asia/Tashkent");
+
+  const [currentMonth, setCurrentMonth] = useState<dayjs.Dayjs>(today);
+  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(today);
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState<any>(null);
   const [warning, setWarning] = useState<string | null>(null);
@@ -36,34 +40,48 @@ export default function AdminCalendar() {
   const role = (session?.user as any)?.role;
 
   const [monthDirection, setMonthDirection] = useState<"left" | "right">("right");
+  const [privacyEnabled, setPrivacyEnabled] = useState(() => {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("calendarPrivacy");
+    if (saved !== null) return saved === "true";
+  }
+  return false;
+});
   
 
   useEffect(() => {
-  fetchEvents();
+  async function init() {
+    await fetchEvents();
 
-  const today = dayjs().tz("Asia/Tashkent");
+    requestAnimationFrame(() => {
+      const el = document.getElementById(
+        `day-${today.format("YYYY-MM-DD")}`
+      );
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  setCurrentMonth(today);
-  setSelectedDate(today);
+      setIsLoading(false);
+    });
 
-  setTimeout(() => {
-    const el = document.getElementById(
-      `day-${today.format("YYYY-MM-DD")}`
-    );
-    el?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, 100);
+  }
 
+  init();
 }, []);
 
-  async function fetchEvents() {
+useEffect(() => {
+  localStorage.setItem("calendarPrivacy", String(privacyEnabled));
+}, [privacyEnabled]);
+
+async function fetchEvents() {
   try {
     const res = await fetch("/api/events");
-    if (!res.ok) return;
+    if (!res.ok) return [];
 
     const data = await res.json();
     setEvents(data);
+    return data;
   } catch (err) {
     console.error("Failed to fetch events");
+    return [];
   }
 }
 
@@ -135,8 +153,6 @@ function getEventIcon(type: string) {
   }
 }
 
-if (!currentMonth || !selectedDate) return null;
-
 const startOfMonth = currentMonth.startOf("month");
 
 const startWeekDay = startOfMonth.day();
@@ -156,6 +172,24 @@ const daysInMonth = Array.from(
   (_, i) => currentMonth.date(i + 1)
 );
 
+if (isLoading) {
+  return (
+    <div className="flex flex-col xl:flex-row gap-8 h-full">
+      <div className="flex-1 flex items-center justify-center">
+        <div className="w-full max-w-md px-6 text-center">
+          <p className="text-emerald-600 text-lg font-semibold mb-6">
+            Loading our calendar...
+          </p>
+
+          <div className="w-full h-2 bg-emerald-100 rounded-full overflow-hidden">
+            <div className="h-full bg-emerald-500 animate-loading-bar" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
   return (
   <>
     {warning && (
@@ -172,7 +206,9 @@ const daysInMonth = Array.from(
 
     <div className="flex flex-col xl:flex-row gap-8 h-full">
 
+
       {/* CENTER */}
+
       <div className="flex-1 bg-green-100 rounded-3xl p-6 sm:p-10 overflow-y-auto">
 
         {/* MONTH HEADER */}
@@ -309,10 +345,10 @@ const daysInMonth = Array.from(
       </div>
 
       {/* RIGHT MONTH MINI CALENDAR + REFLECTION + GOALS */}
-<div className="hidden xl:flex flex-col w-[300px] bg-emerald-400 text-white rounded-3xl p-6 h-full">
+<div className="hidden xl:flex flex-col w-[300px] bg-emerald-400 text-white rounded-3xl p-6 h-full min-h-0 relative">
 
   {/* MONTH HEADER */}
-<div className="flex items-center justify-between mb-6">
+<div className="relative flex items-center justify-center mb-6">
   <button
   onClick={() => {
     setMonthDirection("left");
@@ -398,16 +434,73 @@ const daysInMonth = Array.from(
     ))}
   </div>
 
-  {/* SCROLLABLE LOWER SECTION */}
-<div className="flex-1 overflow-y-auto space-y-8">
+  {/* JOURNAL + GOALS SECTION */}
+<div className="relative flex-1 mt-2 min-h-0 h-full">
 
-  <ReflectionBox selectedDate={selectedDate} />
+  {/* WRAPPER (needed for positioning) */}
+  <div className={`relative h-full ${privacyEnabled ? "group" : ""}`}>
 
-  <MonthlyGoalsBox currentMonth={currentMonth} />
+    {/* SCROLLABLE CONTENT */}
+    <div
+      className={`
+        h-full overflow-y-auto space-y-8 pr-1 transition-opacity duration-300
+        ${privacyEnabled ? "opacity-0 group-hover:opacity-100" : "opacity-100"}
+      `}
+    >
+      <ReflectionBox selectedDate={selectedDate} />
+      <MonthlyGoalsBox currentMonth={currentMonth} />
 
-</div> {/* END SCROLLABLE LOWER SECTION */}
+      {/* bottom spacing so toggle never overlaps */}
+      <div className="h-16" />
+    </div>
+
+    {/* PRIVACY COVER */}
+    {privacyEnabled && (
+  <div className="absolute inset-0 z-20 bg-emerald-400 rounded-2xl 
+                  transition-opacity duration-300 
+                  group-hover:opacity-0 opacity-100 
+                  pointer-events-none 
+                  will-change-transform 
+                  transform-gpu">
+
+  {privacyEnabled && (
+  <div
+    className="absolute inset-0 z-20 bg-emerald-400 rounded-2xl 
+               transition-opacity duration-300 
+               group-hover:opacity-0 opacity-100 
+               pointer-events-none 
+               will-change-transform 
+               transform-gpu"
+  />
+)}
+
+</div>
+    )}
+
+  </div>
+</div>
 </div> {/* END ANIMATION INNER */}
 </div> {/* END ANIMATION OUTER WRAPPER */}
+
+{/* STRICT BOTTOM PRIVACY TOGGLE */}
+<div className="absolute bottom-4 left-0 right-0 flex justify-center z-40">
+  <button
+    onClick={() => setPrivacyEnabled(!privacyEnabled)}
+    className="flex items-center gap-2 text-xs text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full transition"
+  >
+    {privacyEnabled ? (
+      <>
+        <ShieldOff size={14} />
+        Disable privacy shield
+      </>
+    ) : (
+      <>
+        <Shield size={14} />
+        Enable privacy shield
+      </>
+    )}
+  </button>
+</div>
 
 </div> {/* END RIGHT SIDEBAR */}
 
@@ -426,6 +519,7 @@ const daysInMonth = Array.from(
 )}
 
 </div>
+
 </>
 );
 }
