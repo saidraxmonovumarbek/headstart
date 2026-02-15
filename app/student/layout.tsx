@@ -116,8 +116,14 @@ export default function StudentLayout({
             }`}
           />
 
-          <button
-            onClick={() => setCollapsed(!collapsed)}
+  <button
+    onClick={() => {
+  if (window.innerWidth < 1024) {
+    setMobileOpen((prev) => !prev);
+  } else {
+    setCollapsed((prev) => !prev);
+  }
+}}
             className={`${
               collapsed
                 ? "absolute opacity-0 group-hover:opacity-100"
@@ -241,7 +247,16 @@ export default function StudentLayout({
                 <span className="text-sm font-medium">Logout</span>
               </button>
 
-              {confirmLogout && (
+            </div>
+          )}
+        </div>
+      </aside>
+
+      <main className="flex-1 overflow-y-auto bg-white pt-16 px-4 sm:px-6 lg:p-10">
+  {children}
+</main>
+
+{confirmLogout && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                   <div className="bg-white rounded-2xl p-6 w-[320px] shadow-xl">
                     <h3 className="text-lg font-semibold mb-3">
@@ -266,14 +281,6 @@ export default function StudentLayout({
                   </div>
                 </div>
               )}
-            </div>
-          )}
-        </div>
-      </aside>
-
-      <main className="flex-1 overflow-y-auto bg-white pt-16 px-4 sm:px-6 lg:p-10">
-  {children}
-</main>
 
     </div>
   );

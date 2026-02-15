@@ -110,12 +110,12 @@ export default function TeacherLayout({
             }`}
           />
 
-          <button
-            onClick={() => {
+            <button
+    onClick={() => {
   if (window.innerWidth < 1024) {
-    setMobileOpen(false);
+    setMobileOpen((prev) => !prev);
   } else {
-    setCollapsed(!collapsed);
+    setCollapsed((prev) => !prev);
   }
 }}
             className={`${
@@ -241,7 +241,23 @@ export default function TeacherLayout({
                 <span className="text-sm font-medium">Logout</span>
               </button>
 
-              {confirmLogout && (
+            </div>
+          )}
+        </div>
+      </aside>
+
+      {mobileOpen && (
+  <div
+    onClick={() => setMobileOpen(false)}
+    className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+  />
+)}
+
+      <main className="flex-1 overflow-y-auto bg-white pt-16 px-4 sm:px-6 lg:p-10">
+      {children}
+    </main>
+
+{confirmLogout && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                   <div className="bg-white rounded-2xl p-6 w-[320px] shadow-xl">
                     <h3 className="text-lg font-semibold mb-3">
@@ -266,21 +282,7 @@ export default function TeacherLayout({
                   </div>
                 </div>
               )}
-            </div>
-          )}
-        </div>
-      </aside>
 
-      {mobileOpen && (
-  <div
-    onClick={() => setMobileOpen(false)}
-    className="fixed inset-0 bg-black/40 z-40 lg:hidden"
-  />
-)}
-
-      <main className="flex-1 overflow-y-auto bg-white pt-16 px-4 sm:px-6 lg:p-10">
-      {children}
-    </main>
     </div>
   );
 }
