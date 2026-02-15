@@ -52,20 +52,32 @@ export default function AdminCalendar() {
   useEffect(() => {
   async function init() {
     await fetchEvents();
-
-    requestAnimationFrame(() => {
-      const el = document.getElementById(
-        `day-${today.format("YYYY-MM-DD")}`
-      );
-      el?.scrollIntoView({ behavior: "smooth", block: "start" });
-
-      setIsLoading(false);
-    });
-
+    setIsLoading(false);
   }
 
   init();
 }, []);
+
+
+// 👇 NEW EFFECT — handles smooth scroll AFTER render
+useEffect(() => {
+  if (!isLoading) {
+    const timeout = setTimeout(() => {
+      const el = document.getElementById(
+        `day-${today.format("YYYY-MM-DD")}`
+      );
+
+      if (el) {
+        el.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    }, 100); // small delay ensures DOM is painted
+
+    return () => clearTimeout(timeout);
+  }
+}, [isLoading]);
 
 useEffect(() => {
   localStorage.setItem("calendarPrivacy", String(privacyEnabled));
@@ -99,19 +111,28 @@ async function fetchEvents() {
 function getEventColors(type: string) {
   switch (type) {
     case "GLOBAL":
-      return "bg-blue-200 text-black";
+      // 🔥 Premium green (shining)
+      return "relative bg-gradient-to-r from-emerald-500 to-emerald-600 text-white overflow-hidden";
+
     case "CLASS":
       return "bg-purple-200 text-black";
+
     case "PERSONAL":
       return "bg-yellow-200 text-black";
+
     case "TODO":
       return "bg-rose-300 text-black";
+
     case "HABITS":
       return "bg-slate-300 text-black";
+
     case "HEALTH":
       return "bg-teal-200 text-black";
+
     case "OTHERS":
-  return "bg-emerald-300 text-black";
+      // 💙 Simple blue (old global style without shine)
+      return "bg-blue-300 text-black";
+
     default:
       return "bg-gray-200 text-black";
   }
@@ -135,7 +156,13 @@ function countWords(text: string) {
 function getEventIcon(type: string) {
   switch (type) {
     case "GLOBAL":
-      return <Globe size={18} className="opacity-70" />;
+  return (
+    <img
+      src="/assets/headstartwhite.png"
+      alt="Headstart"
+      className="w-[28px] h-[28px] object-contain drop-shadow-sm"
+    />
+  );
     case "CLASS":
       return <BookOpen size={18} className="opacity-70" />;
     case "PERSONAL":
@@ -265,10 +292,17 @@ if (isLoading) {
   return (
   <div
     key={event.id}
-    className={`group relative flex flex-col md:flex-row md:items-start rounded-2xl px-6 py-5 transition shadow-sm ${getEventColors(event.type)}`}
+    className={`group relative flex flex-row items-center rounded-2xl px-6 py-5 transition shadow-sm ${getEventColors(event.type)}`}
   >
+    {/* ✨ GLOBAL SHINE EFFECT */}
+    {event.type === "GLOBAL" && (
+      <span className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+        <span className="absolute top-0 left-[-75%] h-full w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-global-shine" />
+      </span>
+    )}
+
     {/* TIME */}
-<div className="md:w-[22%] flex-shrink-0 mb-3 md:mb-0 font-semibold text-sm text-black whitespace-normal leading-snug">
+<div className="w-[90px] flex-shrink-0 font-semibold text-sm text-black leading-snug">
   <span className="block">
     {dayjs(event.startTime).tz("Asia/Tashkent").format("HH:mm")} –
   </span>
@@ -278,7 +312,7 @@ if (isLoading) {
 </div>
 
 {/* TITLE + ICON */}
-<div className="flex items-start gap-3 flex-1 min-w-0">
+<div className="flex items-center gap-3 flex-1 min-w-0">
   
   {/* ICON */}
   <div className="mt-1 text-black opacity-70">
@@ -308,7 +342,7 @@ if (isLoading) {
 
   setEditingEvent(event);
 }}
-                        className="absolute right-4 opacity-60 md:opacity-0 md:group-hover:opacity-100 transition p-2 rounded-lg hover:bg-white"
+                        className="absolute right-4 opacity-60 md:opacity-0 md:group-hover:opacity-100 transition p-2"
                       >
                         <MoreVertical size={16} />
                         </button>
@@ -389,7 +423,7 @@ if (isLoading) {
 </div>
 
 {/* ANIMATED MONTH WRAPPER */}
-<div className="overflow-hidden relative w-full">
+<div className="relative w-full">
   <div
     key={currentMonth.format("YYYY-MM")}
     className={`${
@@ -400,7 +434,7 @@ if (isLoading) {
   >
 
   {/* MONTH GRID */}
-  <div className="grid grid-cols-7 gap-2 text-center text-sm mb-8">
+  <div className="grid grid-cols-7 gap-2 text-center text-sm mb-8 justify-items-center">
     {calendarDays.map((day, index) => (
       <div key={index}>
         {day ? (

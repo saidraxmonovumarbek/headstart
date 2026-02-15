@@ -130,3 +130,16 @@ body {
 .animate-loading-bar {
   animation: loadingBar 1.2s ease-out forwards;
 }
+
+@keyframes globalShine {
+  0% {
+    left: -75%;
+  }
+  100% {
+    left: 125%;
+  }
+}
+
+.animate-global-shine {
+  animation: globalShine 4s ease-in-out infinite;
+}
