@@ -205,7 +205,7 @@ if (isLoading) {
       <div className="flex-1 flex items-center justify-center">
         <div className="w-full max-w-md px-6 text-center">
           <p className="text-emerald-600 text-lg font-semibold mb-6">
-            Loading our calendar...
+            Loading your calendar...
           </p>
 
           <div className="w-full h-2 bg-emerald-100 rounded-full overflow-hidden">

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Home,
   BookOpen,
@@ -67,7 +68,7 @@ export default function StudentLayout({
 ];
 
   return (
-    <div className="flex h-screen overflow-hidden bg-white">
+    <div className="relative flex h-screen bg-white">
       {/* Sidebar */}
 
 {/* MOBILE HEADER */}
@@ -94,7 +95,7 @@ export default function StudentLayout({
 
       <aside
   className={`
-    fixed lg:static top-0 left-0 h-full bg-white flex flex-col z-50
+    fixed lg:static top-0 left-0 h-full bg-white flex flex-col z-50 overflow-visible
     transition-all duration-300 ease-in-out
     w-[75%]
     lg:border-r lg:border-gray-200
@@ -142,37 +143,71 @@ export default function StudentLayout({
 
             return (
               <Link
-                key={i}
-                href={item.href}
-                className={`flex items-center px-4 py-3 rounded-xl transition-colors duration-200 ${
-                  active
-                    ? "bg-green-600 text-white"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Icon
-                  size={20}
-                  className={`flex-shrink-0 ${
-                    active ? "text-white" : "text-gray-600"
-                  }`}
-                />
+  key={i}
+  href={item.href}
+  className={`group relative flex items-center px-4 py-3 rounded-xl transition-colors duration-200 ${
+    active
+      ? "bg-green-600 text-white"
+      : "text-gray-700 hover:bg-gray-100"
+  }`}
+>
+  {/* Desktop Animated Icon */}
+  <motion.div
+    className="flex-shrink-0 hidden lg:block"
+    whileHover={{ scale: 1.15 }}
+    transition={{ type: "spring", stiffness: 300, damping: 15 }}
+  >
+    <Icon
+      size={20}
+      className={active ? "text-white" : "text-gray-600"}
+    />
+  </motion.div>
 
-                <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    collapsed
-                      ? "max-w-0 opacity-0 translate-x-[-8px]"
-                      : "max-w-xs opacity-100 translate-x-0 ml-3"
-                  }`}
-                >
-                  <span
-                    className={`whitespace-nowrap font-medium ${
-                      active ? "text-white" : "text-gray-700"
-                    }`}
-                  >
-                    {item.name}
-                  </span>
-                </div>
-              </Link>
+  {/* Mobile Static Icon */}
+  <div className="flex-shrink-0 lg:hidden">
+    <Icon
+      size={20}
+      className={active ? "text-white" : "text-gray-600"}
+    />
+  </div>
+
+  {/* Text */}
+  <div
+    className={`overflow-hidden transition-all duration-300 ease-in-out ${
+      collapsed
+        ? "max-w-0 opacity-0 -translate-x-2"
+        : "max-w-xs opacity-100 translate-x-0 ml-3"
+    }`}
+  >
+    <span
+      className={`whitespace-nowrap font-medium ${
+        active ? "text-white" : "text-gray-700"
+      }`}
+    >
+      {item.name}
+    </span>
+  </div>
+
+  {/* Tooltip (Collapsed Desktop Only) */}
+  {collapsed && (
+    <div
+      className="
+        absolute left-full ml-3 top-1/2 -translate-y-1/2
+        hidden lg:block
+        px-3 py-1.5
+        rounded-lg bg-gray-900 text-white text-sm
+        shadow-lg whitespace-nowrap
+        opacity-0 -translate-x-2
+        group-hover:opacity-100 group-hover:translate-x-0
+        transition-all duration-150
+        pointer-events-none
+        z-50
+      "
+    >
+      {item.name}
+    </div>
+  )}
+</Link>
             );
           })}
         </nav>
