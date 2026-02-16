@@ -13,7 +13,6 @@ import {
   ChevronLeft, 
   ChevronRight, 
   Plus,
-  Globe,
   BookOpen,
   User,
   CheckCircle,
@@ -285,6 +284,13 @@ if (isLoading) {
                 <div className="flex-1 space-y-4">
 
                   {getEventsForDate(day).map((event) => {
+                    const startTz = dayjs(event.startTime).tz("Asia/Tashkent");
+const endTz = dayjs(event.endTime).tz("Asia/Tashkent");
+
+const isNoTime =
+  startTz.isSame(endTz) &&
+  startTz.hour() === 0 &&
+  startTz.minute() === 0;
   const canEdit =
     role === "admin" ||
     (!event.isGlobal && event.creatorId === (session?.user as any)?.id);
@@ -302,14 +308,16 @@ if (isLoading) {
     )}
 
     {/* TIME */}
-<div className="w-[90px] flex-shrink-0 font-semibold text-sm text-black leading-snug">
-  <span className="block">
-    {dayjs(event.startTime).tz("Asia/Tashkent").format("HH:mm")} –
-  </span>
-  <span className="block">
-    {dayjs(event.endTime).tz("Asia/Tashkent").format("HH:mm")}
-  </span>
-</div>
+{!isNoTime && (
+  <div className="w-[90px] flex-shrink-0 font-semibold text-sm text-black leading-snug">
+    <span className="block">
+      {startTz.format("HH:mm")} –
+    </span>
+    <span className="block">
+      {endTz.format("HH:mm")}
+    </span>
+  </div>
+)}
 
 {/* TITLE + ICON */}
 <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -484,8 +492,6 @@ if (isLoading) {
       <ReflectionBox selectedDate={selectedDate} />
       <MonthlyGoalsBox currentMonth={currentMonth} />
 
-      {/* bottom spacing so toggle never overlaps */}
-      <div className="h-16" />
     </div>
 
     {/* PRIVACY COVER */}
@@ -496,17 +502,6 @@ if (isLoading) {
                   pointer-events-none 
                   will-change-transform 
                   transform-gpu">
-
-  {privacyEnabled && (
-  <div
-    className="absolute inset-0 z-20 bg-emerald-400 rounded-2xl 
-               transition-opacity duration-300 
-               group-hover:opacity-0 opacity-100 
-               pointer-events-none 
-               will-change-transform 
-               transform-gpu"
-  />
-)}
 
 </div>
     )}
@@ -567,6 +562,19 @@ function AddEventModal({
 }: any) {
   const [title, setTitle] = useState(existingEvent?.title || "");
   const [type, setType] = useState(existingEvent?.type || "PERSONAL");
+  const [titleError, setTitleError] = useState(false);
+  const [noTime, setNoTime] = useState(() => {
+  if (!existingEvent) return false;
+
+  const startTz = dayjs(existingEvent.startTime).tz("Asia/Tashkent");
+  const endTz = dayjs(existingEvent.endTime).tz("Asia/Tashkent");
+
+  return (
+    startTz.isSame(endTz) &&
+    startTz.hour() === 0 &&
+    startTz.minute() === 0
+  );
+});
   const [start, setStart] = useState(
     existingEvent
       ? dayjs(existingEvent.startTime).format("HH:mm")
@@ -579,6 +587,11 @@ function AddEventModal({
   );
 
   async function handleSubmit() {
+    if (!title.trim()) {
+  setTitleError(true);
+  return;
+}
+
     if (existingEvent) {
       await fetch(`/api/events/${existingEvent.id}`, {
   method: "PUT",
@@ -586,13 +599,17 @@ function AddEventModal({
   body: JSON.stringify({
           title,
           type,
-          startTime: dayjs
-  .tz(date.format("YYYY-MM-DD") + " " + start, "Asia/Tashkent")
-  .toISOString(),
+          startTime: noTime
+  ? dayjs(date).startOf("day").tz("Asia/Tashkent").toISOString()
+  : dayjs
+      .tz(date.format("YYYY-MM-DD") + " " + start, "Asia/Tashkent")
+      .toISOString(),
 
-endTime: dayjs
-  .tz(date.format("YYYY-MM-DD") + " " + end, "Asia/Tashkent")
-  .toISOString(),
+endTime: noTime
+  ? dayjs(date).startOf("day").tz("Asia/Tashkent").toISOString()
+  : dayjs
+      .tz(date.format("YYYY-MM-DD") + " " + end, "Asia/Tashkent")
+      .toISOString(),
         }),
       });
     } else {
@@ -602,13 +619,17 @@ endTime: dayjs
   body: JSON.stringify({
           title,
           type,
-          startTime: dayjs
-  .tz(date.format("YYYY-MM-DD") + " " + start, "Asia/Tashkent")
-  .toISOString(),
+          startTime: noTime
+  ? dayjs(date).startOf("day").tz("Asia/Tashkent").toISOString()
+  : dayjs
+      .tz(date.format("YYYY-MM-DD") + " " + start, "Asia/Tashkent")
+      .toISOString(),
 
-endTime: dayjs
-  .tz(date.format("YYYY-MM-DD") + " " + end, "Asia/Tashkent")
-  .toISOString(),
+endTime: noTime
+  ? dayjs(date).startOf("day").tz("Asia/Tashkent").toISOString()
+  : dayjs
+      .tz(date.format("YYYY-MM-DD") + " " + end, "Asia/Tashkent")
+      .toISOString(),
         }),
       });
     }
@@ -636,17 +657,22 @@ endTime: dayjs
         </h2>
 
         <input
-          className="w-full border p-2 rounded-lg"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+  className={`w-full border p-2 rounded-lg transition ${
+    titleError ? "border-red-500 bg-red-50" : "border-gray-300"
+  }`}
+  placeholder="Title"
+  value={title}
+  onChange={(e) => {
+    setTitle(e.target.value);
+    if (titleError) setTitleError(false);
+  }}
+/>
 
-        <select
-          className="w-full border p-2 rounded-lg"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        >
+<select
+  className="w-full border border-gray-300 p-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-green-400"
+  value={type}
+  onChange={(e) => setType(e.target.value)}
+>
           {role === "admin" && (
   <option value="GLOBAL">Global Event</option>
 )}
@@ -658,20 +684,39 @@ endTime: dayjs
           <option value="OTHERS">Others</option>
         </select>
 
-        <div className="flex gap-2">
-          <input
-            type="time"
-            className="flex-1 border p-2 rounded-lg"
-            value={start}
-            onChange={(e) => setStart(e.target.value)}
-          />
-          <input
-            type="time"
-            className="flex-1 border p-2 rounded-lg"
-            value={end}
-            onChange={(e) => setEnd(e.target.value)}
-          />
-        </div>
+        <div className="space-y-3">
+
+  {/* No Time Toggle */}
+  <button
+    type="button"
+    onClick={() => setNoTime(!noTime)}
+    className={`w-full py-2 rounded-lg border text-sm transition ${
+      noTime
+        ? "bg-green-100 border-green-400 text-green-700"
+        : "bg-gray-50 hover:bg-gray-100"
+    }`}
+  >
+    {noTime ? "✓ No Time Selected" : "No Time"}
+  </button>
+
+  {/* Time Inputs */}
+{!noTime && (
+  <div className="flex gap-2">
+    <input
+      type="time"
+      className="flex-1 border border-gray-300 p-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-green-400"
+      value={start}
+      onChange={(e) => setStart(e.target.value)}
+    />
+    <input
+      type="time"
+      className="flex-1 border border-gray-300 p-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-green-400"
+      value={end}
+      onChange={(e) => setEnd(e.target.value)}
+    />
+  </div>
+)}
+</div>
 
         <div className="flex justify-between items-center">
           {existingEvent && (
