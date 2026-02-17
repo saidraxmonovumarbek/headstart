@@ -31,11 +31,17 @@ model User {
 
   dailyReflections DailyReflection[]
   monthlyGoals     MonthlyGoal[]
+
+  teacherAttendances TeacherAttendance[]
+  studentAttendances StudentAttendance[]
+  payments Payment[]
 }
 
 model Group {
   id           String   @id @default(cuid())
   name         String
+
+  level String? // IELTS | Beginner | Pre-Intermediate | etc
 
   monthlyPrice Int?
 
@@ -55,6 +61,9 @@ model Group {
 
   events       Event[]
   homeworks Homework[]
+
+  attendances StudentAttendance[]
+  payments Payment[]
 }
 
 model AuditLog {
@@ -128,4 +137,44 @@ model MonthlyGoal {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, month])
+}
+
+model TeacherAttendance {
+  id        String   @id @default(cuid())
+  teacher   User     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  teacherId String
+  date      DateTime
+  present   Boolean
+
+  createdAt DateTime @default(now())
+
+  @@index([teacherId, date])
+}
+
+model StudentAttendance {
+  id        String   @id @default(cuid())
+  student   User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String
+  date      DateTime
+  present   Boolean
+
+  createdAt DateTime @default(now())
+
+  @@index([studentId, date])
+  @@index([groupId, date])
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  student   User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String
+  month     String   // "2026-02"
+  paid      Boolean
+  createdAt DateTime @default(now())
+
+  @@index([studentId, month])
 }

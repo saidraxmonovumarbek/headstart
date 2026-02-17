@@ -1,105 +1,77 @@
-import { prisma } from "@/lib/prisma";
-import AnimatedCounter from "@/app/components/AnimatedCounter";
+import { getDashboardStats } from "@/lib/dashboard/stats";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
+import TopStats from "@/app/components/admin/TopStats";
+import StudentBarChart from "@/app/components/admin/StudentBarChart";
+import StudentDonutChart from "@/app/components/admin/StudentDonutChart";
+import LiveClasses from "@/app/components/admin/LiveClasses";
+import PaymentStatus from "@/app/components/admin/PaymentStatus";
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
   const fullName = session?.user?.name || "Admin";
- 
-  const teachers = await prisma.user.count({
-    where: { role: "teacher" },
-  });
 
-  const students = await prisma.user.count({
-    where: { role: "student" },
-  });
-
-  const admins = await prisma.user.count({
-    where: { role: "admin" },
-  });
-
-  const groups = await prisma.group.count();
-
-  const totalUsers = await prisma.user.count();
+  const stats = await getDashboardStats();
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-10">
 
+      {/* HEADER */}
       <div>
-  <h1 className="text-3xl font-bold text-gray-900">
-    Dashboard
-  </h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Welcome, {fullName}
+        </h1>
+        <p className="text-gray-500 mt-2">
+          Here is your real-time system overview
+        </p>
+      </div>
 
-  <p className="text-gray-500 mt-2">
-    Welcome back, {fullName}
-  </p>
-</div>
+      {/* TOP STATS */}
+      <TopStats
+        totalEmployees={stats.totalEmployees}
+        employeeChange={stats.employeeChange}
+        teacherAbsentRate={stats.teacherAbsentRate}
+        studentAbsentRate={stats.studentAbsentRate}
+      />
 
-      {/* GRID LAYOUT */}
-      <div className="grid grid-cols-5 grid-rows-5 gap-6">
+      {/* MIDDLE SECTION */}
+      <div className="grid grid-cols-12 gap-6">
 
-        {/* TOTAL USERS */}
-        <StatCard
-          className="col-span-2 row-span-3"
-          title="Total Users"
-          value={totalUsers}
-        />
+        {/* LEFT — BAR CHART */}
+        <div className="col-span-8 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <StudentBarChart
+            totalStudents={stats.totalStudents}
+            monthlyData={stats.monthlyData}
+            avgStudents={stats.avgStudents}
+          />
+        </div>
 
-        {/* ADMINS */}
-        <StatCard
-          className="row-span-2 col-start-3"
-          title="Admins"
-          value={admins}
-        />
-
-        {/* TEACHERS */}
-        <StatCard
-          className="row-span-2 col-start-4"
-          title="Teachers"
-          value={teachers}
-        />
-
-        {/* STUDENTS */}
-        <StatCard
-          className="row-span-2 col-start-5"
-          title="Students"
-          value={students}
-        />
-
-        {/* GROUPS */}
-        <StatCard
-          className="col-span-2 row-span-2 row-start-4"
-          title="Groups"
-          value={groups}
-        />
+        {/* RIGHT — DONUT CHART */}
+        <div className="col-span-4 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <StudentDonutChart
+            data={stats.levelDistribution}
+            totalStudents={stats.totalStudents}
+          />
+        </div>
 
       </div>
 
-    </div>
-  );
-}
+      {/* BOTTOM SECTION */}
+      <div className="grid grid-cols-12 gap-6">
 
-function StatCard({
-  title,
-  value,
-  className,
-}: {
-  title: string;
-  value: number;
-  className?: string;
-}) {
-  return (
-    <div
-      className={`bg-white border border-green-100 rounded-2xl shadow-sm p-8 flex flex-col justify-between hover:shadow-md transition ${className}`}
-    >
-      <h2 className="text-gray-600 font-medium text-sm uppercase tracking-wide">
-        {title}
-      </h2>
+        {/* LIVE CLASSES */}
+        <div className="col-span-8 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <LiveClasses groups={stats.liveGroups} />
+        </div>
 
-      <div className="text-5xl font-bold text-green-600">
-        <AnimatedCounter value={value} />
+        {/* PAYMENT STATUS */}
+        <div className="col-span-4 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <PaymentStatus completionRate={stats.paymentCompletionRate} />
+        </div>
+
       </div>
+
     </div>
   );
 }
