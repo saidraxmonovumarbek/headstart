@@ -41,9 +41,12 @@ model Group {
   id           String   @id @default(cuid())
   name         String
 
-  level String? // IELTS | Beginner | Pre-Intermediate | etc
-
   monthlyPrice Int?
+
+  level            String?  // Beginner | Elementary | etc
+
+  headstartPercent Int?     // % that goes to learning center
+  teacherPercent   Int?     // % that goes to teacher
 
   // Scheduling logic
   dayType      String?   // ODD | EVEN | INTENSIVE | CUSTOM
@@ -168,13 +171,22 @@ model StudentAttendance {
 
 model Payment {
   id        String   @id @default(cuid())
+
   student   User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId String
+
   group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
+
   month     String   // "2026-02"
-  paid      Boolean
+
+  paid      Boolean  @default(false)
+
+  amountPaid       Int?   // snapshot of monthly price
+  teacherRevenue   Int?   // calculated teacher income
+  headstartRevenue Int?   // calculated center income
+
   createdAt DateTime @default(now())
 
-  @@index([studentId, month])
+  @@unique([studentId, groupId, month])
 }

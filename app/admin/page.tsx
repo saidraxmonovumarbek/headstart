@@ -39,13 +39,12 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-12 gap-6">
 
         {/* LEFT — BAR CHART */}
-        <div className="col-span-8 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <StudentBarChart
-            totalStudents={stats.totalStudents}
-            monthlyData={stats.monthlyData}
-            avgStudents={stats.avgStudents}
-          />
-        </div>
+<div className="col-span-8 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+  <StudentBarChart
+    totalStudents={stats.totalStudents}
+    monthlyData={stats.monthlyData}
+  />
+</div>
 
         {/* RIGHT — DONUT CHART */}
         <div className="col-span-4 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">

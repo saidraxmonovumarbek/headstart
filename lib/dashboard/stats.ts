@@ -75,8 +75,13 @@ export async function getDashboardStats() {
      ================================ */
 
   const totalStudents = await prisma.user.count({
-    where: { role: "student" },
-  });
+  where: {
+    role: "student",
+    groups: {
+      some: {}, // must belong to at least 1 group
+    },
+  },
+});
 
   /* ================================
      STUDENT MONTHLY SNAPSHOT

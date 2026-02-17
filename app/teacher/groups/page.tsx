@@ -15,6 +15,7 @@ export default function TeacherGroupsPage() {
   const [showInvite, setShowInvite] = useState(false);
   const [showHomeworkCreate, setShowHomeworkCreate] = useState(false);
   const [showHomeworkList, setShowHomeworkList] = useState(false);
+  const [showStudents, setShowStudents] = useState(false);
 
   useEffect(() => {
     fetchGroups();
@@ -125,6 +126,17 @@ export default function TeacherGroupsPage() {
               >
                 See Homework
               </button>
+
+              <button
+  onClick={() => {
+    setSelectedGroup(group);
+    setShowStudents(true);
+  }}
+  className="px-4 py-2 bg-purple-600 text-white rounded"
+>
+  See Students
+</button>
+
             </div>
           </div>
         ))}
@@ -208,6 +220,64 @@ export default function TeacherGroupsPage() {
           ))}
         </Modal>
       )}
+
+{/* STUDENTS MODAL */}
+{showStudents && selectedGroup && (
+  <Modal onClose={() => setShowStudents(false)}>
+    <h2 className="text-xl font-bold mb-6">
+      Students in {selectedGroup.name}
+    </h2>
+
+    {(!selectedGroup.students || selectedGroup.students.length === 0) && (
+      <div className="text-gray-400">No students assigned.</div>
+    )}
+
+    <div className="space-y-4">
+      {selectedGroup.students.map((student: any) => {
+        const paid =
+          student.payments?.[0]?.paid ?? false;
+
+        return (
+          <div
+            key={student.id}
+            className="flex items-center justify-between border p-3 rounded"
+          >
+            <div>
+              <div className="font-semibold">
+                {student.name || "No Name"}
+              </div>
+              <div className="text-sm text-gray-500">
+                {student.email}
+              </div>
+            </div>
+
+            <input
+              type="checkbox"
+              checked={paid}
+              onChange={async (e) => {
+                await fetch("/api/payments", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    studentId: student.id,
+                    groupId: selectedGroup.id,
+                    paid: e.target.checked,
+                  }),
+                });
+
+                fetchGroups(); // refresh
+              }}
+              className="w-5 h-5"
+            />
+          </div>
+        );
+      })}
+    </div>
+  </Modal>
+)}
+
     </div>
   );
 }

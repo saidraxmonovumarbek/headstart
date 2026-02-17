@@ -14,17 +14,30 @@ export async function GET() {
   const userId = (session.user as any).id;
 
   if (role === "admin") {
-    const groups = await prisma.group.findMany({
-      include: {
-        teacher1: true,
-        teacher2: true,
-        students: true,
+  const currentMonth = dayjs().format("YYYY-MM");
+
+  const groups = await prisma.group.findMany({
+    include: {
+      teacher1: true,
+      teacher2: true,
+      students: {
+        include: {
+          payments: {
+            where: {
+              month: currentMonth,
+            },
+          },
+        },
       },
-    });
-    return NextResponse.json(groups);
-  }
+    },
+  });
+
+  return NextResponse.json(groups);
+}
 
   if (role === "teacher") {
+  const currentMonth = dayjs().format("YYYY-MM");
+
   const groups = await prisma.group.findMany({
     where: {
       OR: [
@@ -35,8 +48,18 @@ export async function GET() {
     include: {
       teacher1: true,
       teacher2: true,
+      students: {
+        include: {
+          payments: {
+            where: {
+              month: currentMonth,
+            },
+          },
+        },
+      },
     },
   });
+
   return NextResponse.json(groups);
 }
 
@@ -71,6 +94,7 @@ export async function POST(req: Request) {
 
   const {
   name,
+  level,
   monthlyPrice,
   dayType,
   customDays,
@@ -83,6 +107,7 @@ export async function POST(req: Request) {
   const group = await prisma.group.create({
   data: {
     name,
+    level,
     monthlyPrice: Number(monthlyPrice),
     dayType,
     customDays:
