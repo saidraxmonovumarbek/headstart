@@ -7,6 +7,7 @@ export default function GroupsClient({ stats }: any) {
   const [groups, setGroups] = useState<any[]>([]);
   const [teachers, setTeachers] = useState<any[]>([]);
   const [showStudents, setShowStudents] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<any>(null);
 
   const [form, setForm] = useState({
@@ -73,7 +74,16 @@ export default function GroupsClient({ stats }: any) {
 
   return (
     <div className="space-y-10">
-      <h1 className="text-3xl font-bold">Groups</h1>
+      <div className="flex items-center justify-between">
+  <h1 className="text-3xl font-bold">Groups</h1>
+
+  <button
+    onClick={() => setShowCreateModal(true)}
+    className="bg-green-600 text-white px-5 py-2 rounded-lg shadow-sm hover:bg-green-700 transition"
+  >
+    + Add New Group
+  </button>
+</div>
 
       {/* Analytics */}
       <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
@@ -141,133 +151,6 @@ export default function GroupsClient({ stats }: any) {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="bg-white p-6 rounded-xl shadow space-y-4">
-
-        <input
-          placeholder="Group Name"
-          className="border p-2 w-full"
-          onChange={(e) =>
-            setForm({ ...form, name: e.target.value })
-          }
-        />
-
-        <select
-  className="border p-2 w-full"
-  value={form.level}
-  onChange={(e) =>
-    setForm({ ...form, level: e.target.value })
-  }
->
-  <option value="Beginner">Beginner</option>
-  <option value="Elementary">Elementary</option>
-  <option value="Pre-Intermediate">Pre-Intermediate</option>
-  <option value="Intermediate">Intermediate</option>
-  <option value="Upper-Intermediate">Upper-Intermediate</option>
-  <option value="Advanced">Advanced</option>
-  <option value="IELTS">IELTS</option>
-</select>
-
-        <input
-          placeholder="Monthly Price"
-          type="number"
-          className="border p-2 w-full"
-          onChange={(e) =>
-            setForm({ ...form, monthlyPrice: e.target.value })
-          }
-        />
-
-        <select
-  className="border p-2 w-full"
-  onChange={(e) =>
-    setForm({ ...form, dayType: e.target.value })
-  }
->
-  <option value="ODD">Odd Days (Mon/Wed/Fri)</option>
-  <option value="EVEN">Even Days (Tue/Thu/Sat)</option>
-  <option value="INTENSIVE">Intensive (Mon–Sat)</option>
-  <option value="CUSTOM">Custom</option>
-</select>
-
-{form.dayType === "CUSTOM" && (
-  <div className="flex flex-wrap gap-2 mt-3">
-    {["MON","TUE","WED","THU","FRI","SAT"].map((day) => (
-      <button
-        key={day}
-        type="button"
-        onClick={() =>
-          setForm({
-            ...form,
-            customDays: form.customDays.includes(day)
-              ? form.customDays.filter((d) => d !== day)
-              : [...form.customDays, day],
-          })
-        }
-        className={`px-3 py-1 rounded border ${
-          form.customDays.includes(day)
-            ? "bg-green-600 text-white"
-            : "bg-white"
-        }`}
-      >
-        {day}
-      </button>
-    ))}
-  </div>
-)}
-
-        <div className="flex gap-4">
-          <input
-  type="time"
-  className="border p-2 w-full"
-  onChange={(e) =>
-    setForm({ ...form, startTime: e.target.value })
-  }
-/>
-
-<input
-  type="time"
-  className="border p-2 w-full"
-  onChange={(e) =>
-    setForm({ ...form, endTime: e.target.value })
-  }
-/>
-        </div>
-
-        <select
-          className="border p-2 w-full"
-          onChange={(e) =>
-            setForm({ ...form, teacher1Id: e.target.value })
-          }
-        >
-          <option value="">Select Teacher 1</option>
-          {teachers.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.email}
-            </option>
-          ))}
-        </select>
-
-        <select
-          className="border p-2 w-full"
-          onChange={(e) =>
-            setForm({ ...form, teacher2Id: e.target.value })
-          }
-        >
-          <option value="">Select Teacher 2 (Optional)</option>
-          {teachers.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.email}
-            </option>
-          ))}
-        </select>
-
-        <button
-          onClick={createGroup}
-          className="bg-green-600 text-white px-6 py-2 rounded"
-        >
-          Create Group
-        </button>
       </div>
 
       <div className="space-y-4">
@@ -351,6 +234,145 @@ export default function GroupsClient({ stats }: any) {
           </div>
         );
       })}
+    </div>
+  </Modal>
+)}
+
+{/* CREATE GROUP MODAL */}
+{showCreateModal && (
+  <Modal onClose={() => setShowCreateModal(false)}>
+    <h2 className="text-xl font-bold mb-6">
+      Create New Group
+    </h2>
+
+    <div className="space-y-4">
+
+      <input
+        placeholder="Group Name"
+        className="border p-2 w-full"
+        onChange={(e) =>
+          setForm({ ...form, name: e.target.value })
+        }
+      />
+
+      <select
+        className="border p-2 w-full"
+        value={form.level}
+        onChange={(e) =>
+          setForm({ ...form, level: e.target.value })
+        }
+      >
+        <option value="Beginner">Beginner</option>
+        <option value="Elementary">Elementary</option>
+        <option value="Pre-Intermediate">Pre-Intermediate</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Upper-Intermediate">Upper-Intermediate</option>
+        <option value="Advanced">Advanced</option>
+        <option value="IELTS">IELTS</option>
+      </select>
+
+      <input
+        placeholder="Monthly Price"
+        type="number"
+        className="border p-2 w-full"
+        onChange={(e) =>
+          setForm({ ...form, monthlyPrice: e.target.value })
+        }
+      />
+
+      <select
+        className="border p-2 w-full"
+        onChange={(e) =>
+          setForm({ ...form, dayType: e.target.value })
+        }
+      >
+        <option value="ODD">Odd Days (Mon/Wed/Fri)</option>
+        <option value="EVEN">Even Days (Tue/Thu/Sat)</option>
+        <option value="INTENSIVE">Intensive (Mon–Sat)</option>
+        <option value="CUSTOM">Custom</option>
+      </select>
+
+      {form.dayType === "CUSTOM" && (
+        <div className="flex flex-wrap gap-2">
+          {["MON","TUE","WED","THU","FRI","SAT"].map((day) => (
+            <button
+              key={day}
+              type="button"
+              onClick={() =>
+                setForm({
+                  ...form,
+                  customDays: form.customDays.includes(day)
+                    ? form.customDays.filter((d) => d !== day)
+                    : [...form.customDays, day],
+                })
+              }
+              className={`px-3 py-1 rounded border ${
+                form.customDays.includes(day)
+                  ? "bg-green-600 text-white"
+                  : "bg-white"
+              }`}
+            >
+              {day}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div className="flex gap-4">
+        <input
+          type="time"
+          className="border p-2 w-full"
+          onChange={(e) =>
+            setForm({ ...form, startTime: e.target.value })
+          }
+        />
+
+        <input
+          type="time"
+          className="border p-2 w-full"
+          onChange={(e) =>
+            setForm({ ...form, endTime: e.target.value })
+          }
+        />
+      </div>
+
+      <select
+        className="border p-2 w-full"
+        onChange={(e) =>
+          setForm({ ...form, teacher1Id: e.target.value })
+        }
+      >
+        <option value="">Select Teacher 1</option>
+        {teachers.map((t) => (
+          <option key={t.id} value={t.id}>
+            {t.email}
+          </option>
+        ))}
+      </select>
+
+      <select
+        className="border p-2 w-full"
+        onChange={(e) =>
+          setForm({ ...form, teacher2Id: e.target.value })
+        }
+      >
+        <option value="">Select Teacher 2 (Optional)</option>
+        {teachers.map((t) => (
+          <option key={t.id} value={t.id}>
+            {t.email}
+          </option>
+        ))}
+      </select>
+
+      <button
+        onClick={async () => {
+          await createGroup();
+          setShowCreateModal(false);
+        }}
+        className="bg-green-600 text-white px-6 py-2 rounded w-full"
+      >
+        Create Group
+      </button>
     </div>
   </Modal>
 )}
