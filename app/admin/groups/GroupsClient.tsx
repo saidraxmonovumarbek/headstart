@@ -11,6 +11,10 @@ export default function GroupsClient({ stats }: any) {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<any>(null);
 
+  const [formError, setFormError] = useState("");
+  const [splitError, setSplitError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [showRevenueModal, setShowRevenueModal] = useState(false);
 const [split, setSplit] = useState({
   headstart: "",
@@ -124,11 +128,14 @@ const [split, setSplit] = useState({
   <h1 className="text-3xl font-bold">Groups</h1>
 
   <button
-    onClick={() => setShowCreateModal(true)}
-    className="bg-green-600 text-white px-5 py-2 rounded-lg shadow-sm hover:bg-green-700 transition"
-  >
-    + Add New Group
-  </button>
+  onClick={() => {
+    setFormError("");
+    setShowCreateModal(true);
+  }}
+  className="bg-green-600 text-white px-5 py-2 rounded-lg shadow-sm hover:bg-green-700 transition"
+>
+  + Add New Group
+</button>
 </div>
 
       {/* Analytics */}
@@ -293,7 +300,7 @@ const [split, setSplit] = useState({
       Create New Group
     </h2>
 
-    <div className="space-y-4">
+    <div className={`space-y-4 ${formError ? "animate-shake" : ""}`}>
 
       <input
         placeholder="Optional specific name (e.g., DBO, Exclusive, Fast Track)"
@@ -436,27 +443,39 @@ const [split, setSplit] = useState({
 
       <button
   onClick={() => {
+  setFormError("");
+
+  setTimeout(() => {
     if (!form.level) {
-      alert("Please select group level.");
+      setFormError("Please select group level.");
       return;
     }
 
     if (!form.teacher1Id) {
-      alert("Teacher 1 is required.");
+      setFormError("Please select at least one teacher.");
       return;
     }
 
     if (!form.monthlyPrice) {
-      alert("Monthly price is required.");
+      setFormError("Monthly price is required.");
       return;
     }
 
+    setSplitError("");
     setShowRevenueModal(true);
-  }}
+  }, 10);
+}}
         className="bg-green-600 text-white px-6 py-2 rounded w-full"
       >
         Create Group
       </button>
+
+      {formError && (
+  <p className="text-red-500 text-sm text-center mt-2">
+    {formError}
+  </p>
+)}
+
     </div>
   </Modal>
 )}
@@ -474,7 +493,7 @@ const [split, setSplit] = useState({
       </span>
     </p>
 
-    <div className="space-y-4">
+    <div className={`space-y-4 ${splitError ? "animate-shake" : ""}`}>
 
       {/* HEADSTART */}
       <SplitRow
@@ -529,9 +548,20 @@ const [split, setSplit] = useState({
         />
       )}
 
+      <p className="text-xs text-gray-500 text-center">
+  Please click the button only once. Processing may take a few seconds.
+  Clicking multiple times can result in duplicate group creation.
+</p>
+
       <button
-        className="bg-green-600 text-white px-6 py-2 rounded w-full mt-4"
-        onClick={async () => {
+  disabled={isSubmitting}
+  className={`px-6 py-2 rounded w-full mt-4 text-white ${
+    isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+  }`}
+  onClick={async () => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
           const totalPercent =
   Number(split.headstart || 0) +
   Number(split.teacher1 || 0) +
@@ -539,15 +569,36 @@ const [split, setSplit] = useState({
   (form.teacher3Id ? Number(split.teacher3 || 0) : 0);
 
           if (totalPercent !== 100) {
-            alert("Total percentage must equal 100%");
-            return;
-          }
+  setSplitError("");
+
+  setTimeout(() => {
+    if (totalPercent > 100) {
+      setSplitError("Total percentage cannot exceed 100%.");
+    } else {
+      setSplitError("Total percentage must equal 100%.");
+    }
+  }, 10);
+
+  setIsSubmitting(false);
+
+  return;
+}
+
+setSplitError("");
 
           await createGroupWithSplit();
+          setIsSubmitting(false);
         }}
       >
         Confirm & Create Group
       </button>
+
+      {splitError && (
+  <p className="text-red-500 text-sm text-center mt-2">
+    {splitError}
+  </p>
+)}
+
     </div>
   </Modal>
 )}
