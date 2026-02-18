@@ -2,13 +2,15 @@ import { prisma } from "@/lib/prisma";
 import dayjs from "dayjs";
 
 const LEVEL_COLORS: Record<string, string> = {
-  Beginner: "#3B82F6",
-  Elementary: "#10B981",
-  "Pre-Intermediate": "#F59E0B",
-  Intermediate: "#8B5CF6",
-  "Upper-Intermediate": "#EC4899",
-  Advanced: "#EF4444",
-  IELTS: "#0EA5E9",
+  Beginner: "#10b981",
+  Elementary: "#34d399",
+  "Pre-Intermediate": "#6ee7b7",
+  Intermediate: "#a7f3d0",
+  "Upper-Intermediate": "#3b82f6",
+  Advanced: "#6366f1",
+  IELTS: "#8b5cf6",
+  Kids: "#f59e0b",
+  CEFR: "#ef4444",
 };
 
 export async function getGroupsStats() {
@@ -38,15 +40,13 @@ export async function getGroupsStats() {
     levelMap[level] += 1;
   });
 
-  const levelDistribution = Object.entries(levelMap).map(
-  ([level, count]) => {
-    return {
-      level,
-      count,
-      color: LEVEL_COLORS[level] || "#9CA3AF",
-    };
-  }
-);
+  const levelDistribution = Object.entries(levelMap)
+  .map(([level, count]) => ({
+    level,
+    count,
+    color: LEVEL_COLORS[level] || "#9CA3AF",
+  }))
+  .sort((a, b) => b.count - a.count); // highest first
 
   /* ================================
      WORST PAYMENT GROUPS (TOP 3)

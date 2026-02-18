@@ -7,7 +7,11 @@ export async function GET(req: Request) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || (session.user as any).role !== "admin") {
+    if (
+  !session ||
+  ((session.user as any).role !== "admin" &&
+   !(session.user as any).isSuperAdmin)
+) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -17,14 +21,28 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const role = searchParams.get("role");
 
-    const users = await prisma.user.findMany({
-      where: role ? { role } : {},
+    let whereClause: any = {};
+
+if (role === "teacher") {
+  whereClause = {
+    OR: [
+      { role: "teacher" },
+      { isSuperAdmin: true },
+    ],
+  };
+} else if (role) {
+  whereClause = { role };
+}
+
+const users = await prisma.user.findMany({
+  where: whereClause,
       select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-      },
+  id: true,
+  name: true,
+  email: true,
+  role: true,
+  isSuperAdmin: true,
+},
       orderBy: {
         createdAt: "desc",
       },

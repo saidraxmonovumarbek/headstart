@@ -45,27 +45,43 @@ export async function POST(req: Request) {
   let headstartRevenue = 0;
 
   if (paid) {
-    const teacherPercent = group.teacherPercent ?? 0;
-    const headstartPercent = group.headstartPercent ?? 0;
+    const splits = await prisma.groupRevenueSplit.findMany({
+      where: { groupId },
+    });
 
-    teacherRevenue = Math.floor(
-      (group.monthlyPrice * teacherPercent) / 100
-    );
+    if (splits.length === 0) {
+      return NextResponse.json(
+        { error: "Revenue splits not configured for this group." },
+        { status: 400 }
+      );
+    }
 
-    headstartRevenue = Math.floor(
-      (group.monthlyPrice * headstartPercent) / 100
-    );
+    for (const split of splits) {
+      const revenue = Math.floor(
+        (group.monthlyPrice * split.percentage) / 100
+      );
+
+      if (split.userId === null) {
+        // Headstart
+        headstartRevenue += revenue;
+      } else {
+        // Teacher (or any assigned user)
+        teacherRevenue += revenue;
+      }
+    }
   }
+
+  const paymentData = {
+    paid,
+    amountPaid: paid ? group.monthlyPrice : 0,
+    teacherRevenue: paid ? teacherRevenue : 0,
+    headstartRevenue: paid ? headstartRevenue : 0,
+  };
 
   if (existing) {
     await prisma.payment.update({
       where: { id: existing.id },
-      data: {
-        paid,
-        amountPaid: paid ? group.monthlyPrice : 0,
-        teacherRevenue,
-        headstartRevenue,
-      },
+      data: paymentData,
     });
   } else {
     await prisma.payment.create({
@@ -73,10 +89,7 @@ export async function POST(req: Request) {
         studentId,
         groupId,
         month: currentMonth,
-        paid,
-        amountPaid: paid ? group.monthlyPrice : 0,
-        teacherRevenue,
-        headstartRevenue,
+        ...paymentData,
       },
     });
   }

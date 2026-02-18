@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import LevelDonut from "./LevelDonut";
 
 export default function GroupsClient({ stats }: any) {
@@ -9,6 +10,14 @@ export default function GroupsClient({ stats }: any) {
   const [showStudents, setShowStudents] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<any>(null);
+
+  const [showRevenueModal, setShowRevenueModal] = useState(false);
+const [split, setSplit] = useState({
+  headstart: "",
+  teacher1: "",
+  teacher2: "",
+  teacher3: "",
+});
 
   const [form, setForm] = useState({
   name: "",
@@ -20,6 +29,7 @@ export default function GroupsClient({ stats }: any) {
   endTime: "16:00",
   teacher1Id: "",
   teacher2Id: "",
+  teacher3Id: "",
 });
 
   useEffect(() => {
@@ -39,13 +49,45 @@ export default function GroupsClient({ stats }: any) {
     setTeachers(data);
   }
 
-  async function createGroup() {
+  async function createGroupWithSplit() {
   await fetch("/api/groups", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       ...form,
-      customDays: form.dayType === "CUSTOM" ? form.customDays : null,
+      name: form.name
+        ? `${form.level} ${form.name}`
+        : form.level,
+      customDays:
+        form.dayType === "CUSTOM"
+          ? form.customDays
+          : null,
+      revenueSplits: [
+        {
+  userId: null,
+  percentage: Number(split.headstart || 0),
+},
+{
+  userId: form.teacher1Id,
+  percentage: Number(split.teacher1 || 0),
+},
+...(form.teacher2Id
+  ? [
+      {
+        userId: form.teacher2Id,
+        percentage: Number(split.teacher2 || 0),
+      },
+    ]
+  : []),
+...(form.teacher3Id
+  ? [
+      {
+        userId: form.teacher3Id,
+        percentage: Number(split.teacher3 || 0),
+      },
+    ]
+  : []),
+      ],
     }),
   });
 
@@ -59,7 +101,11 @@ export default function GroupsClient({ stats }: any) {
     endTime: "16:00",
     teacher1Id: "",
     teacher2Id: "",
+    teacher3Id: "",
   });
+
+  setShowRevenueModal(false);
+  setShowCreateModal(false);
 
   fetchGroups();
 }
@@ -94,30 +140,32 @@ export default function GroupsClient({ stats }: any) {
             </h2>
 
             <div className="flex flex-col items-center">
-  <LevelDonut data={stats.levelDistribution} />
+  <LevelDonut 
+  data={stats.levelDistribution} 
+  total={stats.totalGroups}
+/>
 
-  <div className="w-full mt-6 space-y-3">
-    {stats.levelDistribution?.map((item: any) => (
-      <div
-        key={item.level}
-        className="flex items-center justify-between border-b pb-2"
-      >
-        <div className="flex items-center gap-3">
-          <div
-            className="w-3 h-3 rounded-full"
-            style={{ backgroundColor: item.color }}
-          />
-          <div>{item.level}</div>
-        </div>
-        <div className="font-semibold">{item.count}</div>
-      </div>
-    ))}
+  <div className="w-full mt-6 flex gap-10">
+  {/* LEFT COLUMN */}
+  <div className="flex flex-col gap-3 flex-1">
+    {stats.levelDistribution
+      ?.slice(0, Math.ceil(stats.levelDistribution.length / 2))
+      .map((item: any) => (
+        <LegendItem key={item.level} item={item} />
+      ))}
+  </div>
+
+  {/* RIGHT COLUMN */}
+  <div className="flex flex-col gap-3 flex-1">
+    {stats.levelDistribution
+      ?.slice(Math.ceil(stats.levelDistribution.length / 2))
+      .map((item: any) => (
+        <LegendItem key={item.level} item={item} />
+      ))}
   </div>
 </div>
+</div>
 
-            <div className="mt-6 text-gray-500 text-sm">
-              Total Groups: {stats.totalGroups}
-            </div>
           </div>
 
           <div className="col-span-6">
@@ -248,7 +296,7 @@ export default function GroupsClient({ stats }: any) {
     <div className="space-y-4">
 
       <input
-        placeholder="Group Name"
+        placeholder="Optional specific name (e.g., DBO, Exclusive, Fast Track)"
         className="border p-2 w-full"
         onChange={(e) =>
           setForm({ ...form, name: e.target.value })
@@ -262,23 +310,31 @@ export default function GroupsClient({ stats }: any) {
           setForm({ ...form, level: e.target.value })
         }
       >
+        <option value="Kids">Kids</option>
         <option value="Beginner">Beginner</option>
         <option value="Elementary">Elementary</option>
         <option value="Pre-Intermediate">Pre-Intermediate</option>
         <option value="Intermediate">Intermediate</option>
         <option value="Upper-Intermediate">Upper-Intermediate</option>
         <option value="Advanced">Advanced</option>
+        <option value="CEFR">CEFR</option>
         <option value="IELTS">IELTS</option>
       </select>
 
-      <input
-        placeholder="Monthly Price"
-        type="number"
-        className="border p-2 w-full"
-        onChange={(e) =>
-          setForm({ ...form, monthlyPrice: e.target.value })
-        }
-      />
+      <div className="relative">
+  <input
+    placeholder="Monthly Price"
+    type="number"
+    className="border p-2 w-full pr-12"
+    onChange={(e) =>
+      setForm({ ...form, monthlyPrice: e.target.value })
+    }
+  />
+
+  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+    UZS
+  </span>
+</div>
 
       <select
         className="border p-2 w-full"
@@ -345,10 +401,24 @@ export default function GroupsClient({ stats }: any) {
         <option value="">Select Teacher 1</option>
         {teachers.map((t) => (
           <option key={t.id} value={t.id}>
-            {t.email}
-          </option>
+  {t.name || t.email}
+</option>
         ))}
       </select>
+
+      <select
+  className="border p-2 w-full"
+  onChange={(e) =>
+    setForm({ ...form, teacher3Id: e.target.value })
+  }
+>
+  <option value="">Select Teacher 3 (Optional)</option>
+  {teachers.map((t) => (
+    <option key={t.id} value={t.id}>
+  {t.name || t.email}
+</option>
+  ))}
+</select>
 
       <select
         className="border p-2 w-full"
@@ -359,19 +429,124 @@ export default function GroupsClient({ stats }: any) {
         <option value="">Select Teacher 2 (Optional)</option>
         {teachers.map((t) => (
           <option key={t.id} value={t.id}>
-            {t.email}
-          </option>
+  {t.name || t.email}
+</option>
         ))}
       </select>
 
       <button
-        onClick={async () => {
-          await createGroup();
-          setShowCreateModal(false);
-        }}
+  onClick={() => {
+    if (!form.level) {
+      alert("Please select group level.");
+      return;
+    }
+
+    if (!form.teacher1Id) {
+      alert("Teacher 1 is required.");
+      return;
+    }
+
+    if (!form.monthlyPrice) {
+      alert("Monthly price is required.");
+      return;
+    }
+
+    setShowRevenueModal(true);
+  }}
         className="bg-green-600 text-white px-6 py-2 rounded w-full"
       >
         Create Group
+      </button>
+    </div>
+  </Modal>
+)}
+
+{showRevenueModal && (
+  <Modal onClose={() => setShowRevenueModal(false)}>
+    <h2 className="text-xl font-bold mb-2">
+      Revenue Split
+    </h2>
+
+    <p className="text-sm text-gray-500 mb-6">
+      Total Monthly Price:{" "}
+      <span className="font-semibold">
+        {Number(form.monthlyPrice).toLocaleString()} UZS
+      </span>
+    </p>
+
+    <div className="space-y-4">
+
+      {/* HEADSTART */}
+      <SplitRow
+        label="HeadStart"
+        percent={split.headstart}
+        onChange={(val: string) =>
+  setSplit({ ...split, headstart: val })
+}
+        total={Number(form.monthlyPrice)}
+      />
+
+      {/* TEACHER 1 */}
+      <SplitRow
+        label={
+          teachers.find(t => t.id === form.teacher1Id)?.name ||
+          "Teacher 1"
+        }
+        percent={split.teacher1}
+        onChange={(val: string) =>
+  setSplit({ ...split, teacher1: val })
+}
+        total={Number(form.monthlyPrice)}
+      />
+
+      {/* TEACHER 2 */}
+      {form.teacher2Id && (
+        <SplitRow
+          label={
+            teachers.find(t => t.id === form.teacher2Id)?.name ||
+            "Teacher 2"
+          }
+          percent={split.teacher2}
+          onChange={(val: string) =>
+  setSplit({ ...split, teacher2: val })
+}
+          total={Number(form.monthlyPrice)}
+        />
+      )}
+
+      {/* TEACHER 3 */}
+      {form.teacher3Id && (
+        <SplitRow
+          label={
+            teachers.find(t => t.id === form.teacher3Id)?.name ||
+            "Teacher 3"
+          }
+          percent={split.teacher3}
+          onChange={(val: string) =>
+  setSplit({ ...split, teacher3: val })
+}
+          total={Number(form.monthlyPrice)}
+        />
+      )}
+
+      <button
+        className="bg-green-600 text-white px-6 py-2 rounded w-full mt-4"
+        onClick={async () => {
+          const totalPercent =
+  Number(split.headstart || 0) +
+  Number(split.teacher1 || 0) +
+  (form.teacher2Id ? Number(split.teacher2 || 0) : 0) +
+  (form.teacher3Id ? Number(split.teacher3 || 0) : 0);
+
+          if (totalPercent !== 100) {
+            alert("Total percentage must equal 100%");
+            return;
+          }
+
+          await createGroupWithSplit();
+        }}
+      >
+        Confirm & Create Group
       </button>
     </div>
   </Modal>
@@ -382,9 +557,21 @@ export default function GroupsClient({ stats }: any) {
 }
 
 function Modal({ children, onClose }: any) {
-  return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-2xl w-[500px] relative max-h-[80vh] overflow-y-auto">
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
+      <div className="bg-white p-6 rounded-2xl w-[500px] relative max-h-[80vh] overflow-y-auto shadow-xl">
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-400 text-xl"
@@ -392,6 +579,59 @@ function Modal({ children, onClose }: any) {
           ✕
         </button>
         {children}
+      </div>
+    </div>,
+    document.body
+  );
+}
+
+function LegendItem({ item }: any) {
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <div
+          className="w-3 h-3 rounded-full"
+          style={{ backgroundColor: item.color }}
+        />
+        <span className="text-sm text-gray-700">
+          {item.level}
+        </span>
+      </div>
+      <span className="text-sm font-semibold text-gray-900">
+        {item.count}
+      </span>
+    </div>
+  );
+}
+
+function SplitRow({
+  label,
+  percent,
+  onChange,
+  total,
+}: {
+  label: string;
+  percent: string;
+  onChange: (v: string) => void;
+  total: number;
+}) {
+  const numericPercent = Number(percent) || 0;
+  const amount = Math.floor((total * numericPercent) / 100);
+
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <div className="w-1/3 font-medium">{label}</div>
+
+      <input
+        type="number"
+        placeholder="Enter %"
+        className="border p-2 w-1/3 rounded"
+        value={percent}
+        onChange={(e) => onChange(e.target.value)}
+      />
+
+      <div className="w-1/3 text-right text-gray-600">
+        {amount.toLocaleString()} UZS
       </div>
     </div>
   );

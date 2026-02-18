@@ -40,11 +40,12 @@ export async function GET() {
 
   const groups = await prisma.group.findMany({
     where: {
-      OR: [
-        { teacher1Id: userId },
-        { teacher2Id: userId },
-      ],
-    },
+  OR: [
+    { teacher1Id: userId },
+    { teacher2Id: userId },
+    { teacher3Id: userId },
+  ],
+},
     include: {
       teacher1: true,
       teacher2: true,
@@ -86,6 +87,7 @@ return NextResponse.json([]);
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
+
   if (!session || (session.user as any).role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -93,16 +95,38 @@ export async function POST(req: Request) {
   const body = await req.json();
 
   const {
-  name,
-  level,
-  monthlyPrice,
-  dayType,
-  customDays,
-  startTime,
-  endTime,
-  teacher1Id,
-  teacher2Id,
-} = body;
+    name,
+    level,
+    monthlyPrice,
+    dayType,
+    customDays,
+    startTime,
+    endTime,
+    teacher1Id,
+    teacher2Id,
+    teacher3Id,
+    revenueSplits,
+  } = body;
+
+  if (!level) {
+    return NextResponse.json({ error: "Level is required" }, { status: 400 });
+  }
+
+  if (!teacher1Id) {
+    return NextResponse.json({ error: "Teacher 1 is required" }, { status: 400 });
+  }
+
+  const totalPercent = revenueSplits.reduce(
+  (sum: number, r: any) => sum + Number(r.percentage),
+  0
+);
+
+if (totalPercent !== 100) {
+  return NextResponse.json(
+    { error: "Revenue split must equal 100%" },
+    { status: 400 }
+  );
+}
 
   const group = await prisma.group.create({
   data: {
@@ -116,9 +140,18 @@ export async function POST(req: Request) {
         : null,
     startTime,
     endTime,
-    teacher1Id: teacher1Id || null,
+    teacher1Id,
     teacher2Id: teacher2Id || null,
+    teacher3Id: teacher3Id || null,
   },
+});
+
+  await prisma.groupRevenueSplit.createMany({
+  data: revenueSplits.map((r: any) => ({
+    groupId: group.id,
+    userId: r.userId || null,
+    percentage: Number(r.percentage),
+  })),
 });
 
   await generateRecurringEvents(group.id);

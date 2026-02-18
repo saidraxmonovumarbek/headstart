@@ -19,7 +19,17 @@ interface Props {
   totalStudents: number;
 }
 
-const COLORS = ["#10b981", "#34d399", "#6ee7b7", "#a7f3d0"];
+const COLORS = {
+  Beginner: "#10b981",
+  Elementary: "#34d399",
+  "Pre-Intermediate": "#6ee7b7",
+  Intermediate: "#a7f3d0",
+  "Upper-Intermediate": "#3b82f6",
+  Advanced: "#6366f1",
+  IELTS: "#8b5cf6",
+  Kids: "#f59e0b",
+  CEFR: "#ef4444",
+};
 
 export default function StudentDonutChart({
   data,
@@ -40,12 +50,12 @@ export default function StudentDonutChart({
             innerRadius={80}
             outerRadius={120}
           >
-            {data.map((_, index) => (
-              <Cell
-                key={index}
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
+            {data.map((entry) => (
+  <Cell
+    key={entry.level}
+    fill={COLORS[entry.level as keyof typeof COLORS] || "#9ca3af"}
+  />
+))}
           </Pie>
           <Tooltip />
         </PieChart>
