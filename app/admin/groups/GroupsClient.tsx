@@ -314,7 +314,7 @@ if (levelFilter === "MY") {
   >
     <option value="ALL">All Levels</option>
     <option value="MY">My Groups</option>
-    {[...new Set(stats.levelDistribution.map((l:any)=>l.level))].map((level)=>(
+    {[...new Set(stats.levelDistribution.map((l:any)=>l.level as string))].map((level:string)=>(
   <option key={level} value={level}>{level}</option>
 ))}
   </select>
