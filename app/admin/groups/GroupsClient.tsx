@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import LevelDonut from "./LevelDonut";
 import GroupCard from "./GroupCard";
+import { Calendar, Target, Users, ChevronDown, Check } from "lucide-react";
 
 export default function GroupsClient({ stats, sessionUserId }: any) {
   const [groups, setGroups] = useState<any[]>([]);
@@ -14,7 +15,18 @@ export default function GroupsClient({ stats, sessionUserId }: any) {
 
   const [dayFilter, setDayFilter] = useState("ALL");
   const [levelFilter, setLevelFilter] = useState("ALL");
-  const [teacherFilter, setTeacherFilter] = useState("ALL");
+  
+  const [teacherFilter, setTeacherFilter] = useState<string[]>([]);
+  const [teacherSearch, setTeacherSearch] = useState("");
+  const [teacherDropdown, setTeacherDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  const [dayDropdown, setDayDropdown] = useState(false);
+  const [levelDropdown, setLevelDropdown] = useState(false);
+
+  const dayRef = useRef<HTMLDivElement | null>(null);
+  const levelRef = useRef<HTMLDivElement | null>(null);
+
   const [editingGroup, setEditingGroup] = useState<any>(null);
   const [deleteTarget, setDeleteTarget] = useState<any>(null);
 
@@ -137,18 +149,22 @@ const [split, setSplit] = useState({
 }
 
   async function deleteGroup(id: string) {
-  setDeleteTarget(groups.find(g => g.id === id));
+  setDeleteTarget(groups.find(g => g.id === id) ?? null);
 }
 
 async function confirmDelete() {
   if (!deleteTarget) return;
 
+  try {
   await fetch(`/api/groups/${deleteTarget.id}`, {
     method: "DELETE",
   });
 
   setDeleteTarget(null);
   fetchGroups();
+} catch (e) {
+  console.error("Delete failed", e);
+}
 }
 
   const filteredGroups = useMemo(() => {
@@ -169,19 +185,44 @@ if (levelFilter === "MY") {
   return false;
 }
 
-    // TEACHER FILTER
-    if (teacherFilter !== "ALL") {
-      const teacherNames = [
-        g.teacher1?.name || g.teacher1?.email,
-        g.teacher2?.name || g.teacher2?.email,
-        g.teacher3?.name || g.teacher3?.email,
-      ];
-      if (!teacherNames.includes(teacherFilter)) return false;
-    }
+    // TEACHER FILTER (multi-select by id)
+if (teacherFilter.length > 0) {
+  const ids = [g.teacher1Id, g.teacher2Id, g.teacher3Id].filter(Boolean);
+  if (!ids.some((id) => teacherFilter.includes(id))) return false;
+}
 
     return true;
   });
 }, [groups, dayFilter, levelFilter, teacherFilter, sessionUserId]);
+
+const filteredTeachers = useMemo(() => {
+  const query = teacherSearch.toLowerCase().trim();
+
+  return teachers.filter((t: any) => {
+    const full = `${t.name ?? ""} ${t.email ?? ""}`.toLowerCase();
+return full.includes(query);
+  });
+}, [teachers, teacherSearch]);
+
+useEffect(() => {
+  function handleClickOutside(e: MouseEvent) {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      setTeacherDropdown(false);
+      setTeacherSearch("");
+    }
+
+    if (dayRef.current && !dayRef.current.contains(e.target as Node)) {
+      setDayDropdown(false);
+    }
+
+    if (levelRef.current && !levelRef.current.contains(e.target as Node)) {
+      setLevelDropdown(false);
+    }
+  }
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, []);
 
   return (
     <div className="space-y-10">
@@ -291,50 +332,161 @@ if (levelFilter === "MY") {
         </div>
       </div>
 
-      <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-3">
 
   {/* DAY FILTER */}
-  <select
-    value={dayFilter}
-    onChange={(e) => setDayFilter(e.target.value)}
-    className="border p-2 rounded-lg"
-  >
-    <option value="ALL">All Days</option>
-    <option value="ODD">Odd</option>
-    <option value="EVEN">Even</option>
-    <option value="INTENSIVE">Intensive</option>
-    <option value="CUSTOM">Custom</option>
-  </select>
+<div ref={dayRef} className="relative w-[180px]">
+  <button
+  type="button"
+  onClick={() => setDayDropdown(prev => !prev)}
+  className="relative flex items-center w-full pl-10 pr-8 py-2 border rounded-lg bg-white text-sm shadow-sm hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+>
+  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+
+  <span className="truncate">
+    {dayFilter === "ALL" ? "All Days" : dayFilter}
+  </span>
+
+  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+</button>
+
+  {dayDropdown && (
+    <div className="absolute mt-2 w-full bg-white border rounded-xl shadow-lg z-50 p-2">
+      {["ALL","ODD","EVEN","INTENSIVE","CUSTOM"].map(d => (
+        <div
+          key={d}
+          onClick={() => {
+            setDayFilter(d);
+            setDayDropdown(false);
+          }}
+          className="px-3 py-2 rounded hover:bg-gray-100 cursor-pointer text-sm"
+        >
+          {d === "ALL" ? "All Days" : d}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
 
   {/* LEVEL FILTER */}
-<select
-  value={levelFilter}
-  onChange={(e) => setLevelFilter(e.target.value)}
-  className="border p-2 rounded-lg"
+<div ref={levelRef} className="relative w-[200px]">
+  <button
+  type="button"
+  onClick={() => setLevelDropdown(prev => !prev)}
+  className="relative flex items-center w-full pl-10 pr-8 py-2 border rounded-lg bg-white text-sm shadow-sm hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
 >
-  <option value="ALL">All Levels</option>
-  <option value="MY">My Groups</option>
+  <Target className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
 
-  {Array.from(
-    new Set<string>(stats.levelDistribution.map((l:any) => l.level))
-  ).map((level) => (
-    <option key={level} value={level}>{level}</option>
-  ))}
-</select>
+  <span className="truncate">
+    {levelFilter === "ALL"
+      ? "All Levels"
+      : levelFilter === "MY"
+      ? "My Groups"
+      : levelFilter}
+  </span>
+
+  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+</button>
+
+  {levelDropdown && (
+    <div className="absolute mt-2 w-full bg-white border rounded-xl shadow-lg z-50 p-2">
+      {/* ALL */}
+      <div
+        onClick={() => { setLevelFilter("ALL"); setLevelDropdown(false); }}
+        className="px-3 py-2 rounded hover:bg-gray-100 cursor-pointer text-sm"
+      >
+        All Levels
+      </div>
+
+      {/* MY */}
+      <div
+        onClick={() => { setLevelFilter("MY"); setLevelDropdown(false); }}
+        className="px-3 py-2 rounded hover:bg-gray-100 cursor-pointer text-sm"
+      >
+        My Groups
+      </div>
+
+      {/* LEVELS WITH COLORS */}
+      {stats.levelDistribution.map((l:any) => (
+        <div
+          key={l.level}
+          onClick={() => {
+            setLevelFilter(l.level);
+            setLevelDropdown(false);
+          }}
+          className="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 cursor-pointer text-sm"
+        >
+          <div
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ backgroundColor: l.color }}
+          />
+          {l.level}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
 
   {/* TEACHER FILTER */}
-  <select
-    value={teacherFilter}
-    onChange={(e) => setTeacherFilter(e.target.value)}
-    className="border p-2 rounded-lg"
-  >
-    <option value="ALL">All Teachers</option>
-    {teachers.map((t:any)=>(
-      <option key={t.id} value={t.name || t.email}>
-        {t.name || t.email}
-      </option>
-    ))}
-  </select>
+  <div ref={dropdownRef} className="relative w-[240px]">
+  <button
+  type="button"
+  onClick={() => {
+    setTeacherDropdown(prev => {
+      if (prev) setTeacherSearch("");
+      return !prev;
+    });
+  }}
+  className="relative flex items-center w-full pl-10 pr-8 py-2 border rounded-lg bg-white text-sm shadow-sm hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+>
+  <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+
+  <span className="truncate">
+    {teacherFilter.length === 0
+      ? "All Teachers"
+      : `${teacherFilter.length} teacher${teacherFilter.length > 1 ? "s" : ""}`}
+  </span>
+
+  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+</button>
+
+  {teacherDropdown && (
+    <div
+  onMouseDown={(e) => e.stopPropagation()}
+  onClick={(e) => e.stopPropagation()}
+  className="absolute mt-2 w-full bg-white border rounded-xl shadow-lg z-50 p-2"
+>
+      <input
+        placeholder="Search teacher..."
+        value={teacherSearch}
+        onChange={(e) => setTeacherSearch(e.target.value)}
+        className="w-full border rounded-lg p-2 mb-2 text-sm"
+      />
+
+      <div className="max-h-48 overflow-y-auto">
+        {filteredTeachers.map((t: any) => {
+          const selected = teacherFilter.includes(t.id);
+
+          return (
+            <div
+              key={t.id}
+              onClick={() => {
+  setTeacherFilter(prev =>
+  selected ? prev.filter(id => id !== t.id) : [...prev, t.id]
+);
+  setTeacherSearch("");
+}}
+              className="flex items-center justify-between px-2 py-1 rounded hover:bg-gray-100 cursor-pointer text-sm"
+            >
+              <span>{t.name || t.email}</span>
+              {selected && <Check className="w-4 h-4 text-green-600" />}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  )}
+</div>
 
 </div>
 
@@ -367,7 +519,7 @@ if (levelFilter === "MY") {
         const splits:any = { headstart:"", teacher1:"", teacher2:"", teacher3:"" };
 
         g.revenueSplits?.forEach((r:any)=>{
-          if(!r.user) splits.headstart = r.percentage;
+          if(!r.userId) splits.headstart = r.percentage;
           else if(r.userId === g.teacher1Id) splits.teacher1 = r.percentage;
           else if(r.userId === g.teacher2Id) splits.teacher2 = r.percentage;
           else if(r.userId === g.teacher3Id) splits.teacher3 = r.percentage;
