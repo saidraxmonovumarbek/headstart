@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
@@ -8,17 +8,20 @@ import { useSession } from "next-auth/react";
 import ReflectionBox from "@/app/components/calendar/ReflectionBox";
 import MonthlyGoalsBox from "@/app/components/calendar/MonthlyGoalsBox";
 import { Shield, ShieldOff } from "lucide-react";
-import { 
-  MoreVertical, 
-  ChevronLeft, 
-  ChevronRight, 
+import {
+  ChevronDown,
+  MoreVertical,
+  ChevronLeft,
+  ChevronRight,
   Plus,
   BookOpen,
   User,
   CheckCircle,
   TrendingUp,
   HeartPulse,
-  Layers
+  Layers,
+  Briefcase,
+  Home
 } from "lucide-react";
 
 dayjs.extend(utc);
@@ -36,7 +39,7 @@ export default function AdminCalendar() {
   const [warning, setWarning] = useState<string | null>(null);
   const [shake, setShake] = useState(false);
   const { data: session } = useSession();
-  const role = (session?.user as any)?.role;
+  const role = (session?.user as { role?: string })?.role;
 
   const [monthDirection, setMonthDirection] = useState<"left" | "right">("right");
   const [privacyEnabled, setPrivacyEnabled] = useState(() => {
@@ -128,9 +131,14 @@ function getEventColors(type: string) {
     case "HEALTH":
       return "bg-teal-200 text-black";
 
-    case "OTHERS":
-      // 💙 Simple blue (old global style without shine)
-      return "bg-blue-300 text-black";
+    case "WORK":
+  return "bg-orange-300 text-black";
+
+case "HOUSEWORK":
+  return "bg-indigo-300 text-black";
+
+case "OTHERS":
+  return "bg-blue-300 text-black";
 
     default:
       return "bg-gray-200 text-black";
@@ -162,8 +170,13 @@ function getEventIcon(type: string) {
       className="w-[28px] h-[28px] object-contain drop-shadow-sm"
     />
   );
+  case "WORK":
+  return <Briefcase size={18} className="opacity-70" />;
+
+case "HOUSEWORK":
+  return <Home size={18} className="opacity-70" />;
     case "CLASS":
-      return <BookOpen size={18} className="opacity-70" />;
+  return <BookOpen size={18} className="opacity-70" />; // Study
     case "PERSONAL":
       return <User size={18} className="opacity-70" />;
     case "TODO":
@@ -264,7 +277,7 @@ if (isLoading) {
           {daysInMonth.map((day) => (
             <div
   id={`day-${day.format("YYYY-MM-DD")}`}
-  key={day.toString()}
+  key={day.format("YYYY-MM-DD")}
   className="relative border-b border-green-200 pb-10"
 >
 
@@ -562,6 +575,71 @@ function AddEventModal({
 }: any) {
   const [title, setTitle] = useState(existingEvent?.title || "");
   const [type, setType] = useState(existingEvent?.type || "PERSONAL");
+  const [typeDropdown, setTypeDropdown] = useState(false);
+
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+  function handleClickOutside(e: MouseEvent) {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(e.target as Node)
+    ) {
+      setTypeDropdown(false);
+    }
+  }
+
+  function handleEsc(e: KeyboardEvent) {
+    if (e.key === "Escape") {
+      setTypeDropdown(false);
+    }
+  }
+
+  document.addEventListener("mousedown", handleClickOutside);
+  document.addEventListener("keydown", handleEsc);
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+    document.removeEventListener("keydown", handleEsc);
+  };
+}, []);
+
+useEffect(() => {
+  function esc(e: KeyboardEvent) {
+    if (e.key === "Escape") {
+      if (typeDropdown) {
+        setTypeDropdown(false);
+        return;
+      }
+      onClose();
+    }
+  }
+
+  document.addEventListener("keydown", esc);
+  return () => document.removeEventListener("keydown", esc);
+}, [onClose, typeDropdown]);
+
+useEffect(() => {
+  document.body.style.overflow = "hidden";
+  return () => {
+    document.body.style.overflow = "auto";
+  };
+}, []);
+
+  const eventTypes = [
+  ...(role === "admin"
+    ? [{ value: "GLOBAL", label: "Global Event", color: "bg-emerald-500" }]
+    : []),
+  { value: "CLASS", label: "Study", color: "bg-purple-400" },
+  { value: "PERSONAL", label: "Personal", color: "bg-yellow-400" },
+  { value: "TODO", label: "To-Do", color: "bg-rose-400" },
+  { value: "HABITS", label: "Habits", color: "bg-slate-400" },
+  { value: "HEALTH", label: "Health", color: "bg-teal-400" },
+  { value: "WORK", label: "Work", color: "bg-orange-400" },
+  { value: "HOUSEWORK", label: "Housework", color: "bg-indigo-400" },
+  { value: "OTHERS", label: "Others", color: "bg-blue-400" },
+];
+
   const [titleError, setTitleError] = useState(false);
   const [noTime, setNoTime] = useState(() => {
   if (!existingEvent) return false;
@@ -649,8 +727,14 @@ endTime: noTime
   }
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl p-6 w-[420px] space-y-4">
+    <div
+  className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+  onClick={onClose}
+>
+      <div
+  className="bg-white rounded-2xl p-6 w-[420px] space-y-4"
+  onClick={(e) => e.stopPropagation()}
+>
 
         <h2 className="text-lg font-bold">
           {existingEvent ? "Edit Event" : "Add Event"}
@@ -668,21 +752,46 @@ endTime: noTime
   }}
 />
 
-<select
-  className="w-full border border-gray-300 p-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-green-400"
-  value={type}
-  onChange={(e) => setType(e.target.value)}
+<div
+  ref={dropdownRef}
+  className="relative"
+  onClick={(e) => e.stopPropagation()}
 >
-          {role === "admin" && (
-  <option value="GLOBAL">Global Event</option>
-)}
-          <option value="CLASS">Lesson</option>
-          <option value="PERSONAL">Personal</option>
-          <option value="TODO">To-Do</option>
-          <option value="HABITS">Habits</option>
-          <option value="HEALTH">Health</option>
-          <option value="OTHERS">Others</option>
-        </select>
+  <button
+    type="button"
+    onClick={() => setTypeDropdown(!typeDropdown)}
+    className="relative flex items-center w-full pl-3 pr-8 py-2 border rounded-lg bg-white text-sm shadow-sm"
+  >
+    <div className="flex items-center gap-2">
+      <div
+        className={`w-2.5 h-2.5 rounded-full ${
+          eventTypes.find((t) => t.value === type)?.color
+        }`}
+      />
+      {eventTypes.find((t) => t.value === type)?.label}
+    </div>
+
+    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+  </button>
+
+  {typeDropdown && (
+    <div className="absolute mt-2 w-full bg-white border rounded-xl shadow-lg z-50 p-2">
+      {eventTypes.map((t) => (
+        <div
+          key={t.value}
+          onClick={() => {
+            setType(t.value);
+            setTypeDropdown(false);
+          }}
+          className="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 cursor-pointer text-sm"
+        >
+          <div className={`w-2.5 h-2.5 rounded-full ${t.color}`} />
+          {t.label}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
 
         <div className="space-y-3">
 
