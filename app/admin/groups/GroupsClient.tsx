@@ -1,15 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { createPortal } from "react-dom";
 import LevelDonut from "./LevelDonut";
+import GroupCard from "./GroupCard";
 
-export default function GroupsClient({ stats }: any) {
+export default function GroupsClient({ stats, sessionUserId }: any) {
   const [groups, setGroups] = useState<any[]>([]);
   const [teachers, setTeachers] = useState<any[]>([]);
   const [showStudents, setShowStudents] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<any>(null);
+
+  const [dayFilter, setDayFilter] = useState("ALL");
+  const [levelFilter, setLevelFilter] = useState("ALL");
+  const [teacherFilter, setTeacherFilter] = useState("ALL");
+  const [editingGroup, setEditingGroup] = useState<any>(null);
+  const [deleteTarget, setDeleteTarget] = useState<any>(null);
 
   const [formError, setFormError] = useState("");
   const [splitError, setSplitError] = useState("");
@@ -44,56 +51,147 @@ const [split, setSplit] = useState({
   async function fetchGroups() {
     const res = await fetch("/api/groups");
     const data = await res.json();
-    setGroups(data);
+    setGroups(Array.isArray(data) ? data : []);
   }
 
   async function fetchTeachers() {
     const res = await fetch("/api/users?role=teacher");
     const data = await res.json();
-    setTeachers(data);
+    setTeachers(Array.isArray(data) ? data : []);
   }
 
-  async function createGroupWithSplit() {
-  await fetch("/api/groups", {
-    method: "POST",
+  async function saveGroupWithSplit() {
+  const method = editingGroup ? "PUT" : "POST";
+  const url = editingGroup
+    ? `/api/groups/${editingGroup.id}`
+    : "/api/groups";
+
+  await fetch(url, {
+    method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      ...form,
-      name: form.name
-        ? `${form.level} ${form.name}`
-        : form.level,
+  ...form,
+  monthlyPrice: Number(form.monthlyPrice),
+  name: form.name
+    ? `${form.level} ${form.name}`
+    : form.level,
       customDays:
         form.dayType === "CUSTOM"
           ? form.customDays
           : null,
       revenueSplits: [
         {
-  userId: null,
-  percentage: Number(split.headstart || 0),
-},
-{
-  userId: form.teacher1Id,
-  percentage: Number(split.teacher1 || 0),
-},
-...(form.teacher2Id
-  ? [
-      {
-        userId: form.teacher2Id,
-        percentage: Number(split.teacher2 || 0),
-      },
-    ]
-  : []),
-...(form.teacher3Id
-  ? [
-      {
-        userId: form.teacher3Id,
-        percentage: Number(split.teacher3 || 0),
-      },
-    ]
-  : []),
+          userId: null,
+          percentage: Number(split.headstart || 0),
+        },
+        {
+          userId: form.teacher1Id,
+          percentage: Number(split.teacher1 || 0),
+        },
+        ...(form.teacher2Id
+          ? [
+              {
+                userId: form.teacher2Id,
+                percentage: Number(split.teacher2 || 0),
+              },
+            ]
+          : []),
+        ...(form.teacher3Id
+          ? [
+              {
+                userId: form.teacher3Id,
+                percentage: Number(split.teacher3 || 0),
+              },
+            ]
+          : []),
       ],
     }),
   });
+
+  // Reset form after save
+  setForm({
+    name: "",
+    level: "Beginner",
+    monthlyPrice: "",
+    dayType: "ODD",
+    customDays: [],
+    startTime: "14:00",
+    endTime: "16:00",
+    teacher1Id: "",
+    teacher2Id: "",
+    teacher3Id: "",
+  });
+
+  setSplit({
+    headstart: "",
+    teacher1: "",
+    teacher2: "",
+    teacher3: "",
+  });
+
+  setEditingGroup(null);
+  setShowRevenueModal(false);
+  setShowCreateModal(false);
+
+  fetchGroups();
+}
+
+  async function deleteGroup(id: string) {
+  setDeleteTarget(groups.find(g => g.id === id));
+}
+
+async function confirmDelete() {
+  if (!deleteTarget) return;
+
+  await fetch(`/api/groups/${deleteTarget.id}`, {
+    method: "DELETE",
+  });
+
+  setDeleteTarget(null);
+  fetchGroups();
+}
+
+  const filteredGroups = useMemo(() => {
+  return groups.filter((g) => {
+    // DAY FILTER
+    if (dayFilter !== "ALL" && g.dayType !== dayFilter) {
+      if (!(dayFilter === "CUSTOM" && g.dayType === "CUSTOM")) return false;
+    }
+
+    // LEVEL FILTER
+if (levelFilter === "MY") {
+  const isMine =
+    g.teacher1Id === sessionUserId ||
+    g.teacher2Id === sessionUserId ||
+    g.teacher3Id === sessionUserId;
+  if (!isMine) return false;
+} else if (levelFilter !== "ALL" && g.level !== levelFilter) {
+  return false;
+}
+
+    // TEACHER FILTER
+    if (teacherFilter !== "ALL") {
+      const teacherNames = [
+        g.teacher1?.name || g.teacher1?.email,
+        g.teacher2?.name || g.teacher2?.email,
+        g.teacher3?.name || g.teacher3?.email,
+      ];
+      if (!teacherNames.includes(teacherFilter)) return false;
+    }
+
+    return true;
+  });
+}, [groups, dayFilter, levelFilter, teacherFilter, sessionUserId]);
+
+  return (
+    <div className="space-y-10">
+      <div className="flex items-center justify-between">
+  <h1 className="text-3xl font-bold">Groups</h1>
+
+  <button
+  onClick={() => {
+  setFormError("");
+  setEditingGroup(null);
 
   setForm({
     name: "",
@@ -108,30 +206,15 @@ const [split, setSplit] = useState({
     teacher3Id: "",
   });
 
-  setShowRevenueModal(false);
-  setShowCreateModal(false);
+  setSplit({
+    headstart: "",
+    teacher1: "",
+    teacher2: "",
+    teacher3: "",
+  });
 
-  fetchGroups();
-}
-
-  async function deleteGroup(id: string) {
-    await fetch(`/api/groups/${id}`, {
-      method: "DELETE",
-    });
-
-    fetchGroups();
-  }
-
-  return (
-    <div className="space-y-10">
-      <div className="flex items-center justify-between">
-  <h1 className="text-3xl font-bold">Groups</h1>
-
-  <button
-  onClick={() => {
-    setFormError("");
-    setShowCreateModal(true);
-  }}
+  setShowCreateModal(true);
+}}
   className="bg-green-600 text-white px-5 py-2 rounded-lg shadow-sm hover:bg-green-700 transition"
 >
   + Add New Group
@@ -208,34 +291,95 @@ const [split, setSplit] = useState({
         </div>
       </div>
 
+      <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex flex-wrap gap-4">
+
+  {/* DAY FILTER */}
+  <select
+    value={dayFilter}
+    onChange={(e) => setDayFilter(e.target.value)}
+    className="border p-2 rounded-lg"
+  >
+    <option value="ALL">All Days</option>
+    <option value="ODD">Odd</option>
+    <option value="EVEN">Even</option>
+    <option value="INTENSIVE">Intensive</option>
+    <option value="CUSTOM">Custom</option>
+  </select>
+
+  {/* LEVEL FILTER */}
+  <select
+    value={levelFilter}
+    onChange={(e) => setLevelFilter(e.target.value)}
+    className="border p-2 rounded-lg"
+  >
+    <option value="ALL">All Levels</option>
+    <option value="MY">My Groups</option>
+    {[...new Set(stats.levelDistribution.map((l:any)=>l.level))].map((level)=>(
+  <option key={level} value={level}>{level}</option>
+))}
+  </select>
+
+  {/* TEACHER FILTER */}
+  <select
+    value={teacherFilter}
+    onChange={(e) => setTeacherFilter(e.target.value)}
+    className="border p-2 rounded-lg"
+  >
+    <option value="ALL">All Teachers</option>
+    {teachers.map((t:any)=>(
+      <option key={t.id} value={t.name || t.email}>
+        {t.name || t.email}
+      </option>
+    ))}
+  </select>
+
+</div>
+
       <div className="space-y-4">
-        {groups.map((group) => (
-          <div key={group.id} className="border p-4 rounded">
-            <h3 className="font-bold">{group.name}</h3>
-            <p>Price: {group.monthlyPrice}</p>
-            <p>Day Type: {group.dayType}</p>
-            <p>Time: {group.startTime} - {group.endTime}</p>
+  {filteredGroups.map((group) => (
+    <GroupCard
+      key={group.id}
+      group={group}
+      onDelete={deleteGroup}
+      onEdit={(g:any)=>{
+        setEditingGroup(g);
 
-            <button
-              onClick={() => deleteGroup(group.id)}
-              className="text-red-600 mt-2"
-            >
-              Delete Group
-            </button>
+        setForm({
+          name: g.name.replace(`${g.level} `, ""),
+          level: g.level,
+          monthlyPrice: String(g.monthlyPrice ?? ""),
+          dayType: g.dayType,
+          customDays: Array.isArray(g.customDays)
+  ? g.customDays
+  : g.customDays
+  ? JSON.parse(g.customDays)
+  : [],
+          startTime: g.startTime,
+          endTime: g.endTime,
+          teacher1Id: g.teacher1Id,
+          teacher2Id: g.teacher2Id || "",
+          teacher3Id: g.teacher3Id || "",
+        });
 
-<button
-  onClick={() => {
-    setSelectedGroup(group);
-    setShowStudents(true);
-  }}
-  className="text-blue-600 mt-2 ml-4"
->
-  See Students
-</button>
+        const splits:any = { headstart:"", teacher1:"", teacher2:"", teacher3:"" };
 
-          </div>
-        ))}
-      </div>
+        g.revenueSplits?.forEach((r:any)=>{
+          if(!r.user) splits.headstart = r.percentage;
+          else if(r.userId === g.teacher1Id) splits.teacher1 = r.percentage;
+          else if(r.userId === g.teacher2Id) splits.teacher2 = r.percentage;
+          else if(r.userId === g.teacher3Id) splits.teacher3 = r.percentage;
+        });
+
+        setSplit(splits);
+        setShowCreateModal(true);
+      }}
+      onSeeStudents={(g:any)=>{
+        setSelectedGroup(g);
+        setShowStudents(true);
+      }}
+    />
+  ))}
+</div>
 
 {showStudents && selectedGroup && (
   <Modal onClose={() => setShowStudents(false)}>
@@ -247,7 +391,7 @@ const [split, setSplit] = useState({
       <div className="text-gray-400">No students assigned.</div>
     )}
 
-    <div className="space-y-4">
+    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
       {selectedGroup.students.map((student: any) => {
         const paid =
           student.payments?.[0]?.paid ?? false;
@@ -295,20 +439,26 @@ const [split, setSplit] = useState({
 
 {/* CREATE GROUP MODAL */}
 {showCreateModal && (
-  <Modal onClose={() => setShowCreateModal(false)}>
+  <Modal
+  onClose={() => {
+    setShowCreateModal(false);
+    setEditingGroup(null);
+  }}
+>
     <h2 className="text-xl font-bold mb-6">
-      Create New Group
-    </h2>
+  {editingGroup ? "Edit Group" : "Create New Group"}
+</h2>
 
     <div className={`space-y-4 ${formError ? "animate-shake" : ""}`}>
 
       <input
-        placeholder="Optional specific name (e.g., DBO, Exclusive, Fast Track)"
-        className="border p-2 w-full"
-        onChange={(e) =>
-          setForm({ ...form, name: e.target.value })
-        }
-      />
+  value={form.name}
+  placeholder="Optional specific name (e.g., DBO, Exclusive, Fast Track)"
+  className="border p-2 w-full"
+  onChange={(e) =>
+    setForm({ ...form, name: e.target.value })
+  }
+/>
 
       <select
         className="border p-2 w-full"
@@ -330,13 +480,14 @@ const [split, setSplit] = useState({
 
       <div className="relative">
   <input
-    placeholder="Monthly Price"
-    type="number"
-    className="border p-2 w-full pr-12"
-    onChange={(e) =>
-      setForm({ ...form, monthlyPrice: e.target.value })
-    }
-  />
+  value={form.monthlyPrice}
+  placeholder="Monthly Price"
+  type="number"
+  className="border p-2 w-full pr-12"
+  onChange={(e) =>
+    setForm({ ...form, monthlyPrice: e.target.value })
+  }
+/>
 
   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
     UZS
@@ -344,11 +495,12 @@ const [split, setSplit] = useState({
 </div>
 
       <select
-        className="border p-2 w-full"
-        onChange={(e) =>
-          setForm({ ...form, dayType: e.target.value })
-        }
-      >
+  className="border p-2 w-full"
+  value={form.dayType}
+  onChange={(e) =>
+    setForm({ ...form, dayType: e.target.value })
+  }
+>
         <option value="ODD">Odd Days (Mon/Wed/Fri)</option>
         <option value="EVEN">Even Days (Tue/Thu/Sat)</option>
         <option value="INTENSIVE">Intensive (Mon–Sat)</option>
@@ -383,28 +535,31 @@ const [split, setSplit] = useState({
 
       <div className="flex gap-4">
         <input
-          type="time"
-          className="border p-2 w-full"
-          onChange={(e) =>
-            setForm({ ...form, startTime: e.target.value })
-          }
-        />
+  type="time"
+  value={form.startTime}
+  className="border p-2 w-full"
+  onChange={(e) =>
+    setForm({ ...form, startTime: e.target.value })
+  }
+/>
 
         <input
-          type="time"
-          className="border p-2 w-full"
-          onChange={(e) =>
-            setForm({ ...form, endTime: e.target.value })
-          }
-        />
+  type="time"
+  value={form.endTime}
+  className="border p-2 w-full"
+  onChange={(e) =>
+    setForm({ ...form, endTime: e.target.value })
+  }
+/>
       </div>
 
       <select
-        className="border p-2 w-full"
-        onChange={(e) =>
-          setForm({ ...form, teacher1Id: e.target.value })
-        }
-      >
+  className="border p-2 w-full"
+  value={form.teacher1Id}
+  onChange={(e) =>
+    setForm({ ...form, teacher1Id: e.target.value })
+  }
+>
         <option value="">Select Teacher 1</option>
         {teachers.map((t) => (
           <option key={t.id} value={t.id}>
@@ -415,6 +570,7 @@ const [split, setSplit] = useState({
 
       <select
   className="border p-2 w-full"
+  value={form.teacher3Id}
   onChange={(e) =>
     setForm({ ...form, teacher3Id: e.target.value })
   }
@@ -428,11 +584,12 @@ const [split, setSplit] = useState({
 </select>
 
       <select
-        className="border p-2 w-full"
-        onChange={(e) =>
-          setForm({ ...form, teacher2Id: e.target.value })
-        }
-      >
+  className="border p-2 w-full"
+  value={form.teacher2Id}
+  onChange={(e) =>
+    setForm({ ...form, teacher2Id: e.target.value })
+  }
+>
         <option value="">Select Teacher 2 (Optional)</option>
         {teachers.map((t) => (
           <option key={t.id} value={t.id}>
@@ -467,7 +624,7 @@ const [split, setSplit] = useState({
 }}
         className="bg-green-600 text-white px-6 py-2 rounded w-full"
       >
-        Create Group
+        {editingGroup ? "Update Group" : "Create Group"}
       </button>
 
       {formError && (
@@ -480,8 +637,43 @@ const [split, setSplit] = useState({
   </Modal>
 )}
 
+{deleteTarget && (
+  <Modal onClose={() => setDeleteTarget(null)}>
+    <h2 className="text-xl font-bold mb-4 text-center">
+      Delete Group
+    </h2>
+
+    <p className="text-gray-600 text-center mb-6">
+      Are you sure you want to delete{" "}
+      <span className="font-semibold">{deleteTarget.name}</span>?
+      <br />
+      This action cannot be undone.
+    </p>
+
+    <div className="flex gap-3">
+      <button
+        onClick={() => setDeleteTarget(null)}
+        className="flex-1 py-2 rounded-lg border"
+      >
+        Cancel
+      </button>
+
+      <button
+        onClick={confirmDelete}
+        className="flex-1 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+      >
+        Delete
+      </button>
+    </div>
+  </Modal>
+)}
+
 {showRevenueModal && (
-  <Modal onClose={() => setShowRevenueModal(false)}>
+  <Modal
+  onClose={() => {
+    setShowRevenueModal(false);
+  }}
+>
     <h2 className="text-xl font-bold mb-2">
       Revenue Split
     </h2>
@@ -586,11 +778,11 @@ const [split, setSplit] = useState({
 
 setSplitError("");
 
-          await createGroupWithSplit();
+          await saveGroupWithSplit();
           setIsSubmitting(false);
         }}
       >
-        Confirm & Create Group
+        {editingGroup ? "Save Changes" : "Confirm & Create Group"}
       </button>
 
       {splitError && (

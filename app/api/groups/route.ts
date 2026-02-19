@@ -17,20 +17,20 @@ export async function GET() {
   const currentMonth = dayjs().format("YYYY-MM");
 
   const groups = await prisma.group.findMany({
-    include: {
-      teacher1: true,
-      teacher2: true,
-      students: {
-        include: {
-          payments: {
-            where: {
-              month: currentMonth,
-            },
-          },
+  include: {
+    teacher1: true,
+    teacher2: true,
+    teacher3: true,
+    revenueSplits: { include: { user: true } },
+    students: {
+      include: {
+        payments: {
+          where: { month: currentMonth },
         },
       },
     },
-  });
+  },
+});
 
   return NextResponse.json(groups);
 }
@@ -47,18 +47,18 @@ export async function GET() {
   ],
 },
     include: {
-      teacher1: true,
-      teacher2: true,
-      students: {
-        include: {
-          payments: {
-            where: {
-              month: currentMonth,
-            },
-          },
-        },
+  teacher1: true,
+  teacher2: true,
+  teacher3: true,
+  revenueSplits: { include: { user: true } },
+  students: {
+    include: {
+      payments: {
+        where: { month: currentMonth },
       },
     },
+  },
+},
   });
 
   return NextResponse.json(groups);
