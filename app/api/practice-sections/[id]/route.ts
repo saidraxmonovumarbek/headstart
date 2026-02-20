@@ -6,10 +6,10 @@ UPDATE SECTION
 */
 export async function PUT(
   req: Request,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const body = await req.json();
 
     const section = await prisma.practiceSection.update({
@@ -33,9 +33,9 @@ DELETE SECTION
 */
 export async function DELETE(
   req: Request,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = context.params;
+  const { id } = await context.params;
 
   await prisma.practiceSection.delete({
     where: { id },
