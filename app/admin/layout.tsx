@@ -73,12 +73,12 @@ useEffect(() => {
   { name: "Groups", icon: Users, href: "/admin/groups" },
 
   { name: "Calendar", icon: CalendarDays, href: "/admin/calendar" },
-  { name: "Vocabulary", icon: BookOpen, href: "/admin/vocabulary" }, // 🔥 NEW
+  { name: "Vocabulary", icon: BookOpen, href: "/admin/vocabulary" },
 
-  { name: "Practice", icon: BookOpen, href: "/admin/practice" },
+  { name: "Practice", icon: BookOpen, href: "/practice" },
 
   { name: "Mock Exams", icon: FileText, href: "/admin/mock-exam" },
-  { name: "Events", icon: CalendarCheck, href: "/admin/events" }, // 🔥 NEW
+  { name: "Events", icon: CalendarCheck, href: "/admin/events" },
 
   { name: "Registered Users", icon: Users, href: "/admin/users" },
 
