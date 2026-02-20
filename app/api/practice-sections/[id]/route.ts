@@ -2,17 +2,18 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
 /*
-UPDATE SECTION CONTENT
+UPDATE SECTION
 */
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
+    const { id } = context.params;
     const body = await req.json();
 
     const section = await prisma.practiceSection.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title: body.title,
         content: body.content,
@@ -32,10 +33,12 @@ DELETE SECTION
 */
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
+  const { id } = context.params;
+
   await prisma.practiceSection.delete({
-    where: { id: params.id },
+    where: { id },
   });
 
   return NextResponse.json({ ok: true });

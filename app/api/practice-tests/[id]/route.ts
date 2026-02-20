@@ -1,44 +1,35 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-/**
- * GET SINGLE TEST
- */
+/*
+GET SINGLE TEST
+*/
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  try {
-    const test = await prisma.practiceTest.findUnique({
-      where: { id: params.id },
-    });
+  const { id } = context.params;
 
-    if (!test) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
-    }
+  const test = await prisma.practiceTest.findUnique({
+    where: { id },
+    include: { sections: true },
+  });
 
-    return NextResponse.json(test);
-  } catch (e) {
-    console.error(e);
-    return NextResponse.json({ error: "Failed" }, { status: 500 });
-  }
+  return NextResponse.json(test);
 }
 
-/**
- * DELETE TEST
- */
+/*
+DELETE TEST
+*/
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  try {
-    await prisma.practiceTest.delete({
-      where: { id: params.id },
-    });
+  const { id } = context.params;
 
-    return NextResponse.json({ ok: true });
-  } catch (e) {
-    console.error(e);
-    return NextResponse.json({ error: "Failed" }, { status: 500 });
-  }
+  await prisma.practiceTest.delete({
+    where: { id },
+  });
+
+  return NextResponse.json({ ok: true });
 }
