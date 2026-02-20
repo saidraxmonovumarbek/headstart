@@ -75,6 +75,8 @@ useEffect(() => {
   { name: "Calendar", icon: CalendarDays, href: "/admin/calendar" },
   { name: "Vocabulary", icon: BookOpen, href: "/admin/vocabulary" }, // 🔥 NEW
 
+  { name: "Practice", icon: BookOpen, href: "/admin/practice" },
+
   { name: "Mock Exams", icon: FileText, href: "/admin/mock-exam" },
   { name: "Events", icon: CalendarCheck, href: "/admin/events" }, // 🔥 NEW
 
