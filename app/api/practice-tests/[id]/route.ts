@@ -6,9 +6,9 @@ GET SINGLE TEST
 */
 export async function GET(
   req: Request,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = context.params;
+  const { id } = await context.params;
 
   const test = await prisma.practiceTest.findUnique({
     where: { id },
@@ -23,9 +23,9 @@ DELETE TEST
 */
 export async function DELETE(
   req: Request,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = context.params;
+  const { id } = await context.params;
 
   await prisma.practiceTest.delete({
     where: { id },
