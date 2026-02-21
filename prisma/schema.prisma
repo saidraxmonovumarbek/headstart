@@ -167,3 +167,11 @@ model Payment {
 
   @@unique([studentId, groupId, month])
 }
+
+model Expense {
+  id        String   @id @default(cuid())
+  title     String
+  amount    Int
+  month     String
+  createdAt DateTime @default(now())
+}
