@@ -4,6 +4,8 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
 import dayjs from "dayjs";
 
+export const runtime = "nodejs";
+
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRef } from "react";
 import { useSession } from "next-auth/react";
 import {
   BarChart,
@@ -33,9 +34,23 @@ export default function FinancePage() {
   const [editingExpense, setEditingExpense] = useState<any>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
+  const [deleteExpense, setDeleteExpense] = useState<any>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     fetchStats();
   }, []);
+
+  useEffect(() => {
+  function handleClickOutside(e: MouseEvent) {
+    if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+      setOpenMenu(null);
+    }
+  }
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, []);
 
   async function fetchStats() {
     const res = await fetch("/api/finance");
@@ -91,7 +106,10 @@ export default function FinancePage() {
 
           <div className="flex justify-between mb-6">
             <div>
-              <div className="text-sm text-gray-500">Headstart Profit</div>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+  <TrendingUp size={16} />
+  Headstart Profit
+</div>
               <div className="text-4xl font-bold text-green-600">
                 {stats.netProfit.toLocaleString()} UZS
               </div>
@@ -134,8 +152,10 @@ export default function FinancePage() {
 
         {/* TRANSACTIONS */}
         <div className="bg-white p-8 rounded-2xl shadow border">
-          <h2 className="text-xl font-semibold mb-6">Transactions</h2>
-
+          <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
+  <CreditCard size={18} />
+  Transactions
+</h2>
           <div className="space-y-4">
             {stats.transactions.map((t: any) => (
               <div
@@ -183,9 +203,11 @@ export default function FinancePage() {
   <div className="space-y-3">
     {stats.expenses?.map((e: any) => (
       <div
-        key={e.id}
-        className="flex justify-between items-center p-4 border rounded-xl relative"
-      >
+  key={e.id}
+  className="flex justify-between items-center p-4 border rounded-xl relative"
+  onMouseEnter={() => setOpenMenu(e.id)}
+  onMouseLeave={() => setOpenMenu(null)}
+>
         <div>
           <div className="font-medium">{e.title}</div>
           <div className="text-sm text-gray-500">
@@ -194,17 +216,15 @@ export default function FinancePage() {
         </div>
 
         {/* 3 dots */}
-        <button
-  onClick={(ev) => {
-    ev.stopPropagation();
-    setOpenMenu(openMenu === e.id ? null : e.id);
-  }}
->
-          <MoreVertical size={18} />
-        </button>
+        <button>
+  <MoreVertical size={18} />
+</button>
 
         {openMenu === e.id && (
-          <div className="absolute right-4 top-12 bg-white shadow rounded-lg border z-20">
+          <div
+  ref={menuRef}
+  className="absolute right-4 top-12 bg-white shadow rounded-lg border z-20"
+>
             <button
               onClick={() => {
   setOpenMenu(null);
@@ -219,17 +239,14 @@ export default function FinancePage() {
             </button>
 
             <button
-              onClick={async () => {
-                if (confirm("Delete expense?")) {
-                  await fetch(`/api/expenses/${e.id}`, { method: "DELETE" });
-setOpenMenu(null);
-fetchStats();
-                }
-              }}
-              className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-gray-50 w-full"
-            >
-              <Trash2 size={14} /> Delete
-            </button>
+  onClick={() => {
+    setOpenMenu(null);
+    setDeleteExpense(e);
+  }}
+  className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-gray-50 w-full"
+>
+  <Trash2 size={14} /> Delete
+</button>
           </div>
         )}
       </div>
@@ -237,6 +254,53 @@ fetchStats();
   </div>
 </div>
             </div>
+
+            {/* DELETE CONFIRM MODAL */}
+{deleteExpense && (
+  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    <div className="bg-white rounded-2xl p-6 w-[360px] space-y-4 shadow-xl">
+      <h3 className="font-semibold text-lg">Delete expense?</h3>
+
+      <p className="text-sm text-gray-500">
+        This action cannot be undone.
+      </p>
+
+      <div className="flex justify-end gap-2">
+        <button
+          onClick={() => setDeleteExpense(null)}
+          className="px-4 py-2 border rounded-lg"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={async () => {
+  try {
+    const res = await fetch(`/api/expenses/${deleteExpense.id}`, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("DELETE ERROR:", text);
+      return;
+    }
+
+    setDeleteExpense(null);
+    setOpenMenu(null);
+    fetchStats();
+  } catch (err) {
+    console.error("DELETE CRASH:", err);
+  }
+}}
+          className="px-4 py-2 bg-red-600 text-white rounded-lg"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
       {/* ⭐ EXPENSE MODAL */}
       {showExpenseModal && (
@@ -275,7 +339,7 @@ fetchStats();
               <button
                 onClick={async () => {
                   if (editingExpense) {
-                    await fetch(`/api/expenses/${editingExpense.id}`, {
+                    const res = await fetch(`/api/expenses/${editingExpense.id}`, {
   method: "PATCH",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
@@ -283,6 +347,12 @@ fetchStats();
     amount: Number(expenseAmount),
   }),
 });
+
+if (!res.ok) {
+  const text = await res.text();
+  console.error("PATCH ERROR:", text);
+  return;
+}
                   } else {
                     await addExpense();
                   }
