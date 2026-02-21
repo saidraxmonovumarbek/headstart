@@ -47,12 +47,13 @@ export default function FinancePage() {
     if (!expenseTitle || !expenseAmount) return;
 
     await fetch("/api/expenses", {
-      method: "POST",
-      body: JSON.stringify({
-        title: expenseTitle,
-        amount: Number(expenseAmount),
-      }),
-    });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    title: expenseTitle,
+    amount: Number(expenseAmount),
+  }),
+});
 
     setExpenseTitle("");
     setExpenseAmount("");
@@ -193,7 +194,12 @@ export default function FinancePage() {
         </div>
 
         {/* 3 dots */}
-        <button onClick={() => setOpenMenu(openMenu === e.id ? null : e.id)}>
+        <button
+  onClick={(ev) => {
+    ev.stopPropagation();
+    setOpenMenu(openMenu === e.id ? null : e.id);
+  }}
+>
           <MoreVertical size={18} />
         </button>
 
@@ -257,7 +263,10 @@ fetchStats();
 
             <div className="flex justify-end gap-2">
               <button
-                onClick={() => setShowExpenseModal(false)}
+                onClick={() => {
+  setShowExpenseModal(false);
+  setEditingExpense(null);
+}}
                 className="px-4 py-2 border rounded-lg"
               >
                 Cancel
@@ -267,20 +276,23 @@ fetchStats();
                 onClick={async () => {
                   if (editingExpense) {
                     await fetch(`/api/expenses/${editingExpense.id}`, {
-                      method: "PATCH",
-                      body: JSON.stringify({
-                        title: expenseTitle,
-                        amount: Number(expenseAmount),
-                      }),
-                    });
+  method: "PATCH",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    title: expenseTitle,
+    amount: Number(expenseAmount),
+  }),
+});
                   } else {
                     await addExpense();
                   }
 
                   setShowExpenseModal(false);
-                  setExpenseTitle("");
-                  setExpenseAmount("");
-                  fetchStats();
+setOpenMenu(null);   // ⭐ ADD HERE
+setEditingExpense(null);
+setExpenseTitle("");
+setExpenseAmount("");
+fetchStats();
                 }}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg"
               >
