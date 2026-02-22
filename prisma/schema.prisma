@@ -175,3 +175,15 @@ model Expense {
   month     String
   createdAt DateTime @default(now())
 }
+
+model EmployeePayroll {
+  id        String   @id @default(cuid())
+  name      String
+  position  String
+  salary    Int
+  month     String
+  type      String?  // cash | online
+  status    String   @default("pending")
+  paidAt    DateTime?
+  createdAt DateTime @default(now())
+}

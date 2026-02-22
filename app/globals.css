@@ -155,3 +155,25 @@ body {
 .animate-shake {
   animation: shake 0.3s ease-in-out;
 }
+
+@keyframes loader {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.animate-loader {
+  animation: loader 1.6s linear infinite;
+}
+
+@keyframes loadingShine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+.animate-loading-shine {
+  animation: loadingShine 2.4s linear infinite;
+}

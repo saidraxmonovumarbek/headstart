@@ -44,6 +44,83 @@ export async function GET() {
   });
 
   // =========================
+// EMPLOYEE PAYROLL
+// =========================
+const employeePayroll = await prisma.employeePayroll.findMany({
+  where: { month: currentMonth },
+  orderBy: { createdAt: "desc" },
+});
+
+// =========================
+// TEACHER PAYROLL (AGGREGATE FROM PAYMENTS)
+// =========================
+const teacherPayrollMap: Record<string, any> = {};
+
+payments.forEach((p) => {
+  p.group.revenueSplits
+    .filter((s) => s.user)
+    .forEach((s) => {
+      const teacherId = s.userId!;
+      const teacherName = s.user?.name || "Teacher";
+
+      if (!teacherPayrollMap[teacherId]) {
+        teacherPayrollMap[teacherId] = {
+          id: teacherId,
+          name: teacherName,
+          position: "Teacher",
+          salary: 0,
+          type: null,
+          status: "pending",
+          paidAt: null,
+        };
+      }
+
+      teacherPayrollMap[teacherId].salary += Math.floor(
+  (p.group.monthlyPrice! * s.percentage) / 100
+);
+    });
+});
+
+const teacherPayroll = Object.values(teacherPayrollMap);
+
+// =========================
+// ENSURE TEACHER PAYROLL PERSISTENCE
+// =========================
+for (const t of teacherPayroll) {
+  const existing = await prisma.employeePayroll.findFirst({
+    where: {
+      month: currentMonth,
+      name: t.name,
+      position: "Teacher",
+    },
+  });
+
+  if (!existing) {
+    await prisma.employeePayroll.create({
+      data: {
+        name: t.name,
+        position: "Teacher",
+        salary: t.salary,
+        status: "pending",
+        type: null,
+        month: currentMonth,
+      },
+    });
+  } else {
+    // update salary realtime
+    await prisma.employeePayroll.update({
+      where: { id: existing.id },
+      data: { salary: t.salary },
+    });
+  }
+}
+
+const payroll = await prisma.employeePayroll.findMany({
+  where: { month: currentMonth },
+  orderBy: { createdAt: "desc" },
+});
+
+  // =========================
   // TOTALS
   // =========================
   let totalCollected = 0;
@@ -59,6 +136,12 @@ export async function GET() {
 
   expenses.forEach((e: any) => {
   totalExpenses += e.amount;
+});
+
+payroll.forEach((p) => {
+  if (p.status === "paid") {
+    totalExpenses += p.salary;
+  }
 });
 
   const netProfit = totalHeadstart - totalExpenses;
@@ -109,6 +192,13 @@ expenses.forEach((e) => {
   dailyData[day].expenses += e.amount;
 });
 
+payroll.forEach((e) => {
+  if (e.status === "paid" && e.paidAt) {
+    const day = dayjs(e.paidAt).date() - 1;
+    dailyData[day].expenses += e.salary;
+  }
+});
+
 dailyData.forEach((d) => {
   d.net = d.collected - d.expenses;
 });
@@ -125,5 +215,6 @@ dailyData.forEach((d) => {
     transactions,
     expenses,
     dailyData,
+    payroll,
   });
 }

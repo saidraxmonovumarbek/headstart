@@ -37,9 +37,23 @@ export default function FinancePage() {
   const [deleteExpense, setDeleteExpense] = useState<any>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  const [payrollSearch, setPayrollSearch] = useState("");
+
+  const [showEmployeeModal, setShowEmployeeModal] = useState(false);
+  const [employeeName, setEmployeeName] = useState("");
+  const [employeePosition, setEmployeePosition] = useState("");
+  const [employeeSalary, setEmployeeSalary] = useState("");
+
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    fetchStats();
-  }, []);
+  async function init() {
+    await fetchStats();
+    setIsLoading(false);
+  }
+
+  init();
+}, []);
 
   useEffect(() => {
   function handleClickOutside(e: MouseEvent) {
@@ -53,10 +67,26 @@ export default function FinancePage() {
 }, []);
 
   async function fetchStats() {
+  try {
     const res = await fetch("/api/finance");
+
+    if (!res.ok) {
+      console.error("Finance fetch failed");
+      return;
+    }
+
     const data = await res.json();
     setStats(data);
+  } catch (err) {
+    console.error("Finance fetch crash:", err);
   }
+}
+
+async function refetchStats() {
+  setIsLoading(true);
+  await fetchStats();
+  setIsLoading(false);
+}
 
   async function addExpense() {
     if (!expenseTitle || !expenseAmount) return;
@@ -72,26 +102,56 @@ export default function FinancePage() {
 
     setExpenseTitle("");
     setExpenseAmount("");
-    fetchStats();
+    await refetchStats();
   }
+
+  async function updatePayroll(id: string, data: any) {
+  await fetch(`/api/payroll/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  await refetchStats();
+}
 
   if (!session?.user?.isSuperAdmin) {
     return <div className="p-10">Access denied.</div>;
   }
 
-  if (!stats) {
-    return <div className="p-10">Loading...</div>;
-  }
+  if (isLoading) {
+  return (
+    <div className="flex flex-col xl:flex-row gap-8 h-full">
+      <div className="flex-1 flex items-center justify-center">
+        <div className="w-full max-w-md px-6 text-center">
+          <p className="text-emerald-600 text-lg font-semibold mb-6">
+            Loading your finance dashboard...
+          </p>
+
+          <div className="w-full h-2 bg-emerald-100 rounded-full overflow-hidden">
+            <div className="h-full bg-emerald-500 animate-loading-bar" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
   const chartData = [
-    {
-      name: "Month",
-      collected: stats.totalCollected,
-      teacher: stats.totalTeacher,
-      expenses: stats.totalExpenses,
-      profit: stats.netProfit,
-    },
-  ];
+  {
+    name: "Month",
+    collected: stats?.totalCollected ?? 0,
+    teacher: stats?.totalTeacher ?? 0,
+    expenses: stats?.totalExpenses ?? 0,
+    profit: stats?.netProfit ?? 0,
+  },
+];
+
+const filteredPayroll = stats?.payroll?.filter((p: any) =>
+  (p.name || "")
+    .toLowerCase()
+    .includes(payrollSearch.toLowerCase())
+);
 
   return (
     <div className="p-10 space-y-10">
@@ -146,6 +206,105 @@ export default function FinancePage() {
 <Stat title="Net Profit" value={stats.netProfit} color="purple" icon={TrendingUp} />
         </div>
       </div>
+
+      {/* ===================== PAYROLL TABLE ===================== */}
+<div className="bg-white p-8 rounded-2xl shadow border space-y-6">
+
+  <div className="flex justify-between items-center">
+    <h2 className="text-xl font-semibold flex items-center gap-2">
+      <CreditCard size={18} />
+      Employees Payroll
+    </h2>
+
+    <div className="flex gap-3">
+      {/* SEARCH */}
+      <input
+  value={payrollSearch}
+  onChange={(e) => setPayrollSearch(e.target.value)}
+  placeholder="Search employee..."
+  className="border rounded-lg px-3 py-2 text-sm"
+/>
+
+      {/* MONTH SWITCH (UI only for now) */}
+      <select className="border rounded-lg px-3 py-2 text-sm">
+        <option>This month</option>
+        <option>Last month</option>
+      </select>
+
+      {/* ADD EMPLOYEE */}
+      <button
+  onClick={() => setShowEmployeeModal(true)}
+  className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm"
+>
+  + Add Employee
+</button>
+    </div>
+  </div>
+
+  {/* TABLE HEADER */}
+  <div className="grid grid-cols-6 text-sm font-medium text-gray-500 border-b pb-2">
+    <div>Employee</div>
+    <div>Position</div>
+    <div>Salary</div>
+    <div>Type</div>
+    <div>Status</div>
+    <div>Paid time</div>
+  </div>
+
+  {/* TABLE BODY PLACEHOLDER */}
+  <div className="space-y-2">
+  {filteredPayroll?.map((p: any) => (
+    <div
+      key={p.id}
+      className="grid grid-cols-6 items-center p-3 border rounded-lg text-sm"
+    >
+      {/* Employee */}
+      <div className="font-medium">{p.name}</div>
+
+      {/* Position */}
+      <div className="text-gray-500">{p.position}</div>
+
+      {/* Salary */}
+      <div className="font-semibold">
+        {p.salary?.toLocaleString()} UZS
+      </div>
+
+      {/* Type dropdown */}
+      <select
+  defaultValue={p.type || ""}
+  onChange={(e) =>
+    updatePayroll(p.id, { type: e.target.value, status: p.status })
+  }
+  className="border rounded px-2 py-1"
+>
+  <option value="">—</option>
+  <option value="cash">Cash</option>
+  <option value="online">Online</option>
+</select>
+
+      {/* Status dropdown */}
+      <select
+  defaultValue={p.status}
+  onChange={(e) =>
+    updatePayroll(p.id, { status: e.target.value, type: p.type })
+  }
+  className="border rounded px-2 py-1"
+>
+  <option value="pending">Pending</option>
+  <option value="paid">Paid</option>
+</select>
+
+      {/* Paid time */}
+      <div className="text-gray-400">
+        {p.paidAt
+          ? new Date(p.paidAt).toLocaleString()
+          : "—"}
+      </div>
+    </div>
+  ))}
+</div>
+
+</div>
 
       {/* ===================== BOTTOM PANEL ===================== */}
       <div className="grid grid-cols-2 gap-6">
@@ -288,7 +447,7 @@ export default function FinancePage() {
 
     setDeleteExpense(null);
     setOpenMenu(null);
-    fetchStats();
+    await refetchStats();
   } catch (err) {
     console.error("DELETE CRASH:", err);
   }
@@ -358,11 +517,11 @@ if (!res.ok) {
                   }
 
                   setShowExpenseModal(false);
-setOpenMenu(null);   // ⭐ ADD HERE
+setOpenMenu(null);
 setEditingExpense(null);
 setExpenseTitle("");
 setExpenseAmount("");
-fetchStats();
+await refetchStats();
                 }}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg"
               >
@@ -372,6 +531,74 @@ fetchStats();
           </div>
         </div>
       )}
+
+      {/* ⭐ EMPLOYEE MODAL */}
+{showEmployeeModal && (
+  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    <div className="bg-white rounded-2xl p-6 w-[380px] space-y-4 shadow-xl">
+
+      <h3 className="text-lg font-semibold">Add Employee</h3>
+
+      <input
+        placeholder="Employee name"
+        value={employeeName}
+        onChange={(e) => setEmployeeName(e.target.value)}
+        className="w-full border rounded-lg px-4 py-2"
+      />
+
+      <input
+        placeholder="Position"
+        value={employeePosition}
+        onChange={(e) => setEmployeePosition(e.target.value)}
+        className="w-full border rounded-lg px-4 py-2"
+      />
+
+      <input
+        placeholder="Salary"
+        value={employeeSalary}
+        onChange={(e) => setEmployeeSalary(e.target.value)}
+        className="w-full border rounded-lg px-4 py-2"
+      />
+
+      <div className="flex justify-end gap-2">
+        <button
+          onClick={() => setShowEmployeeModal(false)}
+          className="px-4 py-2 border rounded-lg"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={async () => {
+            const res = await fetch("/api/payroll", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: employeeName,
+                position: employeePosition,
+                salary: Number(employeeSalary),
+              }),
+            });
+
+            if (!res.ok) {
+              console.error(await res.text());
+              return;
+            }
+
+            setShowEmployeeModal(false);
+setEmployeeName("");
+setEmployeePosition("");
+setEmployeeSalary("");
+await refetchStats();
+          }}
+          className="px-4 py-2 bg-green-600 text-white rounded-lg"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
     </div>
   );
