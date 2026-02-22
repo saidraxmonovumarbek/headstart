@@ -45,22 +45,25 @@ export default function FinancePage() {
   const [employeeSalary, setEmployeeSalary] = useState("");
 
   const [isLoading, setIsLoading] = useState(true);
-
-  const abortRef = useRef<AbortController | null>(null);
-  const fetchIdRef = useRef(0);
-  const [showChart, setShowChart] = useState(false);
-
+  
   useEffect(() => {
-  safeFetchStats();
+  async function init() {
+  const res = await fetch("/api/finance");
 
-  const interval = setInterval(() => {
-    safeFetchStats(true);
-  }, 30000);
+  if (!res.ok) {
+    setIsLoading(false);
+    return;
+  }
 
-  return () => {
-    clearInterval(interval);
-    abortRef.current?.abort();
-  };
+  const data = await res.json();
+  setStats(data);
+
+  requestAnimationFrame(() => {
+    setIsLoading(false);
+  });
+}
+
+  init();
 }, []);
 
   useEffect(() => {
@@ -74,34 +77,26 @@ export default function FinancePage() {
   return () => document.removeEventListener("mousedown", handleClickOutside);
 }, []);
 
-async function safeFetchStats(background = false) {
-  const fetchId = ++fetchIdRef.current;
-
-  if (abortRef.current) abortRef.current.abort();
-
-  const controller = new AbortController();
-  abortRef.current = controller;
-
+  async function fetchStats() {
   try {
-    if (!background && !stats) setIsLoading(true);
+    const res = await fetch("/api/finance");
 
-    const res = await fetch("/api/finance", { signal: controller.signal });
-
-    if (!res.ok) return;
+    if (!res.ok) {
+      console.error("Finance fetch failed");
+      return;
+    }
 
     const data = await res.json();
-
-    if (fetchId !== fetchIdRef.current) return;
-
     setStats(data);
-
-    requestAnimationFrame(() => {
-      setIsLoading(false);
-      setTimeout(() => setShowChart(true), 0);
-    });
-  } catch (e: any) {
-    if (e.name !== "AbortError") console.error(e);
+  } catch (err) {
+    console.error("Finance fetch crash:", err);
   }
+}
+
+async function refetchStats() {
+  setIsLoading(true);
+  await fetchStats();
+  setIsLoading(false);
 }
 
   async function addExpense() {
@@ -118,33 +113,40 @@ async function safeFetchStats(background = false) {
 
     setExpenseTitle("");
     setExpenseAmount("");
-    safeFetchStats(true);
+    await refetchStats();
   }
 
   async function updatePayroll(id: string, data: any) {
-  setStats((prev: any) => ({
-    ...prev,
-    payroll: prev.payroll.map((p: any) =>
-      p.id === id ? { ...p, ...data } : p
-    ),
-  }));
+  await fetch(`/api/payroll/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
 
-  try {
-    await fetch(`/api/payroll/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-
-    safeFetchStats(true);
-  } catch {
-    safeFetchStats(true);
-  }
+  await refetchStats();
 }
 
   if (!session?.user?.isSuperAdmin) {
     return <div className="p-10">Access denied.</div>;
   }
+
+  if (isLoading) {
+  return (
+    <div className="flex flex-col xl:flex-row gap-8 h-full">
+      <div className="flex-1 flex items-center justify-center">
+        <div className="w-full max-w-md px-6 text-center">
+          <p className="text-emerald-600 text-lg font-semibold mb-6">
+            Loading your finance dashboard...
+          </p>
+
+          <div className="w-full h-2 bg-emerald-100 rounded-full overflow-hidden">
+            <div className="h-full bg-emerald-500 animate-loading-bar" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
   const chartData = [
   {
@@ -161,23 +163,6 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
     .toLowerCase()
     .includes(payrollSearch.toLowerCase())
 );
-
-const skeleton = (
-  <div className="p-10 space-y-10 animate-pulse">
-    <div className="h-10 bg-gray-200 rounded w-1/3" />
-    <div className="grid grid-cols-5 gap-6">
-      <div className="col-span-4 h-72 bg-gray-200 rounded-2xl" />
-      <div className="space-y-4">
-        <div className="h-20 bg-gray-200 rounded-2xl" />
-        <div className="h-20 bg-gray-200 rounded-2xl" />
-        <div className="h-20 bg-gray-200 rounded-2xl" />
-        <div className="h-20 bg-gray-200 rounded-2xl" />
-      </div>
-    </div>
-  </div>
-);
-
-if (!stats) return skeleton;
 
   return (
     <div className="p-10 space-y-10">
@@ -210,22 +195,18 @@ if (!stats) return skeleton;
             </div>
           </div>
 
-          {showChart ? (
-  <ResponsiveContainer width="100%" height={300}>
-    <BarChart data={chartData}>
-      <XAxis dataKey="name" />
-      <YAxis />
-      <Tooltip />
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={chartData}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
 
-      <Bar dataKey="collected" fill="#10b981" radius={[6,6,0,0]} />
-      <Bar dataKey="teacher" fill="#3b82f6" radius={[6,6,0,0]} />
-      <Bar dataKey="expenses" fill="#ef4444" radius={[6,6,0,0]} />
-      <Bar dataKey="profit" fill="#a855f7" radius={[6,6,0,0]} />
-    </BarChart>
-  </ResponsiveContainer>
-) : (
-  <div className="h-[300px] bg-gray-100 rounded-xl animate-pulse" />
-)}
+              <Bar dataKey="collected" fill="#10b981" radius={[6,6,0,0]} />
+              <Bar dataKey="teacher" fill="#3b82f6" radius={[6,6,0,0]} />
+              <Bar dataKey="expenses" fill="#ef4444" radius={[6,6,0,0]} />
+              <Bar dataKey="profit" fill="#a855f7" radius={[6,6,0,0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
 
         {/* STAT CARDS */}
@@ -463,7 +444,7 @@ if (!stats) return skeleton;
 
     setDeleteExpense(null);
     setOpenMenu(null);
-    safeFetchStats(true);
+    await refetchStats();
   } catch (err) {
     console.error("DELETE CRASH:", err);
   }
@@ -537,7 +518,7 @@ setOpenMenu(null);
 setEditingExpense(null);
 setExpenseTitle("");
 setExpenseAmount("");
-safeFetchStats(true);
+await refetchStats();
                 }}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg"
               >
@@ -605,7 +586,7 @@ safeFetchStats(true);
 setEmployeeName("");
 setEmployeePosition("");
 setEmployeeSalary("");
-safeFetchStats(true);
+await refetchStats();
           }}
           className="px-4 py-2 bg-green-600 text-white rounded-lg"
         >
