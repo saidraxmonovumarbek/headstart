@@ -43,15 +43,11 @@ export async function PATCH(
 ) {
   try {
     const { id } = await context.params;
-
-    console.log("PATCH ID:", id);
+    const body = await req.json();
 
     if (!id) {
       return NextResponse.json({ error: "Missing ID" }, { status: 400 });
     }
-
-    const body = await req.json();
-    const { title, amount } = body;
 
     const existing = await prisma.expense.findUnique({
       where: { id },
@@ -61,15 +57,24 @@ export async function PATCH(
       return NextResponse.json({ error: "Expense not found" }, { status: 404 });
     }
 
-    await prisma.expense.update({
+    const title = body.title ?? existing.title;
+    const amount =
+      body.amount !== undefined ? Number(body.amount) : existing.amount;
+
+    if (Number.isNaN(amount)) {
+      return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
+    }
+
+    const updated = await prisma.expense.update({
       where: { id },
       data: {
         title,
-        amount: Number(amount),
+        amount,
+        month: existing.month, // ⭐ preserve month explicitly
       },
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json(updated);
   } catch (err) {
     console.error("PATCH API CRASH:", err);
     return NextResponse.json({ error: "Patch failed" }, { status: 500 });

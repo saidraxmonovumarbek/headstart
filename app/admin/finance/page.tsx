@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 import { useSession } from "next-auth/react";
+import { Check } from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -32,7 +33,8 @@ export default function FinancePage() {
 
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [editingExpense, setEditingExpense] = useState<any>(null);
-  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [openExpenseMenu, setOpenExpenseMenu] = useState<string | null>(null);
+  const [openEmployeeMenu, setOpenEmployeeMenu] = useState<string | null>(null);
 
   const [deleteExpense, setDeleteExpense] = useState<any>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -45,6 +47,9 @@ export default function FinancePage() {
   const [employeeSalary, setEmployeeSalary] = useState("");
 
   const [isLoading, setIsLoading] = useState(true);
+
+  const [editingEmployee, setEditingEmployee] = useState<any>(null);
+  const [deleteEmployee, setDeleteEmployee] = useState<any>(null);
   
   useEffect(() => {
   async function init() {
@@ -69,7 +74,8 @@ export default function FinancePage() {
   useEffect(() => {
   function handleClickOutside(e: MouseEvent) {
     if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-      setOpenMenu(null);
+      setOpenEmployeeMenu(null);
+setOpenExpenseMenu(null);
     }
   }
 
@@ -116,14 +122,28 @@ async function refetchStats() {
     await refetchStats();
   }
 
-  async function updatePayroll(id: string, data: any) {
-  await fetch(`/api/payroll/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
+  async function togglePayroll(id: string, currentStatus: string) {
+  const newStatus = currentStatus === "paid" ? "pending" : "paid";
 
-  await refetchStats();
+  const paidAt = newStatus === "paid" ? new Date().toISOString() : null;
+
+  // ⭐ optimistic UI update
+  setStats((prev: any) => ({
+    ...prev,
+    payroll: prev.payroll.map((p: any) =>
+      p.id === id ? { ...p, status: newStatus, paidAt } : p
+    ),
+  }));
+
+  try {
+    await fetch(`/api/payroll/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus, paidAt }),
+    });
+  } catch {
+    await refetchStats(); // fallback
+  }
 }
 
   if (!session?.user?.isSuperAdmin) {
@@ -164,6 +184,64 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
     .includes(payrollSearch.toLowerCase())
 );
 
+function formatPaidTime(date: string | null) {
+  if (!date) return "—";
+
+  const d = new Date(date);
+
+  return d.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+async function saveEmployee() {
+  if (!employeeName || !employeeSalary) return;
+
+  if (editingEmployee) {
+    await fetch(`/api/payroll/${editingEmployee.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: employeeName,
+        position: employeePosition,
+        salary: Number(employeeSalary),
+      }),
+    });
+  } else {
+    await fetch("/api/payroll", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: employeeName,
+        position: employeePosition,
+        salary: Number(employeeSalary),
+      }),
+    });
+  }
+
+  setEditingEmployee(null);
+  setShowEmployeeModal(false);
+  setEmployeeName("");
+  setEmployeePosition("");
+  setEmployeeSalary("");
+
+  await refetchStats();
+}
+
+async function confirmDeleteEmployee() {
+  if (!deleteEmployee) return;
+
+  await fetch(`/api/payroll/${deleteEmployee.id}`, {
+    method: "DELETE",
+  });
+
+  setDeleteEmployee(null);
+  await refetchStats();
+}
+
   return (
     <div className="p-10 space-y-10">
 
@@ -182,7 +260,7 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
   Headstart Profit
 </div>
               <div className="text-4xl font-bold text-green-600">
-                {stats.netProfit.toLocaleString()} UZS
+                {Number(stats?.netProfit ?? 0).toLocaleString()} UZS
               </div>
             </div>
 
@@ -211,10 +289,10 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
 
         {/* STAT CARDS */}
         <div className="space-y-4">
-          <Stat title="Total Collected" value={stats.totalCollected} color="green" icon={DollarSign} />
-<Stat title="Teacher payout" value={stats.totalTeacher} color="blue" icon={CreditCard} />
-<Stat title="Expenses" value={stats.totalExpenses} color="red" icon={Receipt} />
-<Stat title="Net Profit" value={stats.netProfit} color="purple" icon={TrendingUp} />
+          <Stat title="Total Collected" value={stats?.totalCollected} color="green" icon={DollarSign} />
+<Stat title="Teacher payout" value={stats?.totalTeacher} color="blue" icon={CreditCard} />
+<Stat title="Expenses" value={stats?.totalExpenses} color="red" icon={Receipt} />
+<Stat title="Net Profit" value={stats?.netProfit} color="purple" icon={TrendingUp} />
         </div>
       </div>
 
@@ -253,12 +331,13 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
   </div>
 
   {/* TABLE HEADER */}
-  <div className="grid grid-cols-5 text-sm font-medium text-gray-500 border-b pb-2">
+  <div className="grid grid-cols-6 text-sm font-medium text-gray-500 border-b pb-2">
   <div>Employee</div>
   <div>Position</div>
   <div>Salary</div>
   <div>Status</div>
   <div>Paid time</div>
+  <div></div> {/* actions column */}
 </div>
 
   {/* TABLE BODY PLACEHOLDER */}
@@ -266,7 +345,7 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
   {filteredPayroll?.map((p: any) => (
     <div
   key={p.id}
-  className="grid grid-cols-5 items-center p-3 border rounded-lg text-sm"
+  className="grid grid-cols-6 items-center p-3 border rounded-lg text-sm"
 >
       {/* Employee */}
       <div className="font-medium">{p.name}</div>
@@ -276,32 +355,93 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
 
       {/* Salary */}
       <div className="font-semibold">
-        {p.salary?.toLocaleString()} UZS
+        {Number(p.salary ?? 0).toLocaleString()} UZS
       </div>
 
-      {/* Status dropdown */}
-      <select
-  defaultValue={p.status}
-  onChange={(e) =>
-    updatePayroll(p.id, { status: e.target.value })
-  }
-  className="border rounded px-2 py-1 w-[110px]"
->
-  <option value="pending">Pending</option>
-  <option value="paid">Paid</option>
-</select>
+      <div className="flex items-center gap-3">
+
+  {/* STATUS BADGE */}
+  <div
+    className={`px-2 py-1 rounded-md text-xs font-medium
+      ${p.status === "paid"
+        ? "bg-green-100 text-green-700"
+        : "bg-yellow-100 text-yellow-700"}
+    `}
+  >
+    {p.status === "paid" ? "Paid" : "Pending"}
+  </div>
+
+  {/* TOGGLE BUTTON */}
+  <button
+    onClick={() => togglePayroll(p.id, p.status)}
+    className={`w-7 h-7 rounded-md flex items-center justify-center border
+      ${p.status === "paid"
+        ? "bg-green-500 border-green-500 text-white"
+        : "bg-white border-gray-300 hover:bg-gray-50"}
+    `}
+  >
+    <Check size={14} />
+  </button>
+
+</div>
 
       {/* Paid time */}
       <div className="text-gray-400">
-        {p.paidAt
-          ? new Date(p.paidAt).toLocaleString()
-          : "—"}
-      </div>
+  {p.status === "paid" ? formatPaidTime(p.paidAt) : "—"}
+</div>
+
+{/* ACTION MENU (only fixed salary employees) */}
+{p.position !== "Teacher" && (
+  <div className="relative">
+    <button
+      onClick={() =>
+        setOpenEmployeeMenu(openEmployeeMenu === p.id ? null : p.id)
+      }
+      className="p-1 rounded hover:bg-gray-100"
+    >
+      <MoreVertical size={16} />
+    </button>
+
+    {openEmployeeMenu === p.id && (
+    <div
+      ref={menuRef}
+      className="absolute right-0 top-7 bg-white border rounded-lg shadow z-20 min-w-[120px]"
+    >
+      <button
+        onClick={() => {
+          setOpenEmployeeMenu(null);
+          setEditingEmployee(p);
+          setEmployeeName(p.name);
+          setEmployeePosition(p.position);
+          setEmployeeSalary(String(p.salary));
+          setShowEmployeeModal(true);
+        }}
+        className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 w-full"
+      >
+        <Pencil size={14} /> Edit
+      </button>
+
+      <button
+        onClick={() => {
+          setOpenEmployeeMenu(null);
+          setDeleteEmployee(p);
+        }}
+        className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-gray-50 w-full"
+      >
+        <Trash2 size={14} /> Delete
+      </button>
+    </div>
+  )}
+</div>
+       )}
     </div>
   ))}
 </div>
 
+
 </div>
+
+
 
       {/* ===================== BOTTOM PANEL ===================== */}
       <div className="grid grid-cols-2 gap-6">
@@ -313,7 +453,7 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
   Transactions
 </h2>
           <div className="space-y-4">
-            {stats.transactions.map((t: any) => (
+            {stats?.transactions?.map((t: any) => (
               <div
                 key={t.id}
                 className="flex justify-between items-center p-4 border rounded-xl hover:bg-gray-50"
@@ -327,7 +467,7 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
 
                 <div className="text-right">
                   <div className="font-bold">
-                    {t.amountPaid?.toLocaleString()} UZS
+                    {Number(t.amountPaid ?? 0).toLocaleString()} UZS
                   </div>
                   <div className="text-xs text-gray-500">
                     H: {t.headstartRevenue} • T: {t.teacherRevenue}
@@ -361,29 +501,33 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
       <div
   key={e.id}
   className="flex justify-between items-center p-4 border rounded-xl relative"
-  onMouseEnter={() => setOpenMenu(e.id)}
-  onMouseLeave={() => setOpenMenu(null)}
+  onClick={(event) => event.stopPropagation()}
 >
         <div>
           <div className="font-medium">{e.title}</div>
           <div className="text-sm text-gray-500">
-            {e.amount.toLocaleString()} UZS
+            {Number(e.amount ?? 0).toLocaleString()} UZS
           </div>
         </div>
 
         {/* 3 dots */}
-        <button>
+        <button
+  onClick={(event) => {
+    event.stopPropagation();
+    setOpenExpenseMenu(openExpenseMenu === e.id ? null : e.id);
+  }}
+>
   <MoreVertical size={18} />
 </button>
 
-        {openMenu === e.id && (
+        {openExpenseMenu === e.id && (
           <div
   ref={menuRef}
   className="absolute right-4 top-12 bg-white shadow rounded-lg border z-20"
 >
             <button
               onClick={() => {
-  setOpenMenu(null);
+  setOpenExpenseMenu(null);
   setEditingExpense(e);
   setExpenseTitle(e.title);
   setExpenseAmount(String(e.amount));
@@ -396,7 +540,7 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
 
             <button
   onClick={() => {
-    setOpenMenu(null);
+    setOpenExpenseMenu(null);
     setDeleteExpense(e);
   }}
   className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-gray-50 w-full"
@@ -443,12 +587,36 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
     }
 
     setDeleteExpense(null);
-    setOpenMenu(null);
+    setOpenExpenseMenu(null);
     await refetchStats();
   } catch (err) {
     console.error("DELETE CRASH:", err);
   }
 }}
+          className="px-4 py-2 bg-red-600 text-white rounded-lg"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+{deleteEmployee && (
+  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    <div className="bg-white rounded-2xl p-6 w-[360px] space-y-4 shadow-xl">
+      <h3 className="font-semibold text-lg">Delete employee?</h3>
+
+      <div className="flex justify-end gap-2">
+        <button
+          onClick={() => setDeleteEmployee(null)}
+          className="px-4 py-2 border rounded-lg"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={confirmDeleteEmployee}
           className="px-4 py-2 bg-red-600 text-white rounded-lg"
         >
           Delete
@@ -504,9 +672,11 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
   }),
 });
 
+const data = await res.json();
+console.log("PATCH RESULT:", data);
+
 if (!res.ok) {
-  const text = await res.text();
-  console.error("PATCH ERROR:", text);
+  console.error("PATCH ERROR:", data);
   return;
 }
                   } else {
@@ -514,7 +684,7 @@ if (!res.ok) {
                   }
 
                   setShowExpenseModal(false);
-setOpenMenu(null);
+setOpenExpenseMenu(null);
 setEditingExpense(null);
 setExpenseTitle("");
 setExpenseAmount("");
@@ -534,7 +704,9 @@ await refetchStats();
   <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
     <div className="bg-white rounded-2xl p-6 w-[380px] space-y-4 shadow-xl">
 
-      <h3 className="text-lg font-semibold">Add Employee</h3>
+      <h3 className="text-lg font-semibold">
+  {editingEmployee ? "Edit Employee" : "Add Employee"}
+</h3>
 
       <input
         placeholder="Employee name"
@@ -566,32 +738,11 @@ await refetchStats();
         </button>
 
         <button
-          onClick={async () => {
-            const res = await fetch("/api/payroll", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                name: employeeName,
-                position: employeePosition,
-                salary: Number(employeeSalary),
-              }),
-            });
-
-            if (!res.ok) {
-              console.error(await res.text());
-              return;
-            }
-
-            setShowEmployeeModal(false);
-setEmployeeName("");
-setEmployeePosition("");
-setEmployeeSalary("");
-await refetchStats();
-          }}
-          className="px-4 py-2 bg-green-600 text-white rounded-lg"
-        >
-          Save
-        </button>
+  onClick={saveEmployee}
+  className="px-4 py-2 bg-green-600 text-white rounded-lg"
+>
+  Save
+</button>
       </div>
     </div>
   </div>
@@ -627,7 +778,7 @@ function Stat({ title, value, color, icon: Icon }: any) {
   {title}
 </div>
       <div className={`text-xl font-bold mt-1 ${colors[color]}`}>
-        {value.toLocaleString()} UZS
+        {typeof value === "number" ? value.toLocaleString() : "0"} UZS
       </div>
     </div>
   );
