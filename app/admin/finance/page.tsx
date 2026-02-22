@@ -46,13 +46,21 @@ export default function FinancePage() {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-  async function init() {
-    await fetchStats();
-    setIsLoading(false);
-  }
+  const abortRef = useRef<AbortController | null>(null);
+  const fetchIdRef = useRef(0);
+  const [showChart, setShowChart] = useState(false);
 
-  init();
+  useEffect(() => {
+  safeFetchStats();
+
+  const interval = setInterval(() => {
+    safeFetchStats(true);
+  }, 30000);
+
+  return () => {
+    clearInterval(interval);
+    abortRef.current?.abort();
+  };
 }, []);
 
   useEffect(() => {
@@ -66,26 +74,34 @@ export default function FinancePage() {
   return () => document.removeEventListener("mousedown", handleClickOutside);
 }, []);
 
-  async function fetchStats() {
-  try {
-    const res = await fetch("/api/finance");
+async function safeFetchStats(background = false) {
+  const fetchId = ++fetchIdRef.current;
 
-    if (!res.ok) {
-      console.error("Finance fetch failed");
-      return;
-    }
+  if (abortRef.current) abortRef.current.abort();
+
+  const controller = new AbortController();
+  abortRef.current = controller;
+
+  try {
+    if (!background && !stats) setIsLoading(true);
+
+    const res = await fetch("/api/finance", { signal: controller.signal });
+
+    if (!res.ok) return;
 
     const data = await res.json();
-    setStats(data);
-  } catch (err) {
-    console.error("Finance fetch crash:", err);
-  }
-}
 
-async function refetchStats() {
-  setIsLoading(true);
-  await fetchStats();
-  setIsLoading(false);
+    if (fetchId !== fetchIdRef.current) return;
+
+    setStats(data);
+
+    requestAnimationFrame(() => {
+      setIsLoading(false);
+      setTimeout(() => setShowChart(true), 0);
+    });
+  } catch (e: any) {
+    if (e.name !== "AbortError") console.error(e);
+  }
 }
 
   async function addExpense() {
@@ -102,40 +118,33 @@ async function refetchStats() {
 
     setExpenseTitle("");
     setExpenseAmount("");
-    await refetchStats();
+    safeFetchStats(true);
   }
 
   async function updatePayroll(id: string, data: any) {
-  await fetch(`/api/payroll/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
+  setStats((prev: any) => ({
+    ...prev,
+    payroll: prev.payroll.map((p: any) =>
+      p.id === id ? { ...p, ...data } : p
+    ),
+  }));
 
-  await refetchStats();
+  try {
+    await fetch(`/api/payroll/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    safeFetchStats(true);
+  } catch {
+    safeFetchStats(true);
+  }
 }
 
   if (!session?.user?.isSuperAdmin) {
     return <div className="p-10">Access denied.</div>;
   }
-
-  if (isLoading) {
-  return (
-    <div className="flex flex-col xl:flex-row gap-8 h-full">
-      <div className="flex-1 flex items-center justify-center">
-        <div className="w-full max-w-md px-6 text-center">
-          <p className="text-emerald-600 text-lg font-semibold mb-6">
-            Loading your finance dashboard...
-          </p>
-
-          <div className="w-full h-2 bg-emerald-100 rounded-full overflow-hidden">
-            <div className="h-full bg-emerald-500 animate-loading-bar" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
   const chartData = [
   {
@@ -152,6 +161,23 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
     .toLowerCase()
     .includes(payrollSearch.toLowerCase())
 );
+
+const skeleton = (
+  <div className="p-10 space-y-10 animate-pulse">
+    <div className="h-10 bg-gray-200 rounded w-1/3" />
+    <div className="grid grid-cols-5 gap-6">
+      <div className="col-span-4 h-72 bg-gray-200 rounded-2xl" />
+      <div className="space-y-4">
+        <div className="h-20 bg-gray-200 rounded-2xl" />
+        <div className="h-20 bg-gray-200 rounded-2xl" />
+        <div className="h-20 bg-gray-200 rounded-2xl" />
+        <div className="h-20 bg-gray-200 rounded-2xl" />
+      </div>
+    </div>
+  </div>
+);
+
+if (!stats) return skeleton;
 
   return (
     <div className="p-10 space-y-10">
@@ -184,18 +210,22 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
             </div>
           </div>
 
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData}>
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
+          {showChart ? (
+  <ResponsiveContainer width="100%" height={300}>
+    <BarChart data={chartData}>
+      <XAxis dataKey="name" />
+      <YAxis />
+      <Tooltip />
 
-              <Bar dataKey="collected" fill="#10b981" radius={[6,6,0,0]} />
-              <Bar dataKey="teacher" fill="#3b82f6" radius={[6,6,0,0]} />
-              <Bar dataKey="expenses" fill="#ef4444" radius={[6,6,0,0]} />
-              <Bar dataKey="profit" fill="#a855f7" radius={[6,6,0,0]} />
-            </BarChart>
-          </ResponsiveContainer>
+      <Bar dataKey="collected" fill="#10b981" radius={[6,6,0,0]} />
+      <Bar dataKey="teacher" fill="#3b82f6" radius={[6,6,0,0]} />
+      <Bar dataKey="expenses" fill="#ef4444" radius={[6,6,0,0]} />
+      <Bar dataKey="profit" fill="#a855f7" radius={[6,6,0,0]} />
+    </BarChart>
+  </ResponsiveContainer>
+) : (
+  <div className="h-[300px] bg-gray-100 rounded-xl animate-pulse" />
+)}
         </div>
 
         {/* STAT CARDS */}
@@ -242,22 +272,21 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
   </div>
 
   {/* TABLE HEADER */}
-  <div className="grid grid-cols-6 text-sm font-medium text-gray-500 border-b pb-2">
-    <div>Employee</div>
-    <div>Position</div>
-    <div>Salary</div>
-    <div>Type</div>
-    <div>Status</div>
-    <div>Paid time</div>
-  </div>
+  <div className="grid grid-cols-5 text-sm font-medium text-gray-500 border-b pb-2">
+  <div>Employee</div>
+  <div>Position</div>
+  <div>Salary</div>
+  <div>Status</div>
+  <div>Paid time</div>
+</div>
 
   {/* TABLE BODY PLACEHOLDER */}
   <div className="space-y-2">
   {filteredPayroll?.map((p: any) => (
     <div
-      key={p.id}
-      className="grid grid-cols-6 items-center p-3 border rounded-lg text-sm"
-    >
+  key={p.id}
+  className="grid grid-cols-5 items-center p-3 border rounded-lg text-sm"
+>
       {/* Employee */}
       <div className="font-medium">{p.name}</div>
 
@@ -269,26 +298,13 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
         {p.salary?.toLocaleString()} UZS
       </div>
 
-      {/* Type dropdown */}
-      <select
-  defaultValue={p.type || ""}
-  onChange={(e) =>
-    updatePayroll(p.id, { type: e.target.value, status: p.status })
-  }
-  className="border rounded px-2 py-1"
->
-  <option value="">—</option>
-  <option value="cash">Cash</option>
-  <option value="online">Online</option>
-</select>
-
       {/* Status dropdown */}
       <select
   defaultValue={p.status}
   onChange={(e) =>
-    updatePayroll(p.id, { status: e.target.value, type: p.type })
+    updatePayroll(p.id, { status: e.target.value })
   }
-  className="border rounded px-2 py-1"
+  className="border rounded px-2 py-1 w-[110px]"
 >
   <option value="pending">Pending</option>
   <option value="paid">Paid</option>
@@ -447,7 +463,7 @@ const filteredPayroll = stats?.payroll?.filter((p: any) =>
 
     setDeleteExpense(null);
     setOpenMenu(null);
-    await refetchStats();
+    safeFetchStats(true);
   } catch (err) {
     console.error("DELETE CRASH:", err);
   }
@@ -521,7 +537,7 @@ setOpenMenu(null);
 setEditingExpense(null);
 setExpenseTitle("");
 setExpenseAmount("");
-await refetchStats();
+safeFetchStats(true);
                 }}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg"
               >
@@ -589,7 +605,7 @@ await refetchStats();
 setEmployeeName("");
 setEmployeePosition("");
 setEmployeeSalary("");
-await refetchStats();
+safeFetchStats(true);
           }}
           className="px-4 py-2 bg-green-600 text-white rounded-lg"
         >
